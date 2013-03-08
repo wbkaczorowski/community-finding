@@ -2,22 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/home/bartek/workspace/SALibrary/lib/collections-generic-4.01.jar"/>
-	<classpathentry kind="lib" path="/home/bartek/workspace/SALibrary/lib/colt-1.2.0.jar"/>
-	<classpathentry kind="lib" path="/home/bartek/workspace/SALibrary/lib/concurrent-1.3.4.jar"/>
-	<classpathentry kind="lib" path="/home/bartek/workspace/SALibrary/lib/j3d-core-1.3.1.jar"/>
-	<classpathentry kind="lib" path="/home/bartek/workspace/SALibrary/lib/jung-3d-2.0.1.jar"/>
-	<classpathentry kind="lib" path="/home/bartek/workspace/SALibrary/lib/jung-3d-demos-2.0.1.jar"/>
-	<classpathentry kind="lib" path="/home/bartek/workspace/SALibrary/lib/jung-algorithms-2.0.1.jar"/>
-	<classpathentry kind="lib" path="/home/bartek/workspace/SALibrary/lib/jung-api-2.0.1.jar"/>
-	<classpathentry kind="lib" path="/home/bartek/workspace/SALibrary/lib/jung-graph-impl-2.0.1.jar"/>
-	<classpathentry kind="lib" path="/home/bartek/workspace/SALibrary/lib/jung-io-2.0.1.jar"/>
-	<classpathentry kind="lib" path="/home/bartek/workspace/SALibrary/lib/jung-jai-2.0.1.jar"/>
-	<classpathentry kind="lib" path="/home/bartek/workspace/SALibrary/lib/jung-jai-samples-2.0.1.jar"/>
-	<classpathentry kind="lib" path="/home/bartek/workspace/SALibrary/lib/jung-samples-2.0.1.jar"/>
-	<classpathentry kind="lib" path="/home/bartek/workspace/SALibrary/lib/jung-visualization-2.0.1.jar"/>
-	<classpathentry kind="lib" path="/home/bartek/workspace/SALibrary/lib/stax-api-1.0.1.jar"/>
-	<classpathentry kind="lib" path="/home/bartek/workspace/SALibrary/lib/vecmath-1.3.1.jar"/>
-	<classpathentry kind="lib" path="/home/bartek/workspace/SALibrary/lib/wstx-asl-3.2.6.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JUNG"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
