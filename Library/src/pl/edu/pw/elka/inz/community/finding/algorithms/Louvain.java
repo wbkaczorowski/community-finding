@@ -10,8 +10,11 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 	
 	@Override
 	public Set<Set<V>> getCommunities() {
-		// TODO Auto-generated method stub
-		return null;
+		Set<Set<V>> groups = null;
+		
+		
+		
+		return groups;
 	}
 
 	@Override
