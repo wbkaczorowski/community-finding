@@ -26,7 +26,7 @@ public class Controller {
 		this.loadHandlers();
 
 		try {
-			blockingQueue.put(new Event(EventName.SHOW_EMPTY_WINDOW));
+			blockingQueue.put(new Event(EventName.START));
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -37,7 +37,7 @@ public class Controller {
 	 * Ładuje handlery do obsługi zdarzeń
 	 */
 	private void loadHandlers() {
-		eventHandlers.put(EventName.SHOW_EMPTY_WINDOW, new EventHandler() {
+		eventHandlers.put(EventName.START, new EventHandler() {
 
 			@Override
 			public void execute() {
@@ -60,8 +60,9 @@ public class Controller {
 			
 			@Override
 			public void execute() {
+				model.setAlgorithmType(view.getControllPanel().getAlgorithmType());
 				model.compute();
-//				view.newGroups(model.getGraph());
+				view.newGroups(model.getGraph());
 				
 			}
 		});

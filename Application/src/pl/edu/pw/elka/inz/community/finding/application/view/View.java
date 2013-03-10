@@ -99,6 +99,10 @@ public class View {
 		return statusBar;
 	}
 
+	public ControllPanel getControllPanel() {
+		return controllPanel;
+	}
+	
 	/**
 	 * Listener dla opcji "Quit".
 	 */

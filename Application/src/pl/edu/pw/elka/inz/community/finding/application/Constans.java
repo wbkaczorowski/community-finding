@@ -5,7 +5,7 @@ public class Constans {
     /**
      * Nazwa aplikacji.
      */
-    public static final String APP_NAME = "Social Algorithms";
+    public static final String APP_NAME = "Community Finding";
 
     /**
      * Szerokość okna.
@@ -26,6 +26,6 @@ public class Constans {
      * Wysokość statusBar.
      */
     public static int BAR_HEIGHT = 20;
-
+    
 
 }

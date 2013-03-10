@@ -1,27 +1,27 @@
 package pl.edu.pw.elka.inz.community.finding.application.controller.events;
 
 /**
- * Enumeracja zawierająca nazwy wszystkich zdarzeń jakie mogą być zgłaszane
+ * Enumerate type, containing names for all events.
  */
 public enum EventName {
 
     /**
-     * Event startowy, pokazuje puste okno.
+     * Starting event, shows empty window.
      */
-    SHOW_EMPTY_WINDOW,
+    START,
 
     /**
-     * Obsługa wczytania pliku.
+     * Service for loading file with data.
      */
     CHOOSE_FILE,
     
     /**
-     * Wylicz grupy dla danego algorytmu.
+     * Calculate for given algorithm.
      */
     CALCULATE,
 
     /**
-     * O programie.
+     * About.
      */
     ABOUT
 }

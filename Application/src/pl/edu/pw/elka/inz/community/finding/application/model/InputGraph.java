@@ -37,8 +37,8 @@ public class InputGraph {
 		
 		// ustawianie danych dla wierzcholkow
 		for (Node n : graph.getVertices()) {
-			n.setUid(nodeMetadata.get("0").transformer.transform(n));
-			n.setName(nodeMetadata.get("1").transformer.transform(n));
+			n.setUid(nodeMetadata.get("uid").transformer.transform(n));
+			n.setName(nodeMetadata.get("name").transformer.transform(n));
 			// na początku wszyscy należą do tej samej grupy
 			n.setGroup("0");
 //			System.out.println(n.toString());
