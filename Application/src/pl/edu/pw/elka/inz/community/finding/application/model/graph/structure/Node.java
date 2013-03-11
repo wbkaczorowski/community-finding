@@ -1,7 +1,7 @@
 package pl.edu.pw.elka.inz.community.finding.application.model.graph.structure;
 
 /**
- * Węzeł grafu. W modelu sieci odpowiada on użytkownikowi facebooka.
+ * Node of graph. In model of network correspond to facebook user.
  * 
  * @author Wojciech Kaczorowski
  * 
@@ -9,17 +9,17 @@ package pl.edu.pw.elka.inz.community.finding.application.model.graph.structure;
 public class Node {
 
 	/**
-	 * Facebookowy user id.
+	 * Facebook unique user id.
 	 */
 	private String uid;
 
 	/**
-	 * Imie i nazwisko użytkownika.
+	 * Name of user.
 	 */
 	private String name;
 
 	/**
-	 * Identyfikator grupy do której należy.
+	 * Id of group.
 	 */
 	private String group;
 

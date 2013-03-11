@@ -10,7 +10,10 @@ import pl.edu.pw.elka.inz.community.finding.application.Constans;
 import pl.edu.pw.elka.inz.community.finding.application.controller.events.EventsBlockingQueue;
 
 /**
- * Dolny statusBar informujący użytkownika o danych grafu, stanie aplikacji.
+ * Bottom status bar informing user about statistics, application state.
+ * 
+ * @author Wojciech Kaczorowski
+ * 
  */
 @SuppressWarnings("serial")
 public class StatusBar extends JPanel {

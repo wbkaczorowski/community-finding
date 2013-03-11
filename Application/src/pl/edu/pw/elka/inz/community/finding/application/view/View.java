@@ -23,88 +23,106 @@ import pl.edu.pw.elka.inz.community.finding.application.model.graph.structure.No
 import edu.uci.ics.jung.graph.Graph;
 
 /**
- * Główna klasa tworząca graficzny interfejs użytkownika.
+ * Main class for view in MVC pattern.
+ * 
+ * @author Wojciech Kaczorowski
+ * 
  */
 public class View {
 
-	private JFrame f = new JFrame(Constans.APP_NAME);
-	// Menu
+	private EventsBlockingQueue blockingQueue;
+
+	/**
+	 * Main window
+	 */
+	private JFrame mainWinodw = new JFrame(Constans.APP_NAME);
+
+	/**
+	 * Control panel for setting different options for analyzing networks.
+	 */
+	private ControlPanel controlPanel;
+
+	/**
+	 * Status bar displaying current occupation of application.
+	 */
+	private StatusBar statusBar;
+
+	/**
+	 * Main view for displaying graphs.
+	 */
+	private GraphView graphView;
+
+	/*
+	 * Menu section
+	 */
 	private JMenuBar menuBar = new JMenuBar();
 	private JMenu menuFile = new JMenu("File");
 	private JMenuItem menuItemQuit = new JMenuItem("Quit");
 	private JMenuItem menuItemOpen = new JMenuItem("Open");
 
-	private ControllPanel controllPanel;
-	private StatusBar statusBar;
-	private GraphView graphView;
-
-	private EventsBlockingQueue blockingQueue;
-
 	private String fileGraphPath = null;
 
 	/**
-	 * Tworzy elementy wyświetlanego okna.
+	 * Creates elements displayed window.
 	 * 
-	 * @param blockingQueue kolejka zdarzeń
+	 * @param blockingQueue
 	 */
 	public View(EventsBlockingQueue blockingQueue) {
 
 		this.blockingQueue = blockingQueue;
+		controlPanel = new ControlPanel(blockingQueue, this);
+		statusBar = new StatusBar(blockingQueue);
 
-		f.setJMenuBar(menuBar);
+		mainWinodw.setJMenuBar(menuBar);
 
 		// menu File
 		menuFile.add(menuItemOpen);
 		menuFile.add(menuItemQuit);
 		menuBar.add(menuFile);
 
-		controllPanel = new ControllPanel(blockingQueue);
-		statusBar = new StatusBar(blockingQueue);
-
-		f.getContentPane().setLayout(new BorderLayout());
-		f.addWindowListener(new ListenCloseWdw());
+		mainWinodw.getContentPane().setLayout(new BorderLayout());
+		mainWinodw.addWindowListener(new ListenCloseWdw());
 		menuItemQuit.addActionListener(new ListenMenuQuit());
 		menuItemOpen.addActionListener(new ListenMenuOpen());
 
-		f.getContentPane().add(statusBar, BorderLayout.SOUTH);
-		f.getContentPane().add(controllPanel, BorderLayout.NORTH);
-		f.getContentPane().setBackground(Color.WHITE);
+		mainWinodw.getContentPane().add(statusBar, BorderLayout.SOUTH);
+		mainWinodw.getContentPane().add(controlPanel, BorderLayout.NORTH);
+		mainWinodw.getContentPane().setBackground(Color.WHITE);
 	}
 
 	/**
-	 * Ustawia nowy graf, odświeża widok.
+	 * Sets new graph. Refreshes view.
 	 * 
 	 * @param g
 	 */
 	public void setGraphView(Graph<Node, Edge> g) {
 		graphView = new GraphView(g);
-		f.getContentPane().removeAll();
-		f.getContentPane().add(controllPanel, BorderLayout.NORTH);
-		f.getContentPane().add(statusBar, BorderLayout.SOUTH);
-		f.getContentPane().add(graphView.getVisualizationViewer(), BorderLayout.CENTER);
+		mainWinodw.getContentPane().removeAll();
+		mainWinodw.getContentPane().add(controlPanel, BorderLayout.NORTH);
+		mainWinodw.getContentPane().add(statusBar, BorderLayout.SOUTH);
+		mainWinodw.getContentPane().add(graphView.getVisualizationViewer(), BorderLayout.CENTER);
 		graphView.refresh();
-		controllPanel.setEnabled(true);
+		controlPanel.setEnabled(true);
 	}
 
-
 	/**
-	 * Zaznacza obliczone nowe grupy w widoku.
+	 * Marks calculates groups.
 	 */
 	public void newGroups(Graph<Node, Edge> g) {
 		graphView = new GraphView(g);
 		graphView.refresh();
 	}
-	
+
 	public StatusBar getStatusBar() {
 		return statusBar;
 	}
 
-	public ControllPanel getControllPanel() {
-		return controllPanel;
+	public ControlPanel getControlPanel() {
+		return controlPanel;
 	}
-	
+
 	/**
-	 * Listener dla opcji "Quit".
+	 * Listener for option "Quit".
 	 */
 	public class ListenMenuQuit implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
@@ -113,22 +131,27 @@ public class View {
 	}
 
 	/**
-	 * Listener dla otwierania pliku.
+	 * Listener for opening file.
 	 */
 	public class ListenMenuOpen implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			JFileChooser fd = new JFileChooser(".");
+			openFileChooser();
+			blockingQueue.add(new Event(EventName.OPEN_FILE));
 
-			int returnVal = fd.showOpenDialog(null);
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				fileGraphPath = fd.getSelectedFile().getAbsolutePath();
-				blockingQueue.add(new Event(EventName.CHOOSE_FILE));
-			}
+		}
+	}
+
+	public void openFileChooser() {
+		JFileChooser fd = new JFileChooser(".");
+		fileGraphPath = null;
+		int returnVal = fd.showOpenDialog(null);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			fileGraphPath = fd.getSelectedFile().getAbsolutePath();
 		}
 	}
 
 	/**
-	 * Listener obsługujący zamykanie okna.
+	 * Listener for closing window.
 	 */
 	public class ListenCloseWdw extends WindowAdapter {
 		public void windowClosing(WindowEvent e) {
@@ -137,12 +160,12 @@ public class View {
 	}
 
 	/**
-	 * Wyświetla okno.
+	 * Displays window.
 	 */
 	public void showWindow() {
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setSize(Constans.WINDOW_WIDTH, Constans.WINDOW_HEIGHT);
-		f.setVisible(true);
+		mainWinodw.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainWinodw.setSize(Constans.WINDOW_WIDTH, Constans.WINDOW_HEIGHT);
+		mainWinodw.setVisible(true);
 	}
 
 	public String getGraphFilePath() {
@@ -150,16 +173,14 @@ public class View {
 	}
 
 	/**
-	 * Wyświetla wyskakujące okienko
+	 * Displays pop-up window.
 	 * 
 	 * @param warningText
 	 * @param title
 	 * @param messageType
 	 */
 	public void showPopupWindow(String warningText, String title, int messageType) {
-		JOptionPane.showMessageDialog(f, warningText, title, messageType);
+		JOptionPane.showMessageDialog(mainWinodw, warningText, title, messageType);
 	}
-
-
 
 }

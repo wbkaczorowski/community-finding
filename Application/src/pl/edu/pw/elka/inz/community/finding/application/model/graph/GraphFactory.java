@@ -2,13 +2,16 @@ package pl.edu.pw.elka.inz.community.finding.application.model.graph;
 
 import org.apache.commons.collections15.Factory;
 
-import edu.uci.ics.jung.graph.Graph;
+import pl.edu.pw.elka.inz.community.finding.application.model.graph.structure.Edge;
+import pl.edu.pw.elka.inz.community.finding.application.model.graph.structure.Node;
 import edu.uci.ics.jung.graph.UndirectedGraph;
 import edu.uci.ics.jung.graph.UndirectedSparseGraph;
 
-import pl.edu.pw.elka.inz.community.finding.application.model.graph.structure.Edge;
-import pl.edu.pw.elka.inz.community.finding.application.model.graph.structure.Node;
-
+/**
+ * Factory needed for reading from .graphml file
+ * @author Wojciech Kaczorowski
+ *
+ */
 public class GraphFactory implements Factory<UndirectedGraph<Node, Edge>>{
 
 	@Override

@@ -10,6 +10,11 @@ import org.apache.commons.collections15.Transformer;
 
 import pl.edu.pw.elka.inz.community.finding.application.model.graph.structure.Node;
 
+/**
+ * Painter for nodes, colors them according to different groups.
+ * @author Wojciech Kaczorowski
+ *
+ */
 public class NodePainter implements Transformer<Node, Paint> {
 
 	private Map<String, Paint> colorMap;

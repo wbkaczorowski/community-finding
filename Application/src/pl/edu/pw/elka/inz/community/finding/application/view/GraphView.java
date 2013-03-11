@@ -13,14 +13,15 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
-import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 
 /**
- * Klasa odpowiedzialna za tworzenie widoku grafu.
+ * Class responsible for displaying graph itself.
+ * 
+ * @author Wojciech Kaczorowski
+ * 
  */
 public class GraphView {
 
-	
 	private Layout<Node, Edge> layout;
 	private VisualizationViewer<Node, Edge> visualizationViewer;
 	private DefaultModalGraphMouse<Object, Object> graphMouse;
@@ -30,23 +31,32 @@ public class GraphView {
 		layout = new FRLayout<Node, Edge>(graph);
 		layout.setSize(new Dimension(Constans.WINDOW_WIDTH, Constans.WINDOW_HEIGHT));
 
-
 		visualizationViewer = new VisualizationViewer<Node, Edge>(layout);
 		visualizationViewer.setBackground(Color.WHITE);
 
-		// oznaczenia wierzchołków
-//		visualizationViewer.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<Node>());
+		/*
+		 * nodes labels
+		 */
+		// visualizationViewer.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<Node>());
 
-		// nazwy krawędzi
+		/*
+		 * edges labels
+		 */
 		// visualizationViewer.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller());
 
-		// linie proste
+		/*
+		 * straight lines
+		 */
 		visualizationViewer.getRenderContext().setEdgeShapeTransformer(new EdgeShape.Line<Node, Edge>());
-		
-		// kolorowanie wierzchołków
+
+		/*
+		 * coloring nodes
+		 */
 		visualizationViewer.getRenderContext().setVertexFillPaintTransformer(new NodePainter());
 
-		// Graf dla obsługi myszy
+		/*
+		 * mouse handling
+		 */
 		graphMouse = new DefaultModalGraphMouse<Object, Object>();
 		graphMouse.setMode(ModalGraphMouse.Mode.TRANSFORMING);
 		visualizationViewer.setGraphMouse(graphMouse);
@@ -54,17 +64,12 @@ public class GraphView {
 	}
 
 	/**
-	 * Odświeżanie widoku grafu.
+	 * Refreshing graph view.
 	 */
 	public void refresh() {
 		visualizationViewer.updateUI();
 	}
 
-	/**
-	 * Zwraca widok utworzonego grafu, wraz z dołączoną obsługą myszki.
-	 * 
-	 * @return
-	 */
 	public VisualizationViewer<Node, Edge> getVisualizationViewer() {
 		return visualizationViewer;
 	}

@@ -13,12 +13,17 @@ public enum EventName {
     /**
      * Service for loading file with data.
      */
-    CHOOSE_FILE,
+    OPEN_FILE,
     
     /**
-     * Calculate for given algorithm.
+     * Calculate groups with visualization.
      */
     CALCULATE,
+    
+    /**
+     * Calculate groups without visualization.
+     */
+    CALCULATE_NO_VIEW,
 
     /**
      * About.

@@ -5,6 +5,11 @@ import pl.edu.pw.elka.inz.community.finding.application.controller.events.Events
 import pl.edu.pw.elka.inz.community.finding.application.model.Model;
 import pl.edu.pw.elka.inz.community.finding.application.view.View;
 
+/**
+ * Main class for application, built compatible with MVC design pattern.
+ * @author Wojciech Kaczorowski
+ *
+ */
 public class Main {
 
 	public static void main(String[] args) {

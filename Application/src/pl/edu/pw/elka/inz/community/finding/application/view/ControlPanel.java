@@ -19,31 +19,47 @@ import pl.edu.pw.elka.inz.community.finding.application.model.AlgorithmType;
  * @author Wojciech Kaczorowski
  * 
  */
-public class ControllPanel extends JPanel {
+public class ControlPanel extends JPanel {
 
 	private static final long serialVersionUID = -3149353921520115738L;
 
 	private EventsBlockingQueue blockingQueue;
-	private JButton button;
+	
+	/*
+	 * Element of control panel.
+	 */
+	private JButton calcualteButton;
+	private JButton openFileButton;
 	private JComboBox<AlgorithmType> algorithms;
 
-	private String[] algotrithmsNames;
-
-	public ControllPanel(EventsBlockingQueue blockingQueue) {
+	private View view;
+	
+	public ControlPanel(EventsBlockingQueue blockingQueue, View view) {
 		super(new FlowLayout());
 		this.blockingQueue = blockingQueue;
-		this.button = new JButton("calculate");
-		algorithms = new JComboBox<AlgorithmType>(AlgorithmType.values());
-		this.button.addActionListener(new ButtonListener());
-		button.setEnabled(false);
-		add(button);
-		add(algorithms);
+		this.view = view;
+		
+		this.calcualteButton = new JButton("calculate");
+		this.openFileButton = new JButton("open file");
+		
+		this.algorithms = new JComboBox<AlgorithmType>(AlgorithmType.values());
+		
+		this.calcualteButton.addActionListener(new CalculateButtonListener());
+		this.openFileButton.addActionListener(new OpenFileButtonListener());
+		calcualteButton.setEnabled(false);
+
+		/*
+		 * Adding elements to panel.
+		 */
+		add(this.openFileButton);
+		add(this.calcualteButton);
+		add(this.algorithms);
 
 		setPreferredSize(new Dimension(Constans.WINDOW_WIDTH, Constans.PANEL_HEIGHT));
 
 	}
 
-	private class ButtonListener implements ActionListener {
+	private class CalculateButtonListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -51,9 +67,19 @@ public class ControllPanel extends JPanel {
 		}
 
 	}
+	
+	private class OpenFileButtonListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			view.openFileChooser();
+			blockingQueue.add(new Event(EventName.OPEN_FILE));
+		}
+		
+	}
 
 	public void setEnabled(boolean b) {
-		button.setEnabled(b);
+		calcualteButton.setEnabled(b);
 	}
 
 	public void setAlgorithmType(AlgorithmType algorithmType) {

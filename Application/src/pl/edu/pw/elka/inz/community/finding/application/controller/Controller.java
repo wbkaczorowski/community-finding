@@ -26,6 +26,7 @@ public class Controller {
 		this.loadHandlers();
 
 		try {
+			//put the starting event
 			blockingQueue.put(new Event(EventName.START));
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -34,25 +35,28 @@ public class Controller {
 	}
 
 	/**
-	 * Ładuje handlery do obsługi zdarzeń
+	 * Loading handlers for servicing events.
 	 */
 	private void loadHandlers() {
 		eventHandlers.put(EventName.START, new EventHandler() {
 
 			@Override
 			public void execute() {
+				view.getControlPanel().setAlgorithmType(model.getAlgorithmManager().getAlgorithmType());
 				view.showWindow();
-
 			}
 		});
 
-		eventHandlers.put(EventName.CHOOSE_FILE, new EventHandler() {
+		eventHandlers.put(EventName.OPEN_FILE, new EventHandler() {
 
 			@Override
 			public void execute() {
-				model.loadNewGraph(view.getGraphFilePath());
-				view.setGraphView(model.getGraph());
-				view.getStatusBar().setAppState("Wczytano: " + view.getGraphFilePath());
+				if (view.getGraphFilePath() != null) {
+					view.getStatusBar().setAppState("loading graph...");
+					model.loadNewGraph(view.getGraphFilePath());
+					view.setGraphView(model.getGraph());
+					view.getStatusBar().setAppState("loaded: " + view.getGraphFilePath());
+				}
 			}
 		});
 		
@@ -60,7 +64,7 @@ public class Controller {
 			
 			@Override
 			public void execute() {
-				model.setAlgorithmType(view.getControllPanel().getAlgorithmType());
+				model.setAlgorithmType(view.getControlPanel().getAlgorithmType());
 				model.compute();
 				view.newGroups(model.getGraph());
 				
@@ -69,7 +73,7 @@ public class Controller {
 	}
 
 	/**
-	 * Główna pętla programu obsługująca kolejkę zdarzeń
+	 * Main loop of application, handles event queue.
 	 */
 	public void programStart() {
 

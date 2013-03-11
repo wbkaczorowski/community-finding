@@ -2,21 +2,21 @@ package pl.edu.pw.elka.inz.community.finding.application.model;
 
 import java.io.IOException;
 
-import javax.media.j3d.View;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
-import cern.colt.matrix.impl.SparseDoubleMatrix1D;
-
-import edu.uci.ics.jung.algorithms.generators.random.BarabasiAlbertGenerator;
-import edu.uci.ics.jung.graph.Graph;
-
 import pl.edu.pw.elka.inz.community.finding.application.controller.events.EventsBlockingQueue;
-import pl.edu.pw.elka.inz.community.finding.application.model.algorithms.*;
 import pl.edu.pw.elka.inz.community.finding.application.model.graph.structure.Edge;
 import pl.edu.pw.elka.inz.community.finding.application.model.graph.structure.Node;
+import edu.uci.ics.jung.graph.Graph;
 
+
+/**
+ * Main class for model in MVC pattern. 
+ * @author Wojciech Kaczorowski
+ *
+ */
 public class Model {
 
 	private EventsBlockingQueue blockingQueue;
@@ -46,26 +46,15 @@ public class Model {
 	}
 
 	public void compute() {
-		long time = System.currentTimeMillis();		
 		
-		
-//		algorithm = new GirvanNewman();
-//		algorithm = new Bicomponent();
-//		algorithm = new Voltage();
-//		algorithm = new WeakComponent();
-//		algorithm = new Louvain();
-//		algorithm.setGraph(graph);
-//		algorithm.calculate();
-		
-		
-		
-		
-		long timeTotal = System.currentTimeMillis() - time;
-		System.out.println("Czas obliczen: " + timeTotal + " ms");
 	}
 	
 	public Graph<Node, Edge> getGraph() {
 		return graph;
+	}
+	
+	public AlgorithmManager getAlgorithmManager() {
+		return algorithmManager;
 	}
 
 	public void setAlgorithmType(AlgorithmType algorithmType) {

@@ -1,15 +1,15 @@
 package pl.edu.pw.elka.inz.community.finding.application.model;
 
 /**
- * Type for tested algorithms.
+ * Type for tested algorithms, with human readable names.
  * @author Wojciech Kaczorowski
  *
  */
 public enum AlgorithmType {
-	Louvain("Louvain"),
-	GrivanNewman("Grivan-Newman"),
-	WuHuberman("Wu-Huberman"),
-	ClausetNewmanMoore("Clauset-Newman-Moore"),
+	LOUVAIN("Louvain"),
+	GRIVAN_NEWMAN("Grivan-Newman"),
+	WU_HUBERMAN("Wu-Huberman"),
+	CLAUSET_NEWMAN_MOORE("Clauset-Newman-Moore"),
 	;
 	
 	private final String text;
