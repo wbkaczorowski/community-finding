@@ -26,7 +26,7 @@ public class Controller {
 		this.loadHandlers();
 
 		try {
-			//put the starting event
+			// put the starting event
 			blockingQueue.put(new Event(EventName.START));
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -59,15 +59,28 @@ public class Controller {
 				}
 			}
 		});
-		
+
+		eventHandlers.put(EventName.OPEN_DIRECTORY, new EventHandler() {
+
+			@Override
+			public void execute() {
+				if (view.getDirGraphPath() != null) {
+					view.getStatusBar().setAppState("loading graphs...");
+					model.loadGraphs(view.getDirGraphPath());
+					// no putting graph view here
+					view.getStatusBar().setAppState("loaded graphs: " + view.getDirGraphPath());
+				}
+			}
+		});
+
 		eventHandlers.put(EventName.CALCULATE, new EventHandler() {
-			
+
 			@Override
 			public void execute() {
 				model.setAlgorithmType(view.getControlPanel().getAlgorithmType());
 				model.compute();
 				view.newGroups(model.getGraph());
-				
+
 			}
 		});
 	}

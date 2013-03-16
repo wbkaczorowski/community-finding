@@ -20,6 +20,7 @@ import pl.edu.pw.elka.inz.community.finding.application.controller.events.EventN
 import pl.edu.pw.elka.inz.community.finding.application.controller.events.EventsBlockingQueue;
 import pl.edu.pw.elka.inz.community.finding.application.model.graph.structure.Edge;
 import pl.edu.pw.elka.inz.community.finding.application.model.graph.structure.Node;
+import pl.edu.pw.elka.inz.community.finding.application.view.windows.MultiTestWindow;
 import edu.uci.ics.jung.graph.Graph;
 
 /**
@@ -35,7 +36,7 @@ public class View {
 	/**
 	 * Main window
 	 */
-	private JFrame mainWinodw = new JFrame(Constans.APP_NAME);
+	private JFrame mainWindow = new JFrame(Constans.APP_NAME);
 
 	/**
 	 * Control panel for setting different options for analyzing networks.
@@ -61,6 +62,8 @@ public class View {
 	private JMenuItem menuItemOpen = new JMenuItem("Open");
 
 	private String fileGraphPath = null;
+	private String dirGraphPath = null;
+
 
 	/**
 	 * Creates elements displayed window.
@@ -73,21 +76,21 @@ public class View {
 		controlPanel = new ControlPanel(blockingQueue, this);
 		statusBar = new StatusBar(blockingQueue);
 
-		mainWinodw.setJMenuBar(menuBar);
+		mainWindow.setJMenuBar(menuBar);
 
 		// menu File
 		menuFile.add(menuItemOpen);
 		menuFile.add(menuItemQuit);
 		menuBar.add(menuFile);
 
-		mainWinodw.getContentPane().setLayout(new BorderLayout());
-		mainWinodw.addWindowListener(new ListenCloseWdw());
+		mainWindow.getContentPane().setLayout(new BorderLayout());
+		mainWindow.addWindowListener(new ListenCloseWdw());
 		menuItemQuit.addActionListener(new ListenMenuQuit());
 		menuItemOpen.addActionListener(new ListenMenuOpen());
 
-		mainWinodw.getContentPane().add(statusBar, BorderLayout.SOUTH);
-		mainWinodw.getContentPane().add(controlPanel, BorderLayout.NORTH);
-		mainWinodw.getContentPane().setBackground(Color.WHITE);
+		mainWindow.getContentPane().add(statusBar, BorderLayout.SOUTH);
+		mainWindow.getContentPane().add(controlPanel, BorderLayout.NORTH);
+		mainWindow.getContentPane().setBackground(Color.WHITE);
 	}
 
 	/**
@@ -97,10 +100,10 @@ public class View {
 	 */
 	public void setGraphView(Graph<Node, Edge> g) {
 		graphView = new GraphView(g);
-		mainWinodw.getContentPane().removeAll();
-		mainWinodw.getContentPane().add(controlPanel, BorderLayout.NORTH);
-		mainWinodw.getContentPane().add(statusBar, BorderLayout.SOUTH);
-		mainWinodw.getContentPane().add(graphView.getVisualizationViewer(), BorderLayout.CENTER);
+		mainWindow.getContentPane().removeAll();
+		mainWindow.getContentPane().add(controlPanel, BorderLayout.NORTH);
+		mainWindow.getContentPane().add(statusBar, BorderLayout.SOUTH);
+		mainWindow.getContentPane().add(graphView.getVisualizationViewer(), BorderLayout.CENTER);
 		graphView.refresh();
 		controlPanel.setEnabled(true);
 	}
@@ -149,6 +152,16 @@ public class View {
 			fileGraphPath = fd.getSelectedFile().getAbsolutePath();
 		}
 	}
+	
+	public void openDirChooser() {
+		JFileChooser fd = new JFileChooser(".");
+		fd.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		dirGraphPath = null;
+		int returnVal = fd.showOpenDialog(null);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			dirGraphPath = fd.getSelectedFile().getAbsolutePath();
+		}
+	}
 
 	/**
 	 * Listener for closing window.
@@ -163,24 +176,32 @@ public class View {
 	 * Displays window.
 	 */
 	public void showWindow() {
-		mainWinodw.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainWinodw.setSize(Constans.WINDOW_WIDTH, Constans.WINDOW_HEIGHT);
-		mainWinodw.setVisible(true);
+		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainWindow.setSize(Constans.WINDOW_WIDTH, Constans.WINDOW_HEIGHT);
+		mainWindow.setVisible(true);
 	}
 
 	public String getGraphFilePath() {
 		return fileGraphPath;
 	}
 
+	public String getDirGraphPath() {
+		return dirGraphPath;
+	}
+
+	
 	/**
-	 * Displays pop-up window.
+	 * Displays simple pop-up window.
 	 * 
 	 * @param warningText
 	 * @param title
 	 * @param messageType
 	 */
 	public void showPopupWindow(String warningText, String title, int messageType) {
-		JOptionPane.showMessageDialog(mainWinodw, warningText, title, messageType);
+		JOptionPane.showMessageDialog(mainWindow, warningText, title, messageType);
 	}
 
+	public JFrame getMainWindow() {
+		return mainWindow;
+	}
 }

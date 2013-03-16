@@ -16,6 +16,11 @@ public enum EventName {
     OPEN_FILE,
     
     /**
+     * Load directory with graphs.
+     */
+    OPEN_DIRECTORY,
+    
+    /**
      * Calculate groups with visualization.
      */
     CALCULATE,
@@ -23,7 +28,7 @@ public enum EventName {
     /**
      * Calculate groups without visualization.
      */
-    CALCULATE_NO_VIEW,
+    CALCULATE_MULTI,
 
     /**
      * About.

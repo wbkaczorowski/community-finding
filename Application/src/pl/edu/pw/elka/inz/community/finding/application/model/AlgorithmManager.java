@@ -24,7 +24,7 @@ public class AlgorithmManager {
 		this.algorithmType = AlgorithmType.GRIVAN_NEWMAN;
 	}
 	
-	public void compute() {
+	public void computeSingle() {
 		long time = System.currentTimeMillis();		
 
 		switch (algorithmType) {

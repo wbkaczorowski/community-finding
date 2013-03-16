@@ -34,13 +34,10 @@ public class Model {
 			this.inputGraph = new InputGraph(filename);
 			graph = inputGraph.getGraph();
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SAXException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -59,6 +56,11 @@ public class Model {
 
 	public void setAlgorithmType(AlgorithmType algorithmType) {
 		algorithmManager.setAlgorithmType(algorithmType);
+	}
+
+	public void loadGraphs(String dirGraphPath) {
+		// TODO
+		
 	}
 
 }
