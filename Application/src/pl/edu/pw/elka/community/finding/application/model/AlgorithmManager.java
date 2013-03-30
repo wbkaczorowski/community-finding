@@ -22,8 +22,7 @@ public class AlgorithmManager {
 	private AlgorithmType algorithmType;
 		
 	public AlgorithmManager() {
-		// default algorithm
-		this.algorithmType = AlgorithmType.GRIVAN_NEWMAN;
+		
 	}
 	
 	public int computeSingle(Graph<Node, Edge> graph, int param) {

@@ -39,7 +39,7 @@ public class Controller {
 
 			@Override
 			public void execute() {
-//				view.getControlPanel().setAlgorithmType(model.getAlgorithmManager().getAlgorithmType());
+//				view.getControlPanel().getSingleTestWindow().setAlgorithmType(model.getAlgorithmManager().getAlgorithmType());
 				view.showWindow();
 			}
 		});
@@ -52,6 +52,7 @@ public class Controller {
 					view.getStatusBar().setAppState("loading graph...");
 					model.loadNewGraph(view.getGraphFilePath());
 					view.setGraphView(model.getGraph());
+					view.setGraphParameter(model.getGraph());
 					view.getStatusBar().setAppState("loaded: " + view.getGraphFilePath());
 				}
 			}

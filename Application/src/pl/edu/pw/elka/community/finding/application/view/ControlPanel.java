@@ -36,6 +36,7 @@ public class ControlPanel extends JToolBar {
 	private SingleTestWindow singleTestWindow;
 	
 
+
 	public ControlPanel(final EventsBlockingQueue blockingQueue, final View view) {
 		setFloatable(false);
 
@@ -90,12 +91,16 @@ public class ControlPanel extends JToolBar {
 		});
 		add(btnMultipleTests);
 		
-		
 
 	}
 
 	public void setEnabled(boolean b) {
 		btnSingleTest.setEnabled(b);
 	}
+	
+	public SingleTestWindow getSingleTestWindow() {
+		return singleTestWindow;
+	}
+
 
 }

@@ -10,7 +10,7 @@ public enum AlgorithmType {
 	GRIVAN_NEWMAN("Grivan-Newman"),
 	WU_HUBERMAN("Wu-Huberman"),
 	CLAUSET_NEWMAN_MOORE("Clauset-Newman-Moore"),
-	ALL("all");
+	ALL("all"),
 	;
 	
 	private final String text;
