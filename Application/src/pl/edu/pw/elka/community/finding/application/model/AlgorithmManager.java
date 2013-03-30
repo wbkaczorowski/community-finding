@@ -6,6 +6,7 @@ import pl.edu.pw.elka.community.finding.algorithms.Louvain;
 import pl.edu.pw.elka.community.finding.application.model.graph.structure.Edge;
 import pl.edu.pw.elka.community.finding.application.model.graph.structure.Node;
 import edu.uci.ics.jung.algorithms.cluster.EdgeBetweennessClusterer;
+import edu.uci.ics.jung.algorithms.cluster.VoltageClusterer;
 import edu.uci.ics.jung.graph.Graph;
 
 /**
@@ -39,7 +40,7 @@ public class AlgorithmManager {
 			break;
 			
 		case WU_HUBERMAN:
-			numberGroups = wuHuberman();
+			numberGroups = wuHuberman(graph, param);
 			break;
 			
 		case CLAUSET_NEWMAN_MOORE:
@@ -75,7 +76,15 @@ public class AlgorithmManager {
 		return groupCounter;
 	}
 	
-	private int wuHuberman() {
+	private int wuHuberman(Graph<Node, Edge> graph, int clusterCandidates) {
+		VoltageClusterer<Node, Edge> algorithm = new VoltageClusterer<Node, Edge>(graph, clusterCandidates);
+		int groupCounter = 0;
+		for (Set<Node> set : algorithm.cluster(clusterCandidates)) {
+			for (Node n : set) {
+				n.setGroup(String.valueOf(groupCounter));
+			}
+			++groupCounter;
+		}
 		return 0;
 		
 	}

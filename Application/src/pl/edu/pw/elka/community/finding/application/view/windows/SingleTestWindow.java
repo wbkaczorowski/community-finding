@@ -120,38 +120,38 @@ public class SingleTestWindow extends JDialog {
 			return louvainPanel;
 
 		case GRIVAN_NEWMAN:
-			JPanel jPanel = new JPanel(new BorderLayout(0, 0));
-			final JSlider slider = new JSlider();
-			final JTextField text = new JTextField(String.valueOf(view.getGraphParameter().getEgdesNumber()).length());
-			JPanel labelText = new JPanel();
-			labelText.add(new JLabel("Number of edges to remove:"));
-			labelText.add(text);
-			jPanel.add(labelText, BorderLayout.NORTH);
-			slider.setMaximum(view.getGraphParameter().getEgdesNumber());
-			slider.setValue(view.getGraphParameter().getEgdesNumber() / 18);
-			slider.setMinorTickSpacing(view.getGraphParameter().getEgdesNumber() / 20);
-			slider.setMajorTickSpacing(view.getGraphParameter().getEgdesNumber() / 4);
-			slider.setPaintTicks(true);
-			slider.setPaintLabels(true);
-			slider.addChangeListener(new ChangeListener() {
+			JPanel grPanel = new JPanel(new BorderLayout(0, 0));
+			final JSlider grSlider = new JSlider();
+			final JTextField grText = new JTextField(String.valueOf(view.getGraphParameter().getEgdesNumber()).length());
+			JPanel grLabelText = new JPanel();
+			grLabelText.add(new JLabel("Number of edges to remove:"));
+			grLabelText.add(grText);
+			grPanel.add(grLabelText, BorderLayout.NORTH);
+			grSlider.setMaximum(view.getGraphParameter().getEgdesNumber());
+			grSlider.setValue(view.getGraphParameter().getEgdesNumber() / 18);
+			grSlider.setMinorTickSpacing(view.getGraphParameter().getEgdesNumber() / 20);
+			grSlider.setMajorTickSpacing(view.getGraphParameter().getEgdesNumber() / 4);
+			grSlider.setPaintTicks(true);
+			grSlider.setPaintLabels(true);
+			grSlider.addChangeListener(new ChangeListener() {
 				
 				@Override
 				public void stateChanged(ChangeEvent e) {
 		            JSlider source = (JSlider) e.getSource();
-		            text.setText("" + source.getValue());
+		            grText.setText("" + source.getValue());
 				}
 			});
 		
-	        text.addKeyListener(new KeyListener(){
+	        grText.addKeyListener(new KeyListener(){
 	            @Override
 	            public void keyReleased(KeyEvent e) {
-	                String typed = text.getText();
-	                slider.setValue(0);
+	                String typed = grText.getText();
+	                grSlider.setValue(0);
 	                if(!typed.matches("\\d+")) {
 	                    return;
 	                }
 	                int value = Integer.parseInt(typed);
-	                slider.setValue(value);
+	                grSlider.setValue(value);
 	            }
 
 				@Override
@@ -164,12 +164,55 @@ public class SingleTestWindow extends JDialog {
 					// TODO Auto-generated method stub
 				}
 	        });
-			jPanel.add(slider, BorderLayout.CENTER);
-			return jPanel;
+			grPanel.add(grSlider, BorderLayout.CENTER);
+			return grPanel;
 
 		case WU_HUBERMAN:
+			JPanel whPanel = new JPanel(new BorderLayout(0, 0));
+			final JSlider whSlider = new JSlider();
+			final JTextField whText = new JTextField(String.valueOf(view.getGraphParameter().getEgdesNumber()).length());
+			JPanel whLabelText = new JPanel();
+			whLabelText.add(new JLabel("Number of grup candidates:"));
+			whLabelText.add(whText);
+			whPanel.add(whLabelText, BorderLayout.NORTH);
+			whSlider.setMaximum(view.getGraphParameter().getNodesNumber());
+			whSlider.setMinorTickSpacing(view.getGraphParameter().getNodesNumber() / 20);
+			whSlider.setMajorTickSpacing(view.getGraphParameter().getNodesNumber() / 4);
+			whSlider.setPaintTicks(true);
+			whSlider.setPaintLabels(true);
+			whSlider.addChangeListener(new ChangeListener() {
+				
+				@Override
+				public void stateChanged(ChangeEvent e) {
+		            JSlider source = (JSlider) e.getSource();
+		            whText.setText("" + source.getValue());
+				}
+			});
+		
+	        whText.addKeyListener(new KeyListener(){
+	            @Override
+	            public void keyReleased(KeyEvent e) {
+	                String typed = whText.getText();
+	                whSlider.setValue(0);
+	                if(!typed.matches("\\d+")) {
+	                    return;
+	                }
+	                int value = Integer.parseInt(typed);
+	                whSlider.setValue(value);
+	            }
 
-			return new JPanel();
+				@Override
+				public void keyTyped(KeyEvent e) {
+					// TODO Auto-generated method stub
+				}
+
+				@Override
+				public void keyPressed(KeyEvent e) {
+					// TODO Auto-generated method stub
+				}
+	        });
+			whPanel.add(whSlider, BorderLayout.CENTER);
+			return whPanel;
 
 		case CLAUSET_NEWMAN_MOORE:
 
