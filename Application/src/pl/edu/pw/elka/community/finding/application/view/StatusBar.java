@@ -17,19 +17,23 @@ import pl.edu.pw.elka.community.finding.application.controller.events.EventsBloc
 @SuppressWarnings("serial")
 public class StatusBar extends JPanel {
 
-	private JLabel appStateLabel;
-	private String appStateString;
+	private JLabel firstLabel;
+	private JLabel secondLabel;
 
 	public StatusBar(EventsBlockingQueue blockingQueue) {
-		super(new GridLayout(1, 6));
+		super(new GridLayout(1, 2));
 		setPreferredSize(new Dimension(Constans.WINDOW_WIDTH, Constans.BAR_HEIGHT));
-		appStateLabel = new JLabel(appStateString);
-		this.add(appStateLabel);
+		firstLabel = new JLabel();
+		secondLabel = new JLabel();
+		this.add(firstLabel);
+		this.add(secondLabel);
 	}
-
-	public void setAppState(String string) {
-		appStateLabel.setText(string);
+	
+	public void setAppState(String first) {
+		firstLabel.setText(first);
 		this.updateUI();
+		// TODO ustawianie tego statusu
+		
 	}
 
 }

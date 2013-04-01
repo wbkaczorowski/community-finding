@@ -26,7 +26,6 @@ public class Controller {
 			// put the starting event
 			blockingQueue.put(new Event(EventName.START));
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -74,11 +73,10 @@ public class Controller {
 
 			@Override
 			public void execute() {
-//				model.setAlgorithmType(view.getControlPanel().getAlgorithmType());
-//				view.getControlPanel().setParamsDataWindow(model.getGraph());
-				model.getAlgorithmManager().computeSingle(model.getGraph(), 0);
+				model.setAlgorithmType(view.getControlPanel().getSingleTestWindow().getChosenAglorithm());
+				view.getStatusBar().setAppState("calculating...");
+				view.getStatusBar().setAppState("number of groups: " + model.getAlgorithmManager().computeSingle(model.getGraph(), view.getControlPanel().getSingleTestWindow().getParam()));
 				view.newGroups(model.getGraph());
-
 			}
 		});
 	}

@@ -26,10 +26,16 @@ public class AlgorithmManager {
 		
 	}
 	
+	/**
+	 * Method managing work for algorithm.
+	 * @param graph
+	 * @param param
+	 * @return
+	 */
 	public int computeSingle(Graph<Node, Edge> graph, int param) {
 		int numberGroups;
 		long time = System.currentTimeMillis();		
-
+		System.out.println(algorithmType);
 		switch (algorithmType) {
 		case LOUVAIN:
 			numberGroups = louvain(graph);
@@ -85,7 +91,7 @@ public class AlgorithmManager {
 			}
 			++groupCounter;
 		}
-		return 0;
+		return groupCounter;
 		
 	}
 	

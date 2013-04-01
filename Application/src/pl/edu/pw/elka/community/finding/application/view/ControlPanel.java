@@ -71,7 +71,7 @@ public class ControlPanel extends JToolBar {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
+				// TODO tworzenie sztuczego grafu
 
 			}
 		});
@@ -85,7 +85,7 @@ public class ControlPanel extends JToolBar {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
+				// TODO multi testy
 
 			}
 		});

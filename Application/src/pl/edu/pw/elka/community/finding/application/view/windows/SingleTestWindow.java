@@ -2,7 +2,6 @@ package pl.edu.pw.elka.community.finding.application.view.windows;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -29,22 +28,33 @@ import pl.edu.pw.elka.community.finding.application.view.View;
 
 /**
  * 
- * Created using WindowBuilder.
+ * Selector for test for single graph and single algorithm. Created using WindowBuilder.
  * 
  * @author Wojciech Kaczorowski
  * 
  */
 @SuppressWarnings("serial")
 public class SingleTestWindow extends JDialog {
-
+	
+	/*
+	 * View components.
+	 */
 	private JPanel listPanel;
 	private JPanel rightPanel;
 	private JPanel algorithmParamerersPanel;
 	private JList<AlgorithmType> algorithmList;
 	private JPanel buttonPanel;
-	
 	private JTextField paramValueTextField;
+
+	/**
+	 * Parameter passed to model, used by different algorithms.
+	 */
 	private int param;
+	
+	/**
+	 * Chosen algorithm by user to work.
+	 */
+	private AlgorithmType chosenAglorithm;
 
 	public SingleTestWindow(final View view) {
 		setLocationRelativeTo(view.getMainWindow());
@@ -69,9 +79,10 @@ public class SingleTestWindow extends JDialog {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// TODO odpalanie liczenia 
+					param = Integer.valueOf(paramValueTextField.getText());
+					chosenAglorithm = algorithmList.getSelectedValue();
 					SingleTestWindow.this.setVisible(false);
-					System.out.println(algorithmList.getSelectedValue() + " " + paramValueTextField.getText()); 
-//					view.getBlockingQueue().add(new Event(EventName.CALCULATE_SINGLE));
+					view.getBlockingQueue().add(new Event(EventName.CALCULATE_SINGLE));
 				}
 			});
 
@@ -117,6 +128,12 @@ public class SingleTestWindow extends JDialog {
 
 	}
 
+	/**
+	 * Creates different view, depending on what algorithm type is chosen from list.
+	 * @param algorithmType
+	 * @param view
+	 * @return
+	 */
 	private JPanel setRightView(AlgorithmType algorithmType, View view) {
 		switch (algorithmType) {
 		case LOUVAIN:
@@ -163,12 +180,10 @@ public class SingleTestWindow extends JDialog {
 
 				@Override
 				public void keyTyped(KeyEvent e) {
-					// TODO Auto-generated method stub
 				}
 
 				@Override
 				public void keyPressed(KeyEvent e) {
-					// TODO Auto-generated method stub
 				}
 	        });
 			grPanel.add(grSlider, BorderLayout.CENTER);
@@ -210,12 +225,10 @@ public class SingleTestWindow extends JDialog {
 
 				@Override
 				public void keyTyped(KeyEvent e) {
-					// TODO Auto-generated method stub
 				}
 
 				@Override
 				public void keyPressed(KeyEvent e) {
-					// TODO Auto-generated method stub
 				}
 	        });
 			whPanel.add(whSlider, BorderLayout.CENTER);
@@ -236,6 +249,14 @@ public class SingleTestWindow extends JDialog {
 
 		}
 
+	}
+	
+	public int getParam() {
+		return param;
+	}
+	
+	public AlgorithmType getChosenAglorithm() {
+		return chosenAglorithm;
 	}
 	
 }
