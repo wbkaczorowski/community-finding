@@ -2,6 +2,7 @@ package pl.edu.pw.elka.community.finding.application.view.windows;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -21,6 +22,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import pl.edu.pw.elka.community.finding.application.controller.events.Event;
+import pl.edu.pw.elka.community.finding.application.controller.events.EventName;
 import pl.edu.pw.elka.community.finding.application.model.AlgorithmType;
 import pl.edu.pw.elka.community.finding.application.view.View;
 
@@ -39,6 +42,9 @@ public class SingleTestWindow extends JDialog {
 	private JPanel algorithmParamerersPanel;
 	private JList<AlgorithmType> algorithmList;
 	private JPanel buttonPanel;
+	
+	private JTextField paramValueTextField;
+	private int param;
 
 	public SingleTestWindow(final View view) {
 		setLocationRelativeTo(view.getMainWindow());
@@ -62,9 +68,10 @@ public class SingleTestWindow extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
-
+					// TODO odpalanie liczenia 
 					SingleTestWindow.this.setVisible(false);
+					System.out.println(algorithmList.getSelectedValue() + " " + paramValueTextField.getText()); 
+//					view.getBlockingQueue().add(new Event(EventName.CALCULATE_SINGLE));
 				}
 			});
 
@@ -122,10 +129,10 @@ public class SingleTestWindow extends JDialog {
 		case GRIVAN_NEWMAN:
 			JPanel grPanel = new JPanel(new BorderLayout(0, 0));
 			final JSlider grSlider = new JSlider();
-			final JTextField grText = new JTextField(String.valueOf(view.getGraphParameter().getEgdesNumber()).length());
+			paramValueTextField = new JTextField(String.valueOf(view.getGraphParameter().getEgdesNumber()).length());
 			JPanel grLabelText = new JPanel();
 			grLabelText.add(new JLabel("Number of edges to remove:"));
-			grLabelText.add(grText);
+			grLabelText.add(paramValueTextField);
 			grPanel.add(grLabelText, BorderLayout.NORTH);
 			grSlider.setMaximum(view.getGraphParameter().getEgdesNumber());
 			grSlider.setValue(view.getGraphParameter().getEgdesNumber() / 18);
@@ -138,14 +145,14 @@ public class SingleTestWindow extends JDialog {
 				@Override
 				public void stateChanged(ChangeEvent e) {
 		            JSlider source = (JSlider) e.getSource();
-		            grText.setText("" + source.getValue());
+		            paramValueTextField.setText("" + source.getValue());
 				}
 			});
-		
-	        grText.addKeyListener(new KeyListener(){
+			paramValueTextField.setText("" + grSlider.getValue());
+	        paramValueTextField.addKeyListener(new KeyListener(){
 	            @Override
 	            public void keyReleased(KeyEvent e) {
-	                String typed = grText.getText();
+	                String typed = paramValueTextField.getText();
 	                grSlider.setValue(0);
 	                if(!typed.matches("\\d+")) {
 	                    return;
@@ -170,10 +177,10 @@ public class SingleTestWindow extends JDialog {
 		case WU_HUBERMAN:
 			JPanel whPanel = new JPanel(new BorderLayout(0, 0));
 			final JSlider whSlider = new JSlider();
-			final JTextField whText = new JTextField(String.valueOf(view.getGraphParameter().getEgdesNumber()).length());
+			paramValueTextField = new JTextField(String.valueOf(view.getGraphParameter().getEgdesNumber()).length());
 			JPanel whLabelText = new JPanel();
 			whLabelText.add(new JLabel("Number of grup candidates:"));
-			whLabelText.add(whText);
+			whLabelText.add(paramValueTextField);
 			whPanel.add(whLabelText, BorderLayout.NORTH);
 			whSlider.setMaximum(view.getGraphParameter().getNodesNumber());
 			whSlider.setMinorTickSpacing(view.getGraphParameter().getNodesNumber() / 20);
@@ -185,14 +192,14 @@ public class SingleTestWindow extends JDialog {
 				@Override
 				public void stateChanged(ChangeEvent e) {
 		            JSlider source = (JSlider) e.getSource();
-		            whText.setText("" + source.getValue());
+		            paramValueTextField.setText("" + source.getValue());
 				}
 			});
-		
-	        whText.addKeyListener(new KeyListener(){
+			paramValueTextField.setText("" + whSlider.getValue());
+			paramValueTextField.addKeyListener(new KeyListener(){
 	            @Override
 	            public void keyReleased(KeyEvent e) {
-	                String typed = whText.getText();
+	                String typed = paramValueTextField.getText();
 	                whSlider.setValue(0);
 	                if(!typed.matches("\\d+")) {
 	                    return;
@@ -220,7 +227,7 @@ public class SingleTestWindow extends JDialog {
 
 		case ALL:
 			JPanel defaultPanel = new JPanel();
-			JLabel defaultLabel = new JLabel("All not acceptable, choose algorithm on the left.");
+			JLabel defaultLabel = new JLabel("All not acceptable, choose other algorithm on the left.");
 			defaultPanel.add(defaultLabel);
 			return defaultPanel;
 
@@ -230,5 +237,5 @@ public class SingleTestWindow extends JDialog {
 		}
 
 	}
-
+	
 }

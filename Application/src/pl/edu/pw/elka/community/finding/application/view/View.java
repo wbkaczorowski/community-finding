@@ -6,8 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.List;
-import java.util.Properties;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -19,10 +17,8 @@ import javax.swing.JOptionPane;
 import pl.edu.pw.elka.community.finding.application.controller.events.Event;
 import pl.edu.pw.elka.community.finding.application.controller.events.EventName;
 import pl.edu.pw.elka.community.finding.application.controller.events.EventsBlockingQueue;
-import pl.edu.pw.elka.community.finding.application.model.AlgorithmType;
 import pl.edu.pw.elka.community.finding.application.model.graph.structure.Edge;
 import pl.edu.pw.elka.community.finding.application.model.graph.structure.Node;
-import pl.edu.pw.elka.community.finding.application.view.windows.MultiTestWindow;
 import edu.uci.ics.jung.graph.Graph;
 
 /**
@@ -54,12 +50,12 @@ public class View {
 	 * Main view for displaying graphs.
 	 */
 	private GraphView graphView;
-	
+
 	/**
-	 * Graph parameters for displaying 
+	 * Graph parameters for displaying
 	 */
 	private GraphParameter graphParameter;
-	
+
 	/*
 	 * Menu section
 	 */
@@ -70,7 +66,6 @@ public class View {
 
 	private String fileGraphPath = null;
 	private String dirGraphPath = null;
-
 
 	/**
 	 * Creates elements displayed window.
@@ -159,7 +154,7 @@ public class View {
 			fileGraphPath = fd.getSelectedFile().getAbsolutePath();
 		}
 	}
-	
+
 	public void openDirChooser() {
 		JFileChooser fd = new JFileChooser(".");
 		fd.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -196,7 +191,6 @@ public class View {
 		return dirGraphPath;
 	}
 
-	
 	/**
 	 * Displays simple pop-up window.
 	 * 
@@ -215,8 +209,12 @@ public class View {
 	public void setGraphParameter(Graph<Node, Edge> graph) {
 		graphParameter = new GraphParameter(graph.getEdgeCount(), graph.getVertexCount());
 	}
-	
+
 	public GraphParameter getGraphParameter() {
 		return graphParameter;
+	}
+
+	public EventsBlockingQueue getBlockingQueue() {
+		return blockingQueue;
 	}
 }

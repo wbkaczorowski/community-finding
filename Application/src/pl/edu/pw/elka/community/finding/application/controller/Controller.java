@@ -39,7 +39,6 @@ public class Controller {
 
 			@Override
 			public void execute() {
-//				view.getControlPanel().getSingleTestWindow().setAlgorithmType(model.getAlgorithmManager().getAlgorithmType());
 				view.showWindow();
 			}
 		});
