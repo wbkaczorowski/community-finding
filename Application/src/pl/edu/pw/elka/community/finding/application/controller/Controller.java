@@ -5,6 +5,7 @@ import pl.edu.pw.elka.community.finding.application.controller.events.EventHandl
 import pl.edu.pw.elka.community.finding.application.controller.events.EventName;
 import pl.edu.pw.elka.community.finding.application.controller.events.EventsBlockingQueue;
 import pl.edu.pw.elka.community.finding.application.controller.events.EventsHandlersMap;
+import pl.edu.pw.elka.community.finding.application.model.AlgorithmType;
 import pl.edu.pw.elka.community.finding.application.model.Model;
 import pl.edu.pw.elka.community.finding.application.view.View;
 
@@ -24,7 +25,8 @@ public class Controller {
 
 		try {
 			// put the starting event
-			blockingQueue.put(new Event(EventName.START));
+//			blockingQueue.put(new Event(EventName.START));
+			blockingQueue.put(new Event(EventName.DEBUG));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -79,6 +81,25 @@ public class Controller {
 				view.newGroups(model.getGraph());
 			}
 		});
+		
+		eventHandlers.put(EventName.DEBUG, new EventHandler() {
+			
+			@Override
+			public void execute() {
+				view.showWindow();
+				
+				view.getStatusBar().setAppState("loading graph...");
+				model.loadNewGraph("ten.graphml");
+				view.setGraphView(model.getGraph());
+				view.setGraphParameter(model.getGraph());
+				view.getStatusBar().setAppState("loaded: " + view.getGraphFilePath());
+				model.setAlgorithmType(AlgorithmType.LOUVAIN);
+				view.getStatusBar().setAppState("calculating...");
+				view.getStatusBar().setAppState("number of groups: " + model.getAlgorithmManager().computeSingle(model.getGraph(), 0));
+				view.newGroups(model.getGraph());
+			}
+		});
+		
 	}
 
 	/**

@@ -8,37 +8,37 @@ import pl.edu.pw.elka.community.finding.application.model.graph.structure.Node;
 
 public class Louvain {
 	
-	Transformer<Node, String> moduleMembership;
-	
-	
-	public Louvain() {
-		super();
-		moduleMembership = new Transformer<Node, String>() {
-			
-			@Override
-			public String transform(Node arg0) {
-				return arg0.getGroup();
-			}
-		};
-	}
-	
-	
-	public void calculate() {
-
-		// ustawienie ze każdy węzeł w innej grupie 
-		int groupNumber = 0;
+//	Transformer<Node, String> moduleMembership;
+//	
+//	
+//	public Louvain() {
+//		super();
+//		moduleMembership = new Transformer<Node, String>() {
+//			
+//			@Override
+//			public String transform(Node arg0) {
+//				return arg0.getGroup();
+//			}
+//		};
+//	}
+//	
+//	
+//	public void calculate() {
+//
+//		// ustawienie ze każdy węzeł w innej grupie 
+//		int groupNumber = 0;
 //		for (Node n : graph.getVertices()) {
 //			n.setGroup(String.valueOf(groupNumber++));			
 //		}
-		
+//		
 //		double modularity = Modularity.computeModularity(graph, moduleMembership);
 //		double maxModularity = Modularity.computeMaxModularity(graph, moduleMembership);
 //		double scaledModularity = Modularity.computeScaledModularity(graph, moduleMembership);
-		
+//		
 //		System.out.println("Modualrity: " + modularity);
 //		System.out.println("MaxModualrity: " + maxModularity);
 //		System.out.println("ScaledModularity: " + scaledModularity);
-		
+//		
 //		for (Node n : graph.getVertices()) {
 //			for (Node n2 : graph.getNeighbors(n)) {
 //				String oldGroup = n2.getGroup();
@@ -51,7 +51,7 @@ public class Louvain {
 //				}
 //			}
 //		}
-		
+//		
 //		for (Node n : graph.getVertices()) {
 //			for (Node n2 : graph.getNeighbors(n)) {
 //				if (!n2.getGroup().equals(n.getGroup())) {
@@ -59,12 +59,12 @@ public class Louvain {
 //				}
 //			}
 //		}
-		
-		//TODO f2
-		
-	
-		
-	}
+//		
+//		//TODO f2
+//		
+//	
+//		
+//	}
 	
 
 	

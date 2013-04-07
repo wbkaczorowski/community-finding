@@ -33,5 +33,11 @@ public enum EventName {
     /**
      * About.
      */
-    ABOUT
+    ABOUT,
+    
+    /**
+     * Custom event for easy develop and debugging.
+     */
+    DEBUG,
+
 }

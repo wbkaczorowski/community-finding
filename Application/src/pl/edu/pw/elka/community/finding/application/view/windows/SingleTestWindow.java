@@ -35,7 +35,7 @@ import pl.edu.pw.elka.community.finding.application.view.View;
  */
 @SuppressWarnings("serial")
 public class SingleTestWindow extends JDialog {
-	
+
 	/*
 	 * View components.
 	 */
@@ -50,7 +50,7 @@ public class SingleTestWindow extends JDialog {
 	 * Parameter passed to model, used by different algorithms.
 	 */
 	private int param;
-	
+
 	/**
 	 * Chosen algorithm by user to work.
 	 */
@@ -78,8 +78,10 @@ public class SingleTestWindow extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO odpalanie liczenia 
-					param = Integer.valueOf(paramValueTextField.getText());
+					// TODO odpalanie liczenia
+					if (paramValueTextField != null) {
+						param = Integer.valueOf(paramValueTextField.getText());
+					}
 					chosenAglorithm = algorithmList.getSelectedValue();
 					SingleTestWindow.this.setVisible(false);
 					view.getBlockingQueue().add(new Event(EventName.CALCULATE_SINGLE));
@@ -96,7 +98,7 @@ public class SingleTestWindow extends JDialog {
 		/*
 		 * Setting default selection
 		 */
-		algorithmList.setSelectedIndex(1);
+		algorithmList.setSelectedIndex(0);
 
 		JScrollPane jScrollPane = new JScrollPane(algorithmList);
 		listPanel = new JPanel(new BorderLayout());
@@ -130,6 +132,7 @@ public class SingleTestWindow extends JDialog {
 
 	/**
 	 * Creates different view, depending on what algorithm type is chosen from list.
+	 * 
 	 * @param algorithmType
 	 * @param view
 	 * @return
@@ -158,25 +161,25 @@ public class SingleTestWindow extends JDialog {
 			grSlider.setPaintTicks(true);
 			grSlider.setPaintLabels(true);
 			grSlider.addChangeListener(new ChangeListener() {
-				
+
 				@Override
 				public void stateChanged(ChangeEvent e) {
-		            JSlider source = (JSlider) e.getSource();
-		            paramValueTextField.setText("" + source.getValue());
+					JSlider source = (JSlider) e.getSource();
+					paramValueTextField.setText("" + source.getValue());
 				}
 			});
 			paramValueTextField.setText("" + grSlider.getValue());
-	        paramValueTextField.addKeyListener(new KeyListener(){
-	            @Override
-	            public void keyReleased(KeyEvent e) {
-	                String typed = paramValueTextField.getText();
-	                grSlider.setValue(0);
-	                if(!typed.matches("\\d+")) {
-	                    return;
-	                }
-	                int value = Integer.parseInt(typed);
-	                grSlider.setValue(value);
-	            }
+			paramValueTextField.addKeyListener(new KeyListener() {
+				@Override
+				public void keyReleased(KeyEvent e) {
+					String typed = paramValueTextField.getText();
+					grSlider.setValue(0);
+					if (!typed.matches("\\d+")) {
+						return;
+					}
+					int value = Integer.parseInt(typed);
+					grSlider.setValue(value);
+				}
 
 				@Override
 				public void keyTyped(KeyEvent e) {
@@ -185,7 +188,7 @@ public class SingleTestWindow extends JDialog {
 				@Override
 				public void keyPressed(KeyEvent e) {
 				}
-	        });
+			});
 			grPanel.add(grSlider, BorderLayout.CENTER);
 			return grPanel;
 
@@ -203,25 +206,25 @@ public class SingleTestWindow extends JDialog {
 			whSlider.setPaintTicks(true);
 			whSlider.setPaintLabels(true);
 			whSlider.addChangeListener(new ChangeListener() {
-				
+
 				@Override
 				public void stateChanged(ChangeEvent e) {
-		            JSlider source = (JSlider) e.getSource();
-		            paramValueTextField.setText("" + source.getValue());
+					JSlider source = (JSlider) e.getSource();
+					paramValueTextField.setText("" + source.getValue());
 				}
 			});
 			paramValueTextField.setText("" + whSlider.getValue());
-			paramValueTextField.addKeyListener(new KeyListener(){
-	            @Override
-	            public void keyReleased(KeyEvent e) {
-	                String typed = paramValueTextField.getText();
-	                whSlider.setValue(0);
-	                if(!typed.matches("\\d+")) {
-	                    return;
-	                }
-	                int value = Integer.parseInt(typed);
-	                whSlider.setValue(value);
-	            }
+			paramValueTextField.addKeyListener(new KeyListener() {
+				@Override
+				public void keyReleased(KeyEvent e) {
+					String typed = paramValueTextField.getText();
+					whSlider.setValue(0);
+					if (!typed.matches("\\d+")) {
+						return;
+					}
+					int value = Integer.parseInt(typed);
+					whSlider.setValue(value);
+				}
 
 				@Override
 				public void keyTyped(KeyEvent e) {
@@ -230,7 +233,7 @@ public class SingleTestWindow extends JDialog {
 				@Override
 				public void keyPressed(KeyEvent e) {
 				}
-	        });
+			});
 			whPanel.add(whSlider, BorderLayout.CENTER);
 			return whPanel;
 
@@ -250,13 +253,13 @@ public class SingleTestWindow extends JDialog {
 		}
 
 	}
-	
+
 	public int getParam() {
 		return param;
 	}
-	
+
 	public AlgorithmType getChosenAglorithm() {
 		return chosenAglorithm;
 	}
-	
+
 }

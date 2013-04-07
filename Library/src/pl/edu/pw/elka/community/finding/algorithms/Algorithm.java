@@ -17,12 +17,6 @@ public interface Algorithm<V, E> {
 	 * Get unique set of found groups, each set represent one group.
 	 * @return 
 	 */
-	Set<Set<V>> getCommunities();
-	
-	/**
-	 * Set graph for community finding.
-	 * @param graph
-	 */
-	void setGraph(Graph<V, E> graph);
+	Set<Set<V>> getCommunities(Graph<V, E> graph);
 	
 }
