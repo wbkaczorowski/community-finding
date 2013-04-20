@@ -89,7 +89,7 @@ public class Controller {
 				view.showWindow();
 				
 				view.getStatusBar().setAppState("loading graph...");
-				model.loadNewGraph("ten.graphml");
+				model.loadNewGraph("sm.graphml");
 				view.setGraphView(model.getGraph());
 				view.setGraphParameter(model.getGraph());
 				view.getStatusBar().setAppState("loaded: " + view.getGraphFilePath());
