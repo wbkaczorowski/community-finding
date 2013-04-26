@@ -6,12 +6,28 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections15.Transformer;
+
 import edu.uci.ics.jung.graph.Graph;
 
 public class Louvain<V, E> implements Algorithm<V, E> {
 
 	private HashSet<Set<V>> groups;
+	private Transformer<V, Set<V>> moduleMembership;
+	private double firstModularity;
 
+	
+	
+	public Louvain() {
+		moduleMembership = new Transformer<V, Set<V>>() {
+			
+			@Override
+			public Set<V> transform(V arg0) {
+				return findVertexGroup(arg0);
+			}
+		};
+	}
+	
 	@Override
 	public Set<Set<V>> getCommunities(Graph<V, E> graph) {
 		groups = new HashSet<>();
@@ -31,16 +47,24 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 		 * Phase I. Connecting nodes, in initials modules.
 		 */
 		double maxDQ = 0;
+		firstModularity = Modularity.computeScaledModularity(graph, moduleMembership);
 		for (V i : graph.getVertices()) {
 			maxDQ = 0;
-			for (V n : graph.getNeighbors(i)) {
+			for (V neighbor : graph.getNeighbors(i)) {
+
 				HashSet<V> vertexGroup = (HashSet<V>) findVertexGroup(i);
+				double Q = calcualteModualarity(graph);
 				System.out.println("Usuwam: " + i + " z grupy " + findVertexGroup(i));
 				findVertexGroup(i).remove(i);
-				System.out.println("Dodaje do grupy: " + findVertexGroup(n));
-				findVertexGroup(n).add(i);
-				double dQ = calcualteDeltaModularity(i, findVertexGroup(n), graph);
-				System.out.println(dQ);
+				System.out.println("Dodaje do grupy: " + findVertexGroup(neighbor));
+				findVertexGroup(neighbor).add(i);
+				//TODO dlaczego moje nie działa?
+//				double dQ = calcualteDeltaModularity(i, findVertexGroup(neighbor), graph);
+				
+				double dQ = calcualteModualarity(graph) - Q;
+				System.out.println("dQ: " + dQ);
+				
+
 				// set previous graph and groups topology if modularity difference is less than before modification
 				if (dQ < maxDQ) { // no gain of modularity
 					System.out.println(" Powrót do poprzedniego stanu");
@@ -78,7 +102,7 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 
 	private double calcualteDeltaModularity(V i, Set<V> groupC, Graph<V, E> graph) {
 		double dQ = 0;
-		double m = graph.getEdgeCount();
+		double m2 = 2 * graph.getEdgeCount();
 		double sumIn = 0;
 		double sumTot = 0;
 		double ki = 0;
@@ -104,11 +128,17 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 
 		ki = graph.degree(i);
 
-		System.out.println(i + " sumIn:" + sumIn + " sumTot:" + sumTot + " kiIn:" + kiIn + " m:" + m);
+		System.out.println(i + " sumIn:" + sumIn + " sumTot:" + sumTot + " kiIn:" + kiIn + " m:" + m2/2);
 
-		dQ = ((sumIn + kiIn) / (2 * m) - ((sumTot + ki) / (2 * m)) * ((sumTot + ki) / (2 * m)))
-				- ((sumIn / (2 * m)) - (sumTot / (2 * m)) * (sumTot / (2 * m)) - (ki / (2 * m)) * (ki / (2 * m)));
+		dQ = ((sumIn + kiIn) / m2 - ((sumTot + ki) / m2) * ((sumTot + ki) / m2)) - ((sumIn / m2) - (sumTot / m2) * (sumTot / m2) - (ki / m2) * (ki / m2));
+		
+		System.out.println("		dQ: "+ dQ + " gotowe: " + (Modularity.computeScaledModularity(graph, moduleMembership) - firstModularity));
+//		return Modularity.computeScaledModularity(graph, moduleMembership) - firstModularity;
 		return dQ;
+	}
+	
+	private double calcualteModualarity(Graph<V, E> graph) {
+		return Modularity.computeScaledModularity(graph, moduleMembership);
 	}
 
 	private Set<V> findVertexGroup(V vertex) {
