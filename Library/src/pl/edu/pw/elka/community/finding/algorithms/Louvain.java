@@ -1,24 +1,30 @@
 package pl.edu.pw.elka.community.finding.algorithms;
 
 import java.util.ArrayList;
-
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.collections15.Transformer;
-import pl.edu.pw.elka.community.finding.algorithms.Modularity;
 
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.UndirectedSparseGraph;
 
+/**
+ * Method for finding communities in graph structures. 
+ * Based on article Newman, M.E.J. & Girvan, M. Finding and evaluating community structure in networks. Physical Review E 69, 26113(2004).
+ * 
+ * @author Wojciech Kaczorowski
+ * 
+ * @param <V> vertex 
+ * @param <E> edge
+ */
 public class Louvain<V, E> implements Algorithm<V, E> {
 
 	/**
-	 * Communities find by algorithm.
+	 * Communities found by algorithm.
 	 */
 	private HashSet<Set<V>> communities;
 
@@ -29,12 +35,12 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 
 	private Transformer<V, Set<V>> moduleMembership;
 
-	// global parameters for calculation
+	// global parameters for calculation and experiments
 	/**
 	 * Doubled number of all edges in graph, should be: Doubled the sum of the weights of all the links in the network.
 	 */
 	private double m2;
-	
+
 	/**
 	 * Number of made full two-phase iterations.
 	 */
@@ -54,30 +60,29 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 	public Set<Set<V>> getCommunities(Graph<V, E> graph) {
 		Graph<V, E> loopGraph = graph;
 		edgesValues = new HashMap<E, Double>();
+		totalIterations = 0;
 
 		// default - no edges values in the graph
 		for (E e : loopGraph.getEdges()) {
 			edgesValues.put(e, new Double(1));
 		}
 
-		totalIterations = 0;
-
 		while (true) {
 			totalIterations++;
 			if (!phaseOne(loopGraph)) {
-//				System.out.println("Warunek stopu osiągnięty");
+				// System.out.println("Warunek stopu osiągnięty");
 				// System.out.println(loopGraph.getVertices());
 				break;
 			}
 			loopGraph = phaseTwo(loopGraph);
 
-//			System.out.println("Nowy graf");
-//			for (V v : loopGraph.getVertices()) {
-//				System.out.println("o " + v);
-//			}
-//			for (E e : loopGraph.getEdges()) {
-//				System.out.println("---- " + e + " " + edgesValues.get(e) + " " + loopGraph.getEndpoints(e));
-//			}
+			// System.out.println("Nowy graf");
+			// for (V v : loopGraph.getVertices()) {
+			// System.out.println("o " + v);
+			// }
+			// for (E e : loopGraph.getEdges()) {
+			// System.out.println("---- " + e + " " + edgesValues.get(e) + " " + loopGraph.getEndpoints(e));
+			// }
 		}
 
 		communities = new HashSet<>();
@@ -85,6 +90,7 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 			communities.add(separateElements((Set<V>) g));
 		}
 
+		System.out.println("Total two-phase iterations:  " + totalIterations);
 		return communities;
 	}
 
@@ -120,7 +126,7 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 			// looking for best change
 			for (Set<V> neighbourGroup : findNeighborGroups(i, graph)) {
 				double dQ = calcualteDeltaModularity(i, neighbourGroup, graph);
-//				System.out.println("dQ:" + dQ + " " + i + " --> " + neighbourGroup);
+				// System.out.println("dQ:" + dQ + " " + i + " --> " + neighbourGroup);
 				if (dQ > maxDQ) {
 					maxDQ = dQ;
 					newGroup = neighbourGroup;
@@ -129,13 +135,13 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 			}
 
 			if (newGroup != null) {
-//				double mQ = calcualteModualarity(graph);
-//				System.out.println("Usuwam: " + i + " z grupy " + findVertexGroup(i));
+				// double mQ = calcualteModualarity(graph);
+				// System.out.println("Usuwam: " + i + " z grupy " + findVertexGroup(i));
 				findVertexGroup(i).remove(i);
-//				System.out.println("Dodaje do grupy: " + newGroup);
+				// System.out.println("Dodaje do grupy: " + newGroup);
 				newGroup.add(i);
-//				double mdQ = calcualteModualarity(graph) - mQ;
-//				System.out.println("gotowiec: " + mdQ + " moje po: " + calcualteDeltaModularity(i, newGroup, graph));
+				// double mdQ = calcualteModualarity(graph) - mQ;
+				// System.out.println("gotowiec: " + mdQ + " moje po: " + calcualteDeltaModularity(i, newGroup, graph));
 			}
 		}
 
@@ -152,7 +158,6 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 		// findVertexGroup(i).remove(i);
 		// System.out.println("Dodaje do grupy: " + findVertexGroup(neighbor));
 		// findVertexGroup(neighbor).add(i);
-		// TODO dlaczego moje nie działa?
 		// double dQ = roundDouble(calcualteDeltaModularity(i, findVertexGroup(neighbor), graph), 6);
 		// double dQ = calcualteDeltaModularity(i, findVertexGroup(neighbor), graph);
 		// System.out.println(calcualteModualarity(graph));
@@ -277,6 +282,13 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 		return nodes;
 	}
 
+	/**
+	 * Method for calculating the difference in modularity as proposed in article.
+	 * @param i vertex for which one is checking modualrity gain
+	 * @param groupC to which group we move vertex i
+	 * @param graph
+	 * @return
+	 */
 	private double calcualteDeltaModularity(V i, Set<V> groupC, Graph<V, E> graph) {
 		double dQfull = 0;
 		double dQshort = 0;
@@ -285,15 +297,14 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 		double ki = 0;
 		double kiIn = 0;
 
-		// TODO zbieranie wartości edge
 		for (V v1 : groupC) {
-//			for (V v2 : groupC) {
-//				E e = graph.findEdge(v1, v2);
-//				if (e != null) {
-//					// System.out.println("		ba bum:" + edgesValues.get(e));
-//					sumIn += 0.5 * edgesValues.get(e);
-//				}
-//			}
+			// for (V v2 : groupC) {
+			// E e = graph.findEdge(v1, v2);
+			// if (e != null) {
+			// // System.out.println("		ba bum:" + edgesValues.get(e));
+			// sumIn += 0.5 * edgesValues.get(e);
+			// }
+			// }
 
 			for (V v3 : graph.getNeighbors(v1)) {
 				E e = graph.findEdge(v1, v3);
@@ -313,7 +324,7 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 			ki += edgesValues.get(e);
 		}
 
-//		System.out.println(i + " sumIn:" + sumIn + " sumTot:" + sumTot + " ki:" + ki + " kiIn:" + kiIn + " m:" + m2 / 2);
+		// System.out.println(i + " sumIn:" + sumIn + " sumTot:" + sumTot + " ki:" + ki + " kiIn:" + kiIn + " m:" + m2 / 2);
 
 		// dQfull = ((sumIn + kiIn) / m2 - ((sumTot + ki) / m2) * ((sumTot + ki) / m2)) - ((sumIn / m2) - (sumTot / m2) * (sumTot / m2) - (ki / m2) * (ki /
 		// m2));
@@ -327,6 +338,7 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 		return Modularity.computeScaledModularity(graph, moduleMembership);
 		// return Modularity.computeModularity(graph, moduleMembership);
 	}
+
 
 	private Set<V> findVertexGroup(V vertex) {
 		for (Set<V> m : communities) {
@@ -349,14 +361,11 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 		return edges;
 	}
 
-	private double roundDouble(double number, int decimalPlace) {
-		int dec = 1;
-		for (int i = 0; i < decimalPlace; ++i) {
-			dec *= 10;
-		}
-		return (double) Math.round(number * dec) / dec;
-	}
-
+	/**
+	 * Separating elements to unification of returning groups.
+	 * @param s
+	 * @return
+	 */
 	private Set<V> separateElements(Set<V> s) {
 		Set<V> set = new HashSet<>();
 		for (V v : s) {
@@ -368,7 +377,10 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 		}
 		return set;
 	}
-	
+
+	/**
+	 * @return How mony iterations was made.
+	 */
 	public int getTotalIterations() {
 		return totalIterations;
 	}
