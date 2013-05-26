@@ -53,7 +53,7 @@ public class Node {
 
 	@Override
 	public String toString() {
-		return "Node [uid=" + uid + ", name=" + name + ", group=" + group + "]";
+		return "Node (uid=" + uid + ", name=" + name + ", group=" + group + ")";
 	}
 
 }

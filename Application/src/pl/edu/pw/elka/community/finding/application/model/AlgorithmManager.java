@@ -68,11 +68,14 @@ public class AlgorithmManager {
 		Louvain<Node, Edge> algorithm = new Louvain<Node, Edge>();
 		int groupCounter = 0;
 		for (Set<Node> set : algorithm.getCommunities(graph)) {
+//			System.out.println(set);
+//			System.out.println(set.getClass());
 			for (Node n : set) {
 				n.setGroup(String.valueOf(groupCounter));
 			}
 			++groupCounter;
 		}
+//		System.out.println("zzz...");
 		return groupCounter;
 
 	}
