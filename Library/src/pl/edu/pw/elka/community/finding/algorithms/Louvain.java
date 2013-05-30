@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.collections15.Transformer;
-
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.UndirectedSparseGraph;
 
@@ -33,7 +31,6 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 	 */
 	private Map<E, Double> edgesValues;
 
-	private Transformer<V, Set<V>> moduleMembership;
 
 	// global parameters for calculation and experiments
 	/**
@@ -47,13 +44,7 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 	private int totalIterations;
 
 	public Louvain() {
-		moduleMembership = new Transformer<V, Set<V>>() {
-
-			@Override
-			public Set<V> transform(V arg0) {
-				return findVertexGroup(arg0);
-			}
-		};
+		
 	}
 
 	@Override
@@ -68,21 +59,12 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 		}
 
 		while (true) {
-			totalIterations++;
 			if (!phaseOne(loopGraph)) {
-				// System.out.println("Warunek stopu osiągnięty");
-				// System.out.println(loopGraph.getVertices());
 				break;
 			}
+			
 			loopGraph = phaseTwo(loopGraph);
-
-			// System.out.println("Nowy graf");
-			// for (V v : loopGraph.getVertices()) {
-			// System.out.println("o " + v);
-			// }
-			// for (E e : loopGraph.getEdges()) {
-			// System.out.println("---- " + e + " " + edgesValues.get(e) + " " + loopGraph.getEndpoints(e));
-			// }
+			totalIterations++;
 		}
 
 		communities = new HashSet<>();
@@ -126,7 +108,6 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 			// looking for best change
 			for (Set<V> neighbourGroup : findNeighborGroups(i, graph)) {
 				double dQ = calcualteDeltaModularity(i, neighbourGroup, graph);
-				// System.out.println("dQ:" + dQ + " " + i + " --> " + neighbourGroup);
 				if (dQ > maxDQ) {
 					maxDQ = dQ;
 					newGroup = neighbourGroup;
@@ -135,56 +116,11 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 			}
 
 			if (newGroup != null) {
-				// double mQ = calcualteModualarity(graph);
-				// System.out.println("Usuwam: " + i + " z grupy " + findVertexGroup(i));
 				findVertexGroup(i).remove(i);
-				// System.out.println("Dodaje do grupy: " + newGroup);
 				newGroup.add(i);
-				// double mdQ = calcualteModualarity(graph) - mQ;
-				// System.out.println("gotowiec: " + mdQ + " moje po: " + calcualteDeltaModularity(i, newGroup, graph));
 			}
 		}
 
-		// for (V i : graph.getVertices()) {
-		// maxDQ = 0;
-		// maxDQ = calcualteModualarity(graph);
-		// for (V neighbor : graph.getNeighbors(i)) {
-		// HashSet<V> originalGroup = (HashSet<V>) findVertexGroup(i);
-		//
-		// double Q = calcualteModualarity(graph);
-		// System.out.println(Q);
-		// double dQ2 = calcualteDeltaModularity(i, findVertexGroup(i), graph);
-		// System.out.println("Usuwam: " + i + " z grupy " + findVertexGroup(i));
-		// findVertexGroup(i).remove(i);
-		// System.out.println("Dodaje do grupy: " + findVertexGroup(neighbor));
-		// findVertexGroup(neighbor).add(i);
-		// double dQ = roundDouble(calcualteDeltaModularity(i, findVertexGroup(neighbor), graph), 6);
-		// double dQ = calcualteDeltaModularity(i, findVertexGroup(neighbor), graph);
-		// System.out.println(calcualteModualarity(graph));
-		// double dQ = roundDouble((calcualteModualarity(graph) - Q), 6);
-		// double dQ1 = (calcualteModualarity(graph) - Q);
-		// double dQ = roundDouble(calcualteModualarity(graph), 6);
-		// System.out.println("dQ: " + dQ + "  dQ1:" + dQ1 + " dQ2:" + dQ2);
-
-		/*
-		 * Set previous graph and groups topology if modularity difference is less than before modification.
-		 */
-		// if (dQ <= maxDQ) { // no gain of modularity
-		// System.out.println(" Powrót do poprzedniego stanu");
-		// findVertexGroup(i).remove(i);
-		// originalGroup.add(i);
-		// } else { // there is a gain of modularity
-		// System.out.println(" Zmiana zostaje");
-		// maxDQ = dQ;
-		// gainOccurred = true;
-		// }
-		// System.out.println("	Mamy grupy:");
-		// for (Set<V> g : tmpGroups) {
-		// System.out.println("		" + g);
-		// }
-		// System.out.println("maxDQ: " + maxDQ);
-		// }
-		// }
 
 		return gainOccurred;
 	}
@@ -290,21 +226,12 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 	 * @return
 	 */
 	private double calcualteDeltaModularity(V i, Set<V> groupC, Graph<V, E> graph) {
-		double dQfull = 0;
 		double dQshort = 0;
-		double sumIn = 0;
 		double sumTot = 0;
 		double ki = 0;
 		double kiIn = 0;
 
 		for (V v1 : groupC) {
-			// for (V v2 : groupC) {
-			// E e = graph.findEdge(v1, v2);
-			// if (e != null) {
-			// // System.out.println("		ba bum:" + edgesValues.get(e));
-			// sumIn += 0.5 * edgesValues.get(e);
-			// }
-			// }
 
 			for (V v3 : graph.getNeighbors(v1)) {
 				E e = graph.findEdge(v1, v3);
@@ -323,20 +250,8 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 		for (E e : graph.getIncidentEdges(i)) {
 			ki += edgesValues.get(e);
 		}
-
-		// System.out.println(i + " sumIn:" + sumIn + " sumTot:" + sumTot + " ki:" + ki + " kiIn:" + kiIn + " m:" + m2 / 2);
-
-		// dQfull = ((sumIn + kiIn) / m2 - ((sumTot + ki) / m2) * ((sumTot + ki) / m2)) - ((sumIn / m2) - (sumTot / m2) * (sumTot / m2) - (ki / m2) * (ki /
-		// m2));
 		dQshort = (kiIn / m2) - (2 * sumTot * ki / (m2 * m2));
-		// dQshort = (kiIn / m2) - (sumTot * sumTot / (m2 * m2));
-		// System.out.println("		dQ: " + dQfull + " dQ2:" + dQshort);
 		return dQshort;
-	}
-
-	private double calcualteModualarity(Graph<V, E> graph) {
-		return Modularity.computeScaledModularity(graph, moduleMembership);
-		// return Modularity.computeModularity(graph, moduleMembership);
 	}
 
 
