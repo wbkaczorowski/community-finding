@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.collections15.BidiMap;
 import org.xml.sax.SAXException;
 
 import pl.edu.pw.elka.community.finding.application.model.graph.EdgeFactory;

@@ -237,9 +237,16 @@ public class SingleTestWindow extends JDialog {
 			whPanel.add(whSlider, BorderLayout.CENTER);
 			return whPanel;
 
-		case CLAUSET_NEWMAN_MOORE:
-
-			return new JPanel();
+		case FAST_NEWMAM:
+			JPanel fastNewmanPanel = new JPanel();
+			JLabel fastNewmanLabel = new JLabel("none");
+			fastNewmanLabel.setForeground(Color.GRAY);
+			fastNewmanPanel.add(fastNewmanLabel);
+			return fastNewmanPanel;
+			
+//		case CLAUSET_NEWMAN_MOORE:
+//
+//			return new JPanel();
 
 		case ALL:
 			JPanel defaultPanel = new JPanel();

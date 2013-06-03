@@ -9,7 +9,8 @@ public enum AlgorithmType {
 	LOUVAIN("Louvain"),
 	GRIVAN_NEWMAN("Grivan-Newman"),
 	WU_HUBERMAN("Wu-Huberman"),
-	CLAUSET_NEWMAN_MOORE("Clauset-Newman-Moore"),
+//	CLAUSET_NEWMAN_MOORE("Clauset-Newman-Moore"),
+	FAST_NEWMAM("Fast Newman Algorithm"),
 	ALL("all"),
 	;
 	

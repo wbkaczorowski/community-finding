@@ -2,6 +2,8 @@ package pl.edu.pw.elka.community.finding.application.model;
 
 import java.util.Set;
 
+import pl.edu.pw.elka.community.finding.algorithms.ClausetNewmanMoore;
+import pl.edu.pw.elka.community.finding.algorithms.FastNewman;
 import pl.edu.pw.elka.community.finding.algorithms.Louvain;
 import pl.edu.pw.elka.community.finding.application.model.graph.structure.Edge;
 import pl.edu.pw.elka.community.finding.application.model.graph.structure.Node;
@@ -50,8 +52,12 @@ public class AlgorithmManager {
 			numberGroups = wuHuberman(graph, param);
 			break;
 
-		case CLAUSET_NEWMAN_MOORE:
-			numberGroups = clausetNewmanMoore();
+//		case CLAUSET_NEWMAN_MOORE:
+//			numberGroups = clausetNewmanMoore(graph);
+//			break;
+			
+		case FAST_NEWMAM:
+			numberGroups = fastNewman(graph);
 			break;
 
 		default:
@@ -64,18 +70,16 @@ public class AlgorithmManager {
 		return numberGroups;
 	}
 
+
 	private int louvain(Graph<Node, Edge> graph) {
 		Louvain<Node, Edge> algorithm = new Louvain<Node, Edge>();
 		int groupCounter = 0;
 		for (Set<Node> set : algorithm.getCommunities(graph)) {
-//			System.out.println(set);
-//			System.out.println(set.getClass());
 			for (Node n : set) {
 				n.setGroup(String.valueOf(groupCounter));
 			}
 			++groupCounter;
 		}
-//		System.out.println("zzz...");
 		return groupCounter;
 
 	}
@@ -103,10 +107,29 @@ public class AlgorithmManager {
 		}
 		return groupCounter;
 	}
+	
+	private int fastNewman(Graph<Node, Edge> graph) {
+		FastNewman<Node, Edge> algorithm = new FastNewman<Node, Edge>();
+		int groupCounter = 0;
+		for (Set<Node> set : algorithm.getCommunities(graph)) {
+			for (Node n : set) {
+				n.setGroup(String.valueOf(groupCounter));
+			}
+			++groupCounter;
+		}
+		return groupCounter;
+	}
 
-	private int clausetNewmanMoore() {
-		return 0;
-
+	private int clausetNewmanMoore(Graph<Node, Edge> graph) {
+		ClausetNewmanMoore<Node, Edge> algorithm = new ClausetNewmanMoore<Node, Edge>();
+		int groupCounter = 0;
+		for (Set<Node> set : algorithm.getCommunities(graph)) {
+			for (Node n : set) {
+				n.setGroup(String.valueOf(groupCounter));
+			}
+			++groupCounter;
+		}
+		return groupCounter;
 	}
 
 	public AlgorithmType getAlgorithmType() {

@@ -93,7 +93,7 @@ public class Controller {
 				view.setGraphView(model.getGraph());
 				view.setGraphParameter(model.getGraph());
 				view.getStatusBar().setAppState("loaded: " + view.getGraphFilePath());
-				model.setAlgorithmType(AlgorithmType.LOUVAIN);
+				model.setAlgorithmType(AlgorithmType.FAST_NEWMAM);
 				view.getStatusBar().setAppState("calculating...");
 				view.getStatusBar().setAppState("number of groups: " + model.getAlgorithmManager().computeSingle(model.getGraph(), 0));
 				view.newGroups(model.getGraph());
