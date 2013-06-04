@@ -47,10 +47,11 @@ public class FastNewman<V, E> implements Algorithm<V, E> {
 		/*
 		 * Calculate possible agglomerations.
 		 */
-		while (adjacencyGroup.rows() > 1) {
+		while (nodesIDsMap.size() > 1) {
 			System.out.println("w macierzy:" + adjacencyGroup.rows() + " w mapie:" + nodesIDsMap.size());
-
+			System.out.println(nodesIDsMap);
 			System.out.println(adjacencyGroup);
+			System.out.println("Q:" + Q + " Q2:" + calculateModularity());
 
 			double bestDQ = -Double.MAX_VALUE;
 			int[] groupsToMerge = null;
@@ -97,20 +98,22 @@ public class FastNewman<V, E> implements Algorithm<V, E> {
 	private double delataQ(int i, int j) {
 		double eii = adjacencyGroup.getQuick(i, i) / m;
 		double ejj = adjacencyGroup.getQuick(j, j) / m;
-		double ai = adjacencyGroup.viewRow(i).zSum() / m;
-		double aj = adjacencyGroup.viewRow(j).zSum() / m;
-//		 double ai = 0;
-//		 double aj = 0;
-//		 for (int k = 0; k < adjacencyGroup.viewRow(i).size(); k++) {
-//		 if (k != i) {
-//		 ai += adjacencyGroup.viewRow(i).get(k);
-//		 }
-//		 if (k != j) {
-//		 aj += adjacencyGroup.viewRow(j).get(k);
-//		 }
-//		 }
-//		 ai = ai / m + eii;
-//		 aj = aj / m + ejj;
+		System.out.println(adjacencyGroup.viewRow(i));
+		double ai = adjacencyGroup.viewRow(i).zSum() / m - eii;
+		System.out.println(adjacencyGroup.viewRow(j));
+		double aj = adjacencyGroup.viewRow(j).zSum() / m - ejj;
+		// double ai = 0;
+		// double aj = 0;
+		// for (int k = 0; k < adjacencyGroup.viewColumn(i).size(); k++) {
+		// if (k != i) {
+		// ai += adjacencyGroup.viewColumn(i).get(k);
+		// }
+		// if (k != j) {
+		// aj += adjacencyGroup.viewColumn(j).get(k);
+		// }
+		// }
+		// ai = ai / m;
+		// aj = aj / m;
 
 		double eij = adjacencyGroup.getQuick(i, j) / m;
 		System.out.println("[" + i + ", " + j + "] eii:" + eii + " ejj:" + ejj + " eij:" + eij + " ai:" + ai + " aj:" + aj + " dQ:" + 2 * (eij - ai * aj));
@@ -127,6 +130,8 @@ public class FastNewman<V, E> implements Algorithm<V, E> {
 			j = ci;
 			i = cj;
 		}
+
+		System.out.println("i:" + i + " j:" + j);
 
 		/*
 		 * Merging the bidiMap.
@@ -147,18 +152,29 @@ public class FastNewman<V, E> implements Algorithm<V, E> {
 		/*
 		 * Merging the group adjacency matrix.
 		 */
-		// System.out.println("i:" + i + " j:" + j);
 
 		// updating values inside matrix
+		double newiiValue = adjacencyGroup.getQuick(i, i) + adjacencyGroup.getQuick(j, j) + adjacencyGroup.getQuick(i, j);
 		for (int row = 0; row < adjacencyGroup.rows(); row++) {
-			adjacencyGroup.setQuick(row, i, adjacencyGroup.getQuick(row, j) + adjacencyGroup.getQuick(row, i));
-
+			if (row != i) {
+				adjacencyGroup.setQuick(row, i, adjacencyGroup.getQuick(row, j) + adjacencyGroup.getQuick(row, i));
+			}
 		}
 		for (int col = 0; col < adjacencyGroup.columns(); col++) {
 			if (col != i) {
 				adjacencyGroup.setQuick(i, col, adjacencyGroup.getQuick(j, col) + adjacencyGroup.getQuick(i, col));
 			}
 		}
+		adjacencyGroup.setQuick(i, i, newiiValue);
+
+		// put zeros where unused group
+		// for (int row = 0; row < adjacencyGroup.rows(); row++) {
+		// adjacencyGroup.setQuick(row, j, 0);
+		// }
+		//
+		// for (int col = 0; col < adjacencyGroup.columns(); col++) {
+		// adjacencyGroup.setQuick(j, col, 0);
+		// }
 
 		// remove not used columns & rows
 		int size = adjacencyGroup.rows() - 1;
