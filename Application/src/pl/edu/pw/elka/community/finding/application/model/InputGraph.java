@@ -2,10 +2,10 @@ package pl.edu.pw.elka.community.finding.application.model;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.collections15.BidiMap;
 import org.xml.sax.SAXException;
 
 import pl.edu.pw.elka.community.finding.application.model.graph.EdgeFactory;
@@ -29,24 +29,25 @@ public class InputGraph {
 	private Graph<Node, Edge> graph;
 
 	public InputGraph(String filename) throws ParserConfigurationException, SAXException, IOException {
-		this.graphMLReader = new GraphMLReader<Graph<Node, Edge>, Node, Edge>(new NodeFactory(), new EdgeFactory());
+		graphMLReader = new GraphMLReader<Graph<Node, Edge>, Node, Edge>(new NodeFactory(), new EdgeFactory());
 
-		// undirected graph meets the case of facebook data
-		this.graph = new UndirectedSparseGraph<Node, Edge>();
+		graph = new UndirectedSparseGraph<Node, Edge>();
 		graphMLReader.load(filename, graph);
 
 		Map<String, GraphMLMetadata<Node>> nodeMetadata = graphMLReader.getVertexMetadata();
 
+		System.out.println(nodeMetadata.keySet());
+
 		// setting data for nodes
-		if (nodeMetadata.keySet().contains("uid")) {
-			for (Node n : graph.getVertices()) {
-				// TODO change hard-coded strings
-				n.setUid(nodeMetadata.get("uid").transformer.transform(n));
-				n.setName(nodeMetadata.get("name").transformer.transform(n));
-				// by default, at beginning all belongs to the same group
-				n.setGroup("0");
-				// System.out.println(n.toString());
+		Set<String> keys = nodeMetadata.keySet();
+		for (Node n : graph.getVertices()) {
+			for (String key : keys) {
+				if (!nodeMetadata.get(key).transformer.transform(n).equals("")) {
+					n.getData().put(key, nodeMetadata.get(key).transformer.transform(n));
+				}
 			}
+			// by default, at beginning all belongs to the same group
+			n.setGroup("0");
 		}
 
 	}

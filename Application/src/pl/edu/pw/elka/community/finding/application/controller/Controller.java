@@ -57,6 +57,14 @@ public class Controller {
 				}
 			}
 		});
+		
+		eventHandlers.put(EventName.REFRESH_VIEW, new EventHandler() {
+			@Override
+			public void execute() {
+				view.setGraphView(model.getGraph());
+				view.setGraphParameter(model.getGraph());
+			}
+		});
 
 		eventHandlers.put(EventName.OPEN_DIRECTORY, new EventHandler() {
 

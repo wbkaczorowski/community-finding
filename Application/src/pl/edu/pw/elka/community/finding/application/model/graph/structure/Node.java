@@ -1,22 +1,19 @@
 package pl.edu.pw.elka.community.finding.application.model.graph.structure;
 
+import java.util.Properties;
+
 /**
- * Node of graph. In model of network correspond to facebook user.
+ * Node of graph.
  * 
  * @author Wojciech Kaczorowski
  * 
  */
 public class Node {
-
+	
 	/**
-	 * Facebook unique user id.
+	 * Data for easy identification of node.
 	 */
-	private String uid;
-
-	/**
-	 * Name of user.
-	 */
-	private String name;
+	private Properties data;
 
 	/**
 	 * Id of group.
@@ -24,25 +21,17 @@ public class Node {
 	private String group;
 
 	public Node() {
-
+		data = new Properties();
 	}
 
-	public String getUid() {
-		return uid;
+	public Properties getData() {
+		return data;
 	}
 
-	public void setUid(String uid) {
-		this.uid = uid;
+	public void setData(Properties data) {
+		this.data = data;
 	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
+	
 	public String getGroup() {
 		return group;
 	}
@@ -53,7 +42,8 @@ public class Node {
 
 	@Override
 	public String toString() {
-		return "Node (uid=" + uid + ", name=" + name + ", group=" + group + ")";
+		return "Node [" + data + ", group=" + group + "]";
 	}
 
+	
 }

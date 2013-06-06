@@ -125,6 +125,11 @@ public class View {
 	public ControlPanel getControlPanel() {
 		return controlPanel;
 	}
+	
+	public GraphView getGraphView() {
+		return graphView;
+	}
+
 
 	/**
 	 * Listener for option "Quit".

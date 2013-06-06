@@ -1,7 +1,6 @@
 package pl.edu.pw.elka.community.finding.application.view;
 
 import java.awt.Color;
-import java.awt.Dimension;
 
 import pl.edu.pw.elka.community.finding.application.model.graph.structure.Edge;
 import pl.edu.pw.elka.community.finding.application.model.graph.structure.Node;
@@ -25,20 +24,25 @@ public class GraphView {
 	private Layout<Node, Edge> layout;
 	private VisualizationViewer<Node, Edge> visualizationViewer;
 	private DefaultModalGraphMouse<Object, Object> graphMouse;
+	private Graph<Node, Edge> graph;
 
-	public GraphView(Graph<Node, Edge> graph) {
+	public GraphView(Graph<Node, Edge> g) {
+		graph = g;
 
+		init();
+	}
+
+	public void init() {
 		layout = new FRLayout<Node, Edge>(graph);
-//		layout.setSize(new Dimension(Constans.WINDOW_WIDTH, Constans.WINDOW_HEIGHT));
-		
+		// layout.setSize(new Dimension(Constans.WINDOW_WIDTH, Constans.WINDOW_HEIGHT));
+
 		visualizationViewer = new VisualizationViewer<Node, Edge>(layout);
 		visualizationViewer.setBackground(Color.WHITE);
-		
+
 		/*
 		 * nodes labels
 		 */
-		 visualizationViewer.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<Node>());
-
+		visualizationViewer.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
 		/*
 		 * edges labels
 		 */
@@ -60,7 +64,7 @@ public class GraphView {
 		graphMouse = new DefaultModalGraphMouse<Object, Object>();
 		graphMouse.setMode(ModalGraphMouse.Mode.TRANSFORMING);
 		visualizationViewer.setGraphMouse(graphMouse);
-
+		visualizationViewer.updateUI();
 	}
 
 	/**

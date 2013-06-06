@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections15.Transformer;
+
 import cern.colt.matrix.impl.SparseDoubleMatrix2D;
 import edu.uci.ics.jung.algorithms.matrix.GraphMatrixOperations;
 import edu.uci.ics.jung.graph.Graph;
@@ -21,10 +23,27 @@ public class FastNewman<V, E> implements Algorithm<V, E> {
 
 	private int m;
 
+	private Transformer<V, Set<V>> moduleMembership;
+
 	/**
 	 * Global value of modularity.
 	 */
 	private double Q = 0;
+
+	public FastNewman() {
+		moduleMembership = new Transformer<V, Set<V>>() {
+
+			@Override
+			public Set<V> transform(V arg0) {
+				for (Set<V> m : nodesIDsMap.values()) {
+					if (m.contains(arg0)) {
+						return m;
+					}
+				}
+				return null;
+			}
+		};
+	}
 
 	@Override
 	public Set<Set<V>> getCommunities(Graph<V, E> graph) {
@@ -59,9 +78,8 @@ public class FastNewman<V, E> implements Algorithm<V, E> {
 			for (int row = 0; row < id; row++) {
 				for (int column = row + 1; column < id; column++) {
 					// check if two groups are connected by edge
-					if (adjacencyGroup.get(row, column) != 0) {
+					if (adjacencyGroup.get(row, column) != 0 /* && nodesIDsMap.containsKey(row) && nodesIDsMap.containsKey(column) */) {
 						double dQ = delataQ(row, column);
-						// System.out.println("badamy: [" + row + ", " + column + "] dQ: " + dQ);
 						if (dQ > bestDQ) {
 							// System.out.println("[" + row + ", " + column + "] dQ: " + dQ);
 							bestDQ = dQ;
@@ -74,7 +92,6 @@ public class FastNewman<V, E> implements Algorithm<V, E> {
 				mergeGroups(groupsToMerge[0], groupsToMerge[1]);
 				addDendrogramLevel(bestDQ);
 			}
-			System.out.println("Q:" + Q);
 		}
 
 		/*
@@ -99,9 +116,9 @@ public class FastNewman<V, E> implements Algorithm<V, E> {
 		double eii = adjacencyGroup.getQuick(i, i) / m;
 		double ejj = adjacencyGroup.getQuick(j, j) / m;
 		System.out.println(adjacencyGroup.viewRow(i));
-		double ai = adjacencyGroup.viewRow(i).zSum() / m - eii;
+		double ai = adjacencyGroup.viewRow(i).zSum() / m;
 		System.out.println(adjacencyGroup.viewRow(j));
-		double aj = adjacencyGroup.viewRow(j).zSum() / m - ejj;
+		double aj = adjacencyGroup.viewRow(j).zSum() / m;
 		// double ai = 0;
 		// double aj = 0;
 		// for (int k = 0; k < adjacencyGroup.viewColumn(i).size(); k++) {
@@ -134,7 +151,7 @@ public class FastNewman<V, E> implements Algorithm<V, E> {
 		System.out.println("i:" + i + " j:" + j);
 
 		/*
-		 * Merging the bidiMap.
+		 * Merging the map.
 		 */
 		nodesIDsMap.get(i).addAll(nodesIDsMap.get(j));
 		nodesIDsMap.remove(j);
@@ -186,7 +203,6 @@ public class FastNewman<V, E> implements Algorithm<V, E> {
 				rowsCols[idx] = val;
 			}
 		}
-
 		adjacencyGroup = new SparseDoubleMatrix2D(adjacencyGroup.viewSelection(rowsCols, rowsCols).toArray());
 	}
 
@@ -211,6 +227,10 @@ public class FastNewman<V, E> implements Algorithm<V, E> {
 		}
 
 		return initialQ;
+	}
+
+	private double calcualteLazyModularity(Graph<V, E> graph) {
+		return Modularity.computeScaledModularity(graph, moduleMembership);
 	}
 
 	public class DendrogramLevel<V> {

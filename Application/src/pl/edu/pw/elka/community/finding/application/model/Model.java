@@ -28,7 +28,7 @@ public class Model {
 
 	public Model(EventsBlockingQueue blockingQueue) {
 		this.blockingQueue = blockingQueue;
-		this.algorithmManager = new AlgorithmManager();
+		this.algorithmManager = new AlgorithmManager(blockingQueue);
 	}
 
 	public void loadNewGraph(String filename) {

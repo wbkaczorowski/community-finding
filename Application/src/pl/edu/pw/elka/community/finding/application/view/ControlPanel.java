@@ -21,7 +21,6 @@ import pl.edu.pw.elka.community.finding.application.view.windows.SingleTestWindo
 @SuppressWarnings("serial")
 public class ControlPanel extends JToolBar {
 
-	
 	/*
 	 * Buttons
 	 */
@@ -29,13 +28,11 @@ public class ControlPanel extends JToolBar {
 	private JButton btnSingleTest;
 	private JButton btnMultipleTests;
 	private JButton btnGenerateRandomGraph;
-	
+
 	/*
 	 * Additional windows
 	 */
 	private SingleTestWindow singleTestWindow;
-	
-
 
 	public ControlPanel(final EventsBlockingQueue blockingQueue, final View view) {
 		setFloatable(false);
@@ -61,7 +58,7 @@ public class ControlPanel extends JToolBar {
 			public void actionPerformed(ActionEvent e) {
 				singleTestWindow = new SingleTestWindow(view);
 				singleTestWindow.setVisible(true);
-				
+
 			}
 		});
 
@@ -86,21 +83,18 @@ public class ControlPanel extends JToolBar {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO multi testy
-
 			}
 		});
 		add(btnMultipleTests);
-		
 
 	}
 
 	public void setEnabled(boolean b) {
 		btnSingleTest.setEnabled(b);
 	}
-	
+
 	public SingleTestWindow getSingleTestWindow() {
 		return singleTestWindow;
 	}
-
 
 }

@@ -39,5 +39,10 @@ public enum EventName {
      * Custom event for easy develop and debugging.
      */
     DEBUG,
+    
+    /**
+     * Refreshes view.
+     */
+    REFRESH_VIEW,
 
 }

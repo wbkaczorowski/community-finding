@@ -243,10 +243,6 @@ public class SingleTestWindow extends JDialog {
 			fastNewmanLabel.setForeground(Color.GRAY);
 			fastNewmanPanel.add(fastNewmanLabel);
 			return fastNewmanPanel;
-			
-//		case CLAUSET_NEWMAN_MOORE:
-//
-//			return new JPanel();
 
 		case ALL:
 			JPanel defaultPanel = new JPanel();
