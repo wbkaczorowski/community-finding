@@ -7,6 +7,6 @@ Application:
 
 Library:
 Contains two algorithms: 
-Louvain (Blondel)
-Fast-Greedy Newman.
+*Louvain (Blondel)
+*Fast-Greedy Newman.
 
