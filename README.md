@@ -3,8 +3,10 @@ community-finding
 
 Community finding library &amp; testing application.
 
-Application
+Application:
 
-Library
+Library:
+Contains two algorithms: 
+Louvain (Blondel)
+Fast-Greedy Newman.
 
-Contains two algorithms: Louvain (Blondel) and Fast-Greedy Newman.
