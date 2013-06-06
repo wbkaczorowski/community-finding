@@ -36,8 +36,6 @@ public class InputGraph {
 
 		Map<String, GraphMLMetadata<Node>> nodeMetadata = graphMLReader.getVertexMetadata();
 
-		System.out.println(nodeMetadata.keySet());
-
 		// setting data for nodes
 		Set<String> keys = nodeMetadata.keySet();
 		for (Node n : graph.getVertices()) {
