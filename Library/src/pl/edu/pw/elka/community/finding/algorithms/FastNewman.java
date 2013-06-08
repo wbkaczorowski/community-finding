@@ -76,7 +76,7 @@ public class FastNewman<V, E> implements Algorithm<V, E> {
 		// first level of dendrogram
 		addDendrogramLevel();
 
-		System.out.println(adjacencyGroup);
+//		System.out.println(adjacencyGroup);
 
 		/*
 		 * Calculate possible agglomerations.

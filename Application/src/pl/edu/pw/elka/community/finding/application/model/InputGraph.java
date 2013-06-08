@@ -29,6 +29,14 @@ public class InputGraph {
 	private Graph<Node, Edge> graph;
 
 	public InputGraph(String filename) throws ParserConfigurationException, SAXException, IOException {
+		if (filename.endsWith(".graphml")) {
+			graphMLFile(filename);
+		} else if (filename.endsWith(".paj")) {
+			pajekFile(filename);
+		}
+	}
+	
+	private void graphMLFile(String filename) throws ParserConfigurationException, SAXException, IOException {
 		graphMLReader = new GraphMLReader<Graph<Node, Edge>, Node, Edge>(new NodeFactory(), new EdgeFactory());
 
 		graph = new UndirectedSparseGraph<Node, Edge>();
@@ -47,7 +55,10 @@ public class InputGraph {
 			// by default, at beginning all belongs to the same group
 			n.setGroup("0");
 		}
-
+	}
+	
+	private void pajekFile(String filename) {
+		
 	}
 
 	public Graph<Node, Edge> getGraph() {
