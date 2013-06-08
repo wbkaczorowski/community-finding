@@ -66,7 +66,7 @@ public class AlgorithmManager {
 		}
 
 		long timeTotal = System.currentTimeMillis() - time;
-		System.out.println("Czas obliczen: " + timeTotal + " ms");
+		System.out.println("Calculation time: " + timeTotal + " ms");
 		blockingQueue.add(new Event(EventName.REFRESH_VIEW));
 		return numberGroups;
 	}

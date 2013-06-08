@@ -11,12 +11,12 @@ import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.UndirectedSparseGraph;
 
 /**
- * Method for finding communities in graph structures. 
- * Based on article Newman, M.E.J. & Girvan, M. Finding and evaluating community structure in networks. Physical Review E 69, 26113(2004).
+ * Method for finding communities in graph structures. Based on article written by Vincent D. Blondel, Jean-Loup Guillaume, Renaud Lambiotte and Etienne
+ * Lefebvre: Fast unfolding of communities in large networks. Journal of Statistical Mechanics: Theory and Experiment 2008 (10), P1000.
  * 
  * @author Wojciech Kaczorowski
  * 
- * @param <V> vertex 
+ * @param <V> vertex
  * @param <E> edge
  */
 public class Louvain<V, E> implements Algorithm<V, E> {
@@ -31,7 +31,6 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 	 */
 	private Map<E, Double> edgesValues;
 
-
 	// global parameters for calculation and experiments
 	/**
 	 * Doubled number of all edges in graph, should be: Doubled the sum of the weights of all the links in the network.
@@ -44,7 +43,7 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 	private int totalIterations;
 
 	public Louvain() {
-		
+
 	}
 
 	@Override
@@ -62,7 +61,7 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 			if (!phaseOne(loopGraph)) {
 				break;
 			}
-			
+
 			loopGraph = phaseTwo(loopGraph);
 			totalIterations++;
 		}
@@ -120,7 +119,6 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 				newGroup.add(i);
 			}
 		}
-
 
 		return gainOccurred;
 	}
@@ -220,8 +218,11 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 
 	/**
 	 * Method for calculating the difference in modularity as proposed in article.
-	 * @param i vertex for which one is checking modualrity gain
-	 * @param groupC to which group we move vertex i
+	 * 
+	 * @param i
+	 *            vertex for which one is checking modualrity gain
+	 * @param groupC
+	 *            to which group we move vertex i
 	 * @param graph
 	 * @return
 	 */
@@ -254,7 +255,6 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 		return dQshort;
 	}
 
-
 	private Set<V> findVertexGroup(V vertex) {
 		for (Set<V> m : communities) {
 			if (m.contains(vertex)) {
@@ -278,6 +278,7 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 
 	/**
 	 * Separating elements to unification of returning groups.
+	 * 
 	 * @param s
 	 * @return
 	 */

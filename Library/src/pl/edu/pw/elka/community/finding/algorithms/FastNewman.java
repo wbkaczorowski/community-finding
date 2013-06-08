@@ -1,48 +1,57 @@
 package pl.edu.pw.elka.community.finding.algorithms;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.collections15.Transformer;
-
+import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.SparseDoubleMatrix2D;
+import cern.colt.matrix.linalg.Algebra;
 import edu.uci.ics.jung.algorithms.matrix.GraphMatrixOperations;
 import edu.uci.ics.jung.graph.Graph;
 
+/**
+ * Greedy method for finding communities in graph structures. Based on method proposed in article written by M. E. J. Newman, Fast algorithm for detecting
+ * community structure in networks, Physical Review E, Vol. 69, No. 6. (Jun 2004).
+ * 
+ * @author Wojciech Kaczorowski
+ * 
+ * @param <V> vertex
+ * @param <E> edge
+ */
 public class FastNewman<V, E> implements Algorithm<V, E> {
 
+	/**
+	 * Mapping groups ids on sets representing chosen groups.
+	 */
 	private Map<Integer, Set<V>> nodesIDsMap;
 
-	private SparseDoubleMatrix2D adjacencyGroup;
-
-	private ArrayList<DendrogramLevel<V>> dendrogram;
-
-	private int m;
-
-	private Transformer<V, Set<V>> moduleMembership;
+	/**
+	 * Indices of groups inside adjacency matrix.
+	 */
+	private Map<Integer, Set<Integer>> groupIndicesMap;
 
 	/**
-	 * Global value of modularity.
+	 * Graph adjacency matrix.
 	 */
-	private double Q = 0;
+	private SparseDoubleMatrix2D adjacencyGroup;
+
+	/**
+	 * Dendrogram built by next joins of groups.
+	 */
+	private ArrayList<DendrogramLevel<V>> dendrogram;
+
+	/**
+	 * Number of edges of graph.
+	 */
+	private int m;
+
+	private Algebra algebra;
 
 	public FastNewman() {
-		moduleMembership = new Transformer<V, Set<V>>() {
-
-			@Override
-			public Set<V> transform(V arg0) {
-				for (Set<V> m : nodesIDsMap.values()) {
-					if (m.contains(arg0)) {
-						return m;
-					}
-				}
-				return null;
-			}
-		};
+		algebra = new Algebra();
 	}
 
 	@Override
@@ -51,46 +60,46 @@ public class FastNewman<V, E> implements Algorithm<V, E> {
 		adjacencyGroup = GraphMatrixOperations.graphToSparseMatrix(graph);
 		m = graph.getEdgeCount();
 		dendrogram = new ArrayList<>();
+		groupIndicesMap = new HashMap<Integer, Set<Integer>>();
 
 		// every node into different group
 		int id = 0;
 		for (V v : graph.getVertices()) {
 			HashSet<V> group = new HashSet<V>();
 			group.add(v);
+			HashSet<Integer> groupIndex = new HashSet<Integer>();
+			groupIndex.add(id);
+			groupIndicesMap.put(id, groupIndex);
 			nodesIDsMap.put(id++, group);
 		}
 
-		addDendrogramLevel(calculateModularity());
-		System.out.println("Init Q: " + Q + " m:" + m);
+		// first level of dendrogram
+		addDendrogramLevel();
+
+		System.out.println(adjacencyGroup);
 
 		/*
 		 * Calculate possible agglomerations.
 		 */
 		while (nodesIDsMap.size() > 1) {
-			System.out.println("w macierzy:" + adjacencyGroup.rows() + " w mapie:" + nodesIDsMap.size());
-			System.out.println(nodesIDsMap);
-			System.out.println(adjacencyGroup);
-			System.out.println("Q:" + Q + " Q2:" + calculateModularity());
-
 			double bestDQ = -Double.MAX_VALUE;
 			int[] groupsToMerge = null;
-			id = adjacencyGroup.rows();
-			for (int row = 0; row < id; row++) {
-				for (int column = row + 1; column < id; column++) {
-					// check if two groups are connected by edge
-					if (adjacencyGroup.get(row, column) != 0 /* && nodesIDsMap.containsKey(row) && nodesIDsMap.containsKey(column) */) {
-						double dQ = delataQ(row, column);
+
+			for (int outsideID : groupIndicesMap.keySet()) {
+				for (int insideID : groupIndicesMap.keySet()) {
+					// check if two groups are not the same and are connected by edge
+					if (outsideID != insideID && areConnected(outsideID, insideID)) {
+						double dQ = deltaQ(outsideID, insideID);
 						if (dQ > bestDQ) {
-							// System.out.println("[" + row + ", " + column + "] dQ: " + dQ);
 							bestDQ = dQ;
-							groupsToMerge = new int[] { row, column };
+							groupsToMerge = new int[] { outsideID, insideID };
 						}
 					}
 				}
 			}
 			if (groupsToMerge != null) {
 				mergeGroups(groupsToMerge[0], groupsToMerge[1]);
-				addDendrogramLevel(bestDQ);
+				addDendrogramLevel();
 			}
 		}
 
@@ -100,159 +109,127 @@ public class FastNewman<V, E> implements Algorithm<V, E> {
 		double maxQ = -Double.MAX_VALUE;
 		DendrogramLevel<V> chosenOne = null;
 		for (DendrogramLevel<V> dl : dendrogram) {
-			System.out.println("Q:" + dl.getQ() + " size:" + dl.getGroups().size());
+			// System.out.println("Q:" + dl.getQ() + " size:" + dl.getGroups().size());
 			if (dl.getQ() > maxQ) {
 				maxQ = dl.getQ();
 				chosenOne = dl;
 			}
 		}
 
-		System.out.println("Wybrany podział: " + chosenOne);
+		// System.out.println("Best partition: " + chosenOne);
 
 		return chosenOne.getGroups();
 	}
 
-	private double delataQ(int i, int j) {
-		double eii = adjacencyGroup.getQuick(i, i) / m;
-		double ejj = adjacencyGroup.getQuick(j, j) / m;
-		System.out.println(adjacencyGroup.viewRow(i));
-		double ai = adjacencyGroup.viewRow(i).zSum() / m;
-		System.out.println(adjacencyGroup.viewRow(j));
-		double aj = adjacencyGroup.viewRow(j).zSum() / m;
-		// double ai = 0;
-		// double aj = 0;
-		// for (int k = 0; k < adjacencyGroup.viewColumn(i).size(); k++) {
-		// if (k != i) {
-		// ai += adjacencyGroup.viewColumn(i).get(k);
-		// }
-		// if (k != j) {
-		// aj += adjacencyGroup.viewColumn(j).get(k);
-		// }
-		// }
-		// ai = ai / m;
-		// aj = aj / m;
+	/**
+	 * Calculates the difference of modularity obtained by joining two communities.
+	 * @param i id of first group
+	 * @param j id of second group
+	 * @return 
+	 */
+	private double deltaQ(int i, int j) {
+		double eii = sumEdgesValues(adjacencyGroup.viewSelection(getIntArrayFromSet(groupIndicesMap.get(i)), getIntArrayFromSet(groupIndicesMap.get(i)))) / m;
+		double ejj = sumEdgesValues(adjacencyGroup.viewSelection(getIntArrayFromSet(groupIndicesMap.get(j)), getIntArrayFromSet(groupIndicesMap.get(j)))) / m;
+		double ai = viewRows(adjacencyGroup, getIntArrayFromSet(groupIndicesMap.get(i))).zSum() / m - eii;
+		double aj = viewRows(adjacencyGroup, getIntArrayFromSet(groupIndicesMap.get(j))).zSum() / m - ejj;
+		double eij = sumEdgesValues(adjacencyGroup.viewSelection(getIntArrayFromSets(groupIndicesMap.get(i), groupIndicesMap.get(j)),
+				getIntArrayFromSets(groupIndicesMap.get(i), groupIndicesMap.get(j))))
+				/ m - eii - ejj;
 
-		double eij = adjacencyGroup.getQuick(i, j) / m;
-		System.out.println("[" + i + ", " + j + "] eii:" + eii + " ejj:" + ejj + " eij:" + eij + " ai:" + ai + " aj:" + aj + " dQ:" + 2 * (eij - ai * aj));
+		// System.out.println("[" + i + ", " + j + "] eii:" + eii + " ejj:" + ejj + " eij:" + eij + " ai:" + ai + " aj:" + aj + " dQ:" + 2 * (eij - ai * aj));
 		return 2 * (eij - ai * aj);
 	}
 
-	private void mergeGroups(int ci, int cj) {
-		int i;
-		int j;
-		if (ci < cj) { // ci should be less than cj, otherwise nodesIDsMap will lose integrity
-			i = ci;
-			j = cj;
-		} else {
-			j = ci;
-			i = cj;
-		}
-
-		System.out.println("i:" + i + " j:" + j);
-
-		/*
-		 * Merging the map.
-		 */
+	/**
+	 * 
+	 * @param i id of first group
+	 * @param j id of second group
+	 */
+	private void mergeGroups(int i, int j) {
 		nodesIDsMap.get(i).addAll(nodesIDsMap.get(j));
 		nodesIDsMap.remove(j);
-
-		// creating new map
-		Collection<Set<V>> n = nodesIDsMap.values();
-		nodesIDsMap = new HashMap<Integer, Set<V>>();
-		int groupNumber = 0;
-		for (Set<V> grp : n) {
-			if (!grp.isEmpty()) {
-				nodesIDsMap.put(groupNumber++, grp);
-			}
-		}
-
-		/*
-		 * Merging the group adjacency matrix.
-		 */
-
-		// updating values inside matrix
-		double newiiValue = adjacencyGroup.getQuick(i, i) + adjacencyGroup.getQuick(j, j) + adjacencyGroup.getQuick(i, j);
-		for (int row = 0; row < adjacencyGroup.rows(); row++) {
-			if (row != i) {
-				adjacencyGroup.setQuick(row, i, adjacencyGroup.getQuick(row, j) + adjacencyGroup.getQuick(row, i));
-			}
-		}
-		for (int col = 0; col < adjacencyGroup.columns(); col++) {
-			if (col != i) {
-				adjacencyGroup.setQuick(i, col, adjacencyGroup.getQuick(j, col) + adjacencyGroup.getQuick(i, col));
-			}
-		}
-		adjacencyGroup.setQuick(i, i, newiiValue);
-
-		// put zeros where unused group
-		// for (int row = 0; row < adjacencyGroup.rows(); row++) {
-		// adjacencyGroup.setQuick(row, j, 0);
-		// }
-		//
-		// for (int col = 0; col < adjacencyGroup.columns(); col++) {
-		// adjacencyGroup.setQuick(j, col, 0);
-		// }
-
-		// remove not used columns & rows
-		int size = adjacencyGroup.rows() - 1;
-		int[] rowsCols = new int[size];
-		for (int idx = 0, val = 0; idx < size; val++, idx++) {
-			if (val == j) {
-				rowsCols[idx] = ++val;
-			} else {
-				rowsCols[idx] = val;
-			}
-		}
-		adjacencyGroup = new SparseDoubleMatrix2D(adjacencyGroup.viewSelection(rowsCols, rowsCols).toArray());
+		groupIndicesMap.get(i).addAll(groupIndicesMap.get(j));
+		groupIndicesMap.remove(j);
 	}
 
-	private void addDendrogramLevel(double valueQ) {
-		Q += valueQ;
+	/**
+	 * Builds one dendrogram level.
+	 */
+	private void addDendrogramLevel() {
 		Set<Set<V>> level = new HashSet<Set<V>>();
 		for (Set<V> group : nodesIDsMap.values()) {
 			level.add(new HashSet<V>(group));
 		}
-		dendrogram.add(new DendrogramLevel<V>(Q, level));
+		dendrogram.add(new DendrogramLevel<V>(calculateModularity(), level));
 	}
 
+	/**
+	 * Calculates modularity Q of current partition.
+	 * @return
+	 */
 	private double calculateModularity() {
 		double initialQ = 0.0;
 		double eii = 0.0;
 		double ai = 0.0;
 
-		for (int row = 0; row < adjacencyGroup.rows(); row++) {
-			eii = adjacencyGroup.get(row, row) / m;
-			ai = adjacencyGroup.viewRow(row).zSum() / m - eii;
+		for (Set<Integer> group : groupIndicesMap.values()) {
+			eii = sumEdgesValues(adjacencyGroup.viewSelection(getIntArrayFromSet(group), getIntArrayFromSet(group))) / m;
+			ai = viewRows(adjacencyGroup, getIntArrayFromSet(group)).zSum() / m - eii;
 			initialQ += (eii - ai * ai);
 		}
 
 		return initialQ;
 	}
 
-	private double calcualteLazyModularity(Graph<V, E> graph) {
-		return Modularity.computeScaledModularity(graph, moduleMembership);
+	/**
+	 * @param i id of first group
+	 * @param j id of second group
+	 * @return ture if two groups are connected by edge
+	 */
+	private boolean areConnected(int i, int j) {
+		if (sumEdgesValuesWithoutTrace(adjacencyGroup.viewSelection(getIntArrayFromSets(groupIndicesMap.get(i), groupIndicesMap.get(j)),
+				getIntArrayFromSets(groupIndicesMap.get(i), groupIndicesMap.get(j)))) == 0) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
-	public class DendrogramLevel<V> {
-		private Double q;
-		private Set<Set<V>> groups;
-
-		public DendrogramLevel(Double q, Set<Set<V>> groups) {
-			this.q = q;
-			this.groups = groups;
+	private int[] getIntArrayFromSet(Set<Integer> set) {
+		int[] array = new int[set.size()];
+		int idx = 0;
+		for (Integer i : set) {
+			array[idx++] = i;
 		}
+		return array;
+	}
 
-		public Double getQ() {
-			return q;
+	private int[] getIntArrayFromSets(Set<Integer> set1, Set<Integer> set2) {
+		int[] array = new int[set1.size() + set2.size()];
+		int idx = 0;
+		for (Integer i : set1) {
+			array[idx++] = i;
 		}
+		for (Integer i : set2) {
+			array[idx++] = i;
+		}
+		return array;
+	}
 
-		public Set<Set<V>> getGroups() {
-			return groups;
-		}
+	private double sumEdgesValues(DoubleMatrix2D matrix) {
+		double trace = algebra.trace(matrix);
+		return (matrix.zSum() - trace) / 2 + trace;
+	}
 
-		@Override
-		public String toString() {
-			return "DendrogramLevel <q=" + q + " " + groups + ">";
+	private double sumEdgesValuesWithoutTrace(DoubleMatrix2D matrix) {
+		return (matrix.zSum() - algebra.trace(matrix)) / 2;
+	}
+
+	private DoubleMatrix2D viewRows(DoubleMatrix2D matrix, int[] rows) {
+		int[] columns = new int[matrix.columns()];
+		for (int i = 0; i < matrix.columns(); ++i) {
+			columns[i] = i;
 		}
+		return matrix.viewSelection(rows, columns);
 	}
 }

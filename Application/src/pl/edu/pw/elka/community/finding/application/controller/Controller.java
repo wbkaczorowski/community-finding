@@ -25,8 +25,8 @@ public class Controller {
 
 		try {
 			// put the starting event
-//			blockingQueue.put(new Event(EventName.START));
-			blockingQueue.put(new Event(EventName.DEBUG));
+			blockingQueue.put(new Event(EventName.START));
+//			blockingQueue.put(new Event(EventName.DEBUG));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
