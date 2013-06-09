@@ -6,7 +6,7 @@ Project done with using JUNG 2.01 framework.
 
 Application:
 * visualization of graph and partition
-* reading graph from graphML files
+* reading graph from graphML and pajek files
 
 Library:  
 Contains two algorithms:

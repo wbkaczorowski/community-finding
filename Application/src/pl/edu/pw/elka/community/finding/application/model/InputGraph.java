@@ -16,6 +16,7 @@ import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.UndirectedSparseGraph;
 import edu.uci.ics.jung.io.GraphMLMetadata;
 import edu.uci.ics.jung.io.GraphMLReader;
+import edu.uci.ics.jung.io.PajekNetReader;
 
 /**
  * Reader for one graph from file.
@@ -26,6 +27,7 @@ import edu.uci.ics.jung.io.GraphMLReader;
 public class InputGraph {
 
 	private GraphMLReader<Graph<Node, Edge>, Node, Edge> graphMLReader;
+	private PajekNetReader<Graph<Node, Edge>, Node, Edge> pajekNetReader;
 	private Graph<Node, Edge> graph;
 
 	public InputGraph(String filename) throws ParserConfigurationException, SAXException, IOException {
@@ -57,8 +59,16 @@ public class InputGraph {
 		}
 	}
 	
-	private void pajekFile(String filename) {
+	private void pajekFile(String filename) throws IOException {
+		pajekNetReader = new PajekNetReader<Graph<Node, Edge>, Node, Edge>(new NodeFactory(), new EdgeFactory());
 		
+		graph = new UndirectedSparseGraph<Node, Edge>();
+		pajekNetReader.load(filename, graph);
+
+		for (Node n : graph.getVertices()) {
+			n.setGroup("0");
+		}
+
 	}
 
 	public Graph<Node, Edge> getGraph() {
