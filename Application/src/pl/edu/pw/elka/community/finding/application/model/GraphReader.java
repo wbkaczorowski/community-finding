@@ -24,13 +24,13 @@ import edu.uci.ics.jung.io.PajekNetReader;
  * @author Wojciech Kaczorowski
  * 
  */
-public class InputGraph {
+public class GraphReader {
 
 	private GraphMLReader<Graph<Node, Edge>, Node, Edge> graphMLReader;
 	private PajekNetReader<Graph<Node, Edge>, Node, Edge> pajekNetReader;
 	private Graph<Node, Edge> graph;
 
-	public InputGraph(String filename) throws ParserConfigurationException, SAXException, IOException {
+	public GraphReader(String filename) throws ParserConfigurationException, SAXException, IOException {
 		if (filename.endsWith(".graphml")) {
 			graphMLFile(filename);
 		} else if (filename.endsWith(".paj")) {

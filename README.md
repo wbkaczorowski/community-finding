@@ -2,7 +2,7 @@ community-finding
 =================
 
 Community finding library &amp; testing application.  
-Project done with using JUNG 2.01 framework.
+Project done with using JUNG 2.0.1 framework.
 
 Application:
 * visualization of graph and partition

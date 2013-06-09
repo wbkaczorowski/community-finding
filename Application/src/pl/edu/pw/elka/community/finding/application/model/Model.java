@@ -22,7 +22,7 @@ import edu.uci.ics.jung.graph.Graph;
 public class Model {
 
 	private EventsBlockingQueue blockingQueue;
-	private InputGraph inputGraph;
+	private GraphReader graphReader;
 	private Graph<Node, Edge> graph = null;
 	private AlgorithmManager algorithmManager;
 
@@ -33,8 +33,8 @@ public class Model {
 
 	public void loadNewGraph(String filename) {
 		try {
-			this.inputGraph = new InputGraph(filename);
-			graph = inputGraph.getGraph();
+			this.graphReader = new GraphReader(filename);
+			graph = graphReader.getGraph();
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		} catch (SAXException e) {
