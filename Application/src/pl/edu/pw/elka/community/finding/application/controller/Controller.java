@@ -70,7 +70,6 @@ public class Controller {
 					view.setGraphView(model.getGraph());
 					view.setGraphParameter(model.getGraph());
 					view.getStatusBar().setAppState("generated " + view.getControlPanel().getGraphGeneratorWindow().getChosenGraphType() + " graph");
-		
 			}
 		});
 		

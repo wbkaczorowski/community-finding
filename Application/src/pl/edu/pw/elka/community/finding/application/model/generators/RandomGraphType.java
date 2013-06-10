@@ -1,14 +1,18 @@
 package pl.edu.pw.elka.community.finding.application.model.generators;
 
+
 /**
- * Type for tested algorithms, with human readable names.
+ * Type for generated graphs, with human readable names.
  * @author Wojciech Kaczorowski
  *
  */
 public enum RandomGraphType {
-	RADNDOM("Random"),
+	RANDOM("random"),
+	RANDOMMODULAR("random with communities"),
 	ERDOSRENYI("Erdos-Renyi"),
-	TEST("Test"),
+	EPPSTEIN("Eppstein power law"),
+	KLEINBERGSMALLWORLD("Kleinberg small worlds"),
+	BARABASIALBERT("Barabasi Albert"),
 	;
 	
 	private final String text;

@@ -45,6 +45,7 @@ public class GraphGeneratorWindow extends JDialog {
 	private JTextField nodesNumberField;
 	private JTextField edgesNumberField;
 	private JTextField probabilityField;
+	private JTextField iterationsField;
 
 	public GraphGeneratorWindow(final View view) {
 		properties = new Properties();
@@ -71,7 +72,24 @@ public class GraphGeneratorWindow extends JDialog {
 				public void actionPerformed(ActionEvent e) {
 					chosenGraphType = graphTypeList.getSelectedValue();
 					switch (chosenGraphType) {
-					case RADNDOM:
+					case RANDOM:
+						if (nodesNumberField != null) {
+							properties.setProperty("nodes", nodesNumberField.getText());
+						}
+						if (edgesNumberField != null) {
+							properties.setProperty("edges", edgesNumberField.getText());
+						}
+						break;
+					case RANDOMMODULAR:
+						if (nodesNumberField != null) {
+							properties.setProperty("nodes", nodesNumberField.getText());
+						}
+						if (edgesNumberField != null) {
+							properties.setProperty("comm", edgesNumberField.getText());
+						}
+						break;
+					
+					case BARABASIALBERT:
 						if (nodesNumberField != null) {
 							properties.setProperty("nodes", nodesNumberField.getText());
 						}
@@ -85,12 +103,29 @@ public class GraphGeneratorWindow extends JDialog {
 							properties.setProperty("nodes", nodesNumberField.getText());
 						}
 						if (probabilityField != null) {
-							properties.setProperty("prob", String.valueOf(Double.valueOf(probabilityField.getText())/100));
+							properties.setProperty("prob", String.valueOf(Double.valueOf(probabilityField.getText()) / 100));
+						}
+					case EPPSTEIN:
+						if (nodesNumberField != null) {
+							properties.setProperty("nodes", nodesNumberField.getText());
+						}
+						if (edgesNumberField != null) {
+							properties.setProperty("edges", edgesNumberField.getText());
+						}
+						if (iterationsField != null) {
+							properties.setProperty("iterations", iterationsField.getText());
+						}
+					case KLEINBERGSMALLWORLD:
+						if (nodesNumberField != null) {
+							properties.setProperty("nodes", nodesNumberField.getText());
+						}
+						if (probabilityField != null) {
+							properties.setProperty("exp", String.valueOf(Double.valueOf(probabilityField.getText()) / 100));
 						}
 					default:
 						break;
 					}
-				
+
 					GraphGeneratorWindow.this.setVisible(false);
 					view.getBlockingQueue().add(new Event(EventName.GENERATE_RANODM));
 				}
@@ -147,7 +182,7 @@ public class GraphGeneratorWindow extends JDialog {
 	 */
 	private JPanel setRightView(RandomGraphType randomGraphType, View view) {
 		switch (randomGraphType) {
-		case RADNDOM:
+		case RANDOM:
 			JPanel randomPanel = new JPanel();
 			JLabel lblNumberOfNodes = new JLabel("number of nodes:");
 			randomPanel.add(lblNumberOfNodes);
@@ -163,6 +198,38 @@ public class GraphGeneratorWindow extends JDialog {
 			edgesNumberField.setColumns(3);
 			return randomPanel;
 
+		case RANDOMMODULAR:
+			JPanel randomModularPanel = new JPanel();
+			JLabel rmLabelNodes = new JLabel("number of nodes:");
+			randomModularPanel.add(rmLabelNodes);
+			nodesNumberField = new JTextField();
+			nodesNumberField.setText("50");
+			randomModularPanel.add(nodesNumberField);
+			nodesNumberField.setColumns(3);
+			JLabel rmLabelComm = new JLabel("number of communities:");
+			randomModularPanel.add(rmLabelComm);
+			edgesNumberField = new JTextField();
+			edgesNumberField.setText("4");
+			randomModularPanel.add(edgesNumberField);
+			edgesNumberField.setColumns(3);
+			return randomModularPanel;
+
+		case BARABASIALBERT:
+			JPanel barabasiAlbertPanel = new JPanel();
+			JLabel baLabel = new JLabel("number of nodes:");
+			barabasiAlbertPanel.add(baLabel);
+			nodesNumberField = new JTextField();
+			nodesNumberField.setText("10");
+			barabasiAlbertPanel.add(nodesNumberField);
+			nodesNumberField.setColumns(3);
+			JLabel baEdges = new JLabel("number of edges:");
+			barabasiAlbertPanel.add(baEdges);
+			edgesNumberField = new JTextField();
+			edgesNumberField.setText("15");
+			barabasiAlbertPanel.add(edgesNumberField);
+			edgesNumberField.setColumns(3);
+			return barabasiAlbertPanel;
+			
 		case ERDOSRENYI:
 			JPanel erdosrenyiPanel = new JPanel(new BorderLayout());
 			JPanel upperPanel = new JPanel();
@@ -215,6 +282,80 @@ public class GraphGeneratorWindow extends JDialog {
 			});
 			erdosrenyiPanel.add(grSlider, BorderLayout.SOUTH);
 			return erdosrenyiPanel;
+
+		case EPPSTEIN:
+			JPanel eppsteinPanel = new JPanel();
+			JLabel eppsetinNodes = new JLabel("number of nodes:");
+			eppsteinPanel.add(eppsetinNodes);
+			nodesNumberField = new JTextField();
+			nodesNumberField.setText("10");
+			eppsteinPanel.add(nodesNumberField);
+			nodesNumberField.setColumns(3);
+			JLabel eppsteinEdges = new JLabel("number of edges:");
+			eppsteinPanel.add(eppsteinEdges);
+			edgesNumberField = new JTextField();
+			edgesNumberField.setText("15");
+			eppsteinPanel.add(edgesNumberField);
+			edgesNumberField.setColumns(3);
+			JLabel iterationLabel = new JLabel("number of iterations:");
+			iterationsField = new JTextField("1");
+			iterationsField.setColumns(2);
+			eppsteinPanel.add(iterationLabel);
+			eppsteinPanel.add(iterationsField);
+			return eppsteinPanel;
+
+		case KLEINBERGSMALLWORLD:
+			JPanel kleinbergPanel = new JPanel(new BorderLayout());
+			JPanel kleinbergUpperPanel = new JPanel();
+			JLabel kswNodesLabel = new JLabel("number of nodes:");
+			kleinbergUpperPanel.add(kswNodesLabel);
+			nodesNumberField = new JTextField();
+			nodesNumberField.setText("10");
+			kleinbergUpperPanel.add(nodesNumberField);
+			nodesNumberField.setColumns(3);
+			kleinbergPanel.add(kleinbergUpperPanel, BorderLayout.NORTH);
+			final JSlider kswSlider = new JSlider();
+			probabilityField = new JTextField();
+			JPanel expTextPanel = new JPanel();
+			expTextPanel.add(new JLabel("clustering exponent percentage:"));
+			expTextPanel.add(probabilityField);
+			kleinbergPanel.add(expTextPanel, BorderLayout.CENTER);
+			kswSlider.setValue(50);
+			kswSlider.setMinorTickSpacing(5);
+			kswSlider.setMajorTickSpacing(25);
+			kswSlider.setPaintTicks(true);
+			kswSlider.setPaintLabels(true);
+			kswSlider.addChangeListener(new ChangeListener() {
+
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					JSlider source = (JSlider) e.getSource();
+					probabilityField.setText("" + source.getValue());
+				}
+			});
+			probabilityField.setText("" + kswSlider.getValue());
+			probabilityField.addKeyListener(new KeyListener() {
+				@Override
+				public void keyReleased(KeyEvent e) {
+					String typed = probabilityField.getText();
+					kswSlider.setValue(0);
+					if (!typed.matches("\\d+")) {
+						return;
+					}
+					int value = Integer.parseInt(typed);
+					kswSlider.setValue(value);
+				}
+
+				@Override
+				public void keyTyped(KeyEvent e) {
+				}
+
+				@Override
+				public void keyPressed(KeyEvent e) {
+				}
+			});
+			kleinbergPanel.add(kswSlider, BorderLayout.SOUTH);
+			return kleinbergPanel;
 			
 		default:
 			return new JPanel();
@@ -226,7 +367,7 @@ public class GraphGeneratorWindow extends JDialog {
 	public RandomGraphType getChosenGraphType() {
 		return chosenGraphType;
 	}
-	
+
 	public Properties getProperties() {
 		return properties;
 	}
