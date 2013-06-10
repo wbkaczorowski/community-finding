@@ -1,4 +1,4 @@
-package pl.edu.pw.elka.community.finding.application.model;
+package pl.edu.pw.elka.community.finding.application.model.algoritms;
 
 /**
  * Type for tested algorithms, with human readable names.

@@ -21,7 +21,6 @@ public class NodePainter implements Transformer<Node, Paint> {
 	private Random random;
 
 	public NodePainter() {
-		// FIXME mało elegancko, poprawić
 		colorMap = new HashMap<String, Paint>();
 		random = new Random();
 		colorMap.put("0", Color.BLUE);

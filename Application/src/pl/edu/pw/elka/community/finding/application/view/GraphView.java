@@ -42,7 +42,7 @@ public class GraphView {
 		/*
 		 * nodes labels
 		 */
-		visualizationViewer.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
+		visualizationViewer.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<Node>());
 		/*
 		 * edges labels
 		 */

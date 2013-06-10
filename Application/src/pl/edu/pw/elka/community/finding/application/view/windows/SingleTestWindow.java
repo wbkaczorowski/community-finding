@@ -23,7 +23,7 @@ import javax.swing.event.ListSelectionListener;
 
 import pl.edu.pw.elka.community.finding.application.controller.events.Event;
 import pl.edu.pw.elka.community.finding.application.controller.events.EventName;
-import pl.edu.pw.elka.community.finding.application.model.AlgorithmType;
+import pl.edu.pw.elka.community.finding.application.model.algoritms.AlgorithmType;
 import pl.edu.pw.elka.community.finding.application.view.View;
 
 /**
@@ -33,9 +33,9 @@ import pl.edu.pw.elka.community.finding.application.view.View;
  * @author Wojciech Kaczorowski
  * 
  */
-@SuppressWarnings("serial")
 public class SingleTestWindow extends JDialog {
 
+	private static final long serialVersionUID = 8729687970590916968L;
 	/*
 	 * View components.
 	 */
@@ -78,7 +78,6 @@ public class SingleTestWindow extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO odpalanie liczenia
 					if (paramValueTextField != null) {
 						param = Integer.valueOf(paramValueTextField.getText());
 					}
@@ -257,12 +256,13 @@ public class SingleTestWindow extends JDialog {
 
 	}
 
-	public int getParam() {
-		return param;
-	}
 
 	public AlgorithmType getChosenAglorithm() {
 		return chosenAglorithm;
+	}
+
+	public int getParam() {
+		return param;
 	}
 
 }

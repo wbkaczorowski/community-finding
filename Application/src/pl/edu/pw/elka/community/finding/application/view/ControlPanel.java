@@ -7,9 +7,12 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 
+import edu.uci.ics.jung.algorithms.generators.GraphGenerator;
+
 import pl.edu.pw.elka.community.finding.application.controller.events.Event;
 import pl.edu.pw.elka.community.finding.application.controller.events.EventName;
 import pl.edu.pw.elka.community.finding.application.controller.events.EventsBlockingQueue;
+import pl.edu.pw.elka.community.finding.application.view.windows.GraphGeneratorWindow;
 import pl.edu.pw.elka.community.finding.application.view.windows.SingleTestWindow;
 
 /**
@@ -33,6 +36,7 @@ public class ControlPanel extends JToolBar {
 	 * Additional windows
 	 */
 	private SingleTestWindow singleTestWindow;
+	private GraphGeneratorWindow graphGeneratorWindow;
 
 	public ControlPanel(final EventsBlockingQueue blockingQueue, final View view) {
 		setFloatable(false);
@@ -68,8 +72,8 @@ public class ControlPanel extends JToolBar {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO tworzenie sztuczego grafu
-
+				graphGeneratorWindow = new GraphGeneratorWindow(view);
+				graphGeneratorWindow.setVisible(true);
 			}
 		});
 		add(btnGenerateRandomGraph);
@@ -95,6 +99,10 @@ public class ControlPanel extends JToolBar {
 
 	public SingleTestWindow getSingleTestWindow() {
 		return singleTestWindow;
+	}
+	
+	public GraphGeneratorWindow getGraphGeneratorWindow() {
+		return graphGeneratorWindow;
 	}
 
 }

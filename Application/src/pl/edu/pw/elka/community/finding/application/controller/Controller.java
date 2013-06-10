@@ -1,12 +1,15 @@
 package pl.edu.pw.elka.community.finding.application.controller;
 
+import java.util.Properties;
+
 import pl.edu.pw.elka.community.finding.application.controller.events.Event;
 import pl.edu.pw.elka.community.finding.application.controller.events.EventHandler;
 import pl.edu.pw.elka.community.finding.application.controller.events.EventName;
 import pl.edu.pw.elka.community.finding.application.controller.events.EventsBlockingQueue;
 import pl.edu.pw.elka.community.finding.application.controller.events.EventsHandlersMap;
-import pl.edu.pw.elka.community.finding.application.model.AlgorithmType;
 import pl.edu.pw.elka.community.finding.application.model.Model;
+import pl.edu.pw.elka.community.finding.application.model.algoritms.AlgorithmType;
+import pl.edu.pw.elka.community.finding.application.model.generators.RandomGraphType;
 import pl.edu.pw.elka.community.finding.application.view.View;
 
 public class Controller {
@@ -58,6 +61,19 @@ public class Controller {
 			}
 		});
 		
+		eventHandlers.put(EventName.GENERATE_RANODM, new EventHandler() {
+
+			@Override
+			public void execute() {
+					view.getStatusBar().setAppState("generating graph...");
+					model.generateGraph(view.getControlPanel().getGraphGeneratorWindow().getChosenGraphType(), view.getControlPanel().getGraphGeneratorWindow().getProperties());
+					view.setGraphView(model.getGraph());
+					view.setGraphParameter(model.getGraph());
+					view.getStatusBar().setAppState("generated " + view.getControlPanel().getGraphGeneratorWindow().getChosenGraphType() + " graph");
+		
+			}
+		});
+		
 		eventHandlers.put(EventName.REFRESH_VIEW, new EventHandler() {
 			@Override
 			public void execute() {
@@ -89,6 +105,7 @@ public class Controller {
 				view.newGroups(model.getGraph());
 			}
 		});
+		
 		
 		eventHandlers.put(EventName.DEBUG, new EventHandler() {
 			

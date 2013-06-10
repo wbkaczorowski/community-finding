@@ -44,5 +44,10 @@ public enum EventName {
      * Refreshes view.
      */
     REFRESH_VIEW,
+    
+    /**
+     * Generates random graph.
+     */
+    GENERATE_RANODM,
 
 }

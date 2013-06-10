@@ -1,4 +1,4 @@
-package pl.edu.pw.elka.community.finding.application.model;
+package pl.edu.pw.elka.community.finding.application.model.algoritms;
 
 import java.util.Set;
 

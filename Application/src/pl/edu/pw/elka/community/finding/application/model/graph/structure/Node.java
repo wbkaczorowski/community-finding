@@ -9,7 +9,7 @@ import java.util.Properties;
  * 
  */
 public class Node {
-	
+
 	/**
 	 * Data for easy identification of node.
 	 */
@@ -21,7 +21,11 @@ public class Node {
 	private String group;
 
 	public Node() {
-		data = new Properties();
+		this.data = new Properties();
+	}
+
+	public Node(Properties data) {
+		this.data = data;
 	}
 
 	public Properties getData() {
@@ -31,7 +35,7 @@ public class Node {
 	public void setData(Properties data) {
 		this.data = data;
 	}
-	
+
 	public String getGroup() {
 		return group;
 	}
@@ -45,5 +49,4 @@ public class Node {
 		return "Node [" + data + ", group=" + group + "]";
 	}
 
-	
 }
