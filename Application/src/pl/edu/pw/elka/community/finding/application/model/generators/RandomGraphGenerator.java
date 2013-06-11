@@ -96,7 +96,7 @@ public class RandomGraphGenerator {
 		// creating edges between communities
 		int edgesTotal = (int) (densityTotal * graph.getVertexCount() * (graph.getVertexCount() - 1) / 2);
 		ArrayList<Node> vertices = new ArrayList<Node>(graph.getVertices());
-//		System.out.println(edgesTotal + " " + graph.getEdgeCount());
+		System.out.println(edgesTotal + " " + graph.getEdgeCount());
 		while (edgesTotal > graph.getEdgeCount()) {
 			while (true) {
 				Node firstNode = vertices.get(random.nextInt(nodes));
