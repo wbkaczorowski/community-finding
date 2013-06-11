@@ -1,6 +1,7 @@
 package pl.edu.pw.elka.community.finding.application.view;
 
 import java.awt.Color;
+import java.awt.Dimension;
 
 import pl.edu.pw.elka.community.finding.application.model.graph.structure.Edge;
 import pl.edu.pw.elka.community.finding.application.model.graph.structure.Node;
@@ -11,7 +12,6 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
-import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 
 /**
  * Class responsible for displaying graph itself.
@@ -26,15 +26,16 @@ public class GraphView {
 	private DefaultModalGraphMouse<Object, Object> graphMouse;
 	private Graph<Node, Edge> graph;
 
-	public GraphView(Graph<Node, Edge> g) {
+	public GraphView(Graph<Node, Edge> g, View view) {
 		graph = g;
 
-		init();
+		init(view);
 	}
 
-	public void init() {
+	public void init(View view) {
 		layout = new FRLayout<Node, Edge>(graph);
-		// layout.setSize(new Dimension(Constans.WINDOW_WIDTH, Constans.WINDOW_HEIGHT));
+		
+		layout.setSize(new Dimension(view.getMainWindow().getSize().width, view.getMainWindow().getSize().height - Constans.BAR_HEIGHT));
 
 		visualizationViewer = new VisualizationViewer<Node, Edge>(layout);
 		visualizationViewer.setBackground(Color.WHITE);

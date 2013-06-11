@@ -16,8 +16,10 @@ import edu.uci.ics.jung.graph.UndirectedSparseGraph;
  * 
  * @author Wojciech Kaczorowski
  * 
- * @param <V> vertex
- * @param <E> edge
+ * @param <V>
+ *            vertex
+ * @param <E>
+ *            edge
  */
 public class Louvain<V, E> implements Algorithm<V, E> {
 
@@ -68,7 +70,13 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 
 		communities = new HashSet<>();
 		for (V g : loopGraph.getVertices()) {
-			communities.add(separateElements((Set<V>) g));
+			if (!(g instanceof Set<?>)) {
+				Set<V> group = new HashSet<>();
+				group.add(g);
+				communities.add(separateElements(group));
+			} else {
+				communities.add(separateElements((Set<V>) g));
+			}
 		}
 
 		System.out.println("Total two-phase iterations:  " + totalIterations);

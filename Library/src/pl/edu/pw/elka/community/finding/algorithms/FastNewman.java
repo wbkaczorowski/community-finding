@@ -36,7 +36,7 @@ public class FastNewman<V, E> implements Algorithm<V, E> {
 	/**
 	 * Graph adjacency matrix.
 	 */
-	private SparseDoubleMatrix2D adjacencyGroup;
+	private SparseDoubleMatrix2D matrixGraph;
 
 	/**
 	 * Dendrogram built by next joins of groups.
@@ -57,7 +57,7 @@ public class FastNewman<V, E> implements Algorithm<V, E> {
 	@Override
 	public Set<Set<V>> getCommunities(Graph<V, E> graph) {
 		nodesIDsMap = new HashMap<>();
-		adjacencyGroup = GraphMatrixOperations.graphToSparseMatrix(graph);
+		matrixGraph = GraphMatrixOperations.graphToSparseMatrix(graph);
 		m = graph.getEdgeCount();
 		dendrogram = new ArrayList<>();
 		groupIndicesMap = new HashMap<Integer, Set<Integer>>();
@@ -128,11 +128,11 @@ public class FastNewman<V, E> implements Algorithm<V, E> {
 	 * @return 
 	 */
 	private double deltaQ(int i, int j) {
-		double eii = sumEdgesValues(adjacencyGroup.viewSelection(getIntArrayFromSet(groupIndicesMap.get(i)), getIntArrayFromSet(groupIndicesMap.get(i)))) / m;
-		double ejj = sumEdgesValues(adjacencyGroup.viewSelection(getIntArrayFromSet(groupIndicesMap.get(j)), getIntArrayFromSet(groupIndicesMap.get(j)))) / m;
-		double ai = viewRows(adjacencyGroup, getIntArrayFromSet(groupIndicesMap.get(i))).zSum() / m - eii;
-		double aj = viewRows(adjacencyGroup, getIntArrayFromSet(groupIndicesMap.get(j))).zSum() / m - ejj;
-		double eij = sumEdgesValues(adjacencyGroup.viewSelection(getIntArrayFromSets(groupIndicesMap.get(i), groupIndicesMap.get(j)),
+		double eii = sumEdgesValues(matrixGraph.viewSelection(getIntArrayFromSet(groupIndicesMap.get(i)), getIntArrayFromSet(groupIndicesMap.get(i)))) / m;
+		double ejj = sumEdgesValues(matrixGraph.viewSelection(getIntArrayFromSet(groupIndicesMap.get(j)), getIntArrayFromSet(groupIndicesMap.get(j)))) / m;
+		double ai = viewRows(matrixGraph, getIntArrayFromSet(groupIndicesMap.get(i))).zSum() / m - eii;
+		double aj = viewRows(matrixGraph, getIntArrayFromSet(groupIndicesMap.get(j))).zSum() / m - ejj;
+		double eij = sumEdgesValues(matrixGraph.viewSelection(getIntArrayFromSets(groupIndicesMap.get(i), groupIndicesMap.get(j)),
 				getIntArrayFromSets(groupIndicesMap.get(i), groupIndicesMap.get(j))))
 				/ m - eii - ejj;
 
@@ -173,8 +173,8 @@ public class FastNewman<V, E> implements Algorithm<V, E> {
 		double ai = 0.0;
 
 		for (Set<Integer> group : groupIndicesMap.values()) {
-			eii = sumEdgesValues(adjacencyGroup.viewSelection(getIntArrayFromSet(group), getIntArrayFromSet(group))) / m;
-			ai = viewRows(adjacencyGroup, getIntArrayFromSet(group)).zSum() / m - eii;
+			eii = sumEdgesValues(matrixGraph.viewSelection(getIntArrayFromSet(group), getIntArrayFromSet(group))) / m;
+			ai = viewRows(matrixGraph, getIntArrayFromSet(group)).zSum() / m - eii;
 			initialQ += (eii - ai * ai);
 		}
 
@@ -187,7 +187,7 @@ public class FastNewman<V, E> implements Algorithm<V, E> {
 	 * @return ture if two groups are connected by edge
 	 */
 	private boolean areConnected(int i, int j) {
-		if (sumEdgesValuesWithoutTrace(adjacencyGroup.viewSelection(getIntArrayFromSets(groupIndicesMap.get(i), groupIndicesMap.get(j)),
+		if (sumEdgesValuesWithoutTrace(matrixGraph.viewSelection(getIntArrayFromSets(groupIndicesMap.get(i), groupIndicesMap.get(j)),
 				getIntArrayFromSets(groupIndicesMap.get(i), groupIndicesMap.get(j)))) == 0) {
 			return false;
 		} else {

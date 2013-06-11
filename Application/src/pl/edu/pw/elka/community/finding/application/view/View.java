@@ -101,7 +101,7 @@ public class View {
 	 * @param g
 	 */
 	public void setGraphView(Graph<Node, Edge> g) {
-		graphView = new GraphView(g);
+		graphView = new GraphView(g, this);
 		mainWindow.getContentPane().removeAll();
 		mainWindow.getContentPane().add(controlPanel, BorderLayout.NORTH);
 		mainWindow.getContentPane().add(statusBar, BorderLayout.SOUTH);
@@ -114,7 +114,7 @@ public class View {
 	 * Marks calculates groups.
 	 */
 	public void newGroups(Graph<Node, Edge> g) {
-		graphView = new GraphView(g);
+		graphView = new GraphView(g, this);
 		graphView.refresh();
 	}
 

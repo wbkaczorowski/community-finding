@@ -45,6 +45,8 @@ public class GraphGeneratorWindow extends JDialog {
 	private JTextField nodesNumberField;
 	private JTextField edgesNumberField;
 	private JTextField probabilityField;
+	private JTextField densityInsideField;
+	private JTextField densityTotalField;
 	private JTextField iterationsField;
 
 	public GraphGeneratorWindow(final View view) {
@@ -76,8 +78,8 @@ public class GraphGeneratorWindow extends JDialog {
 						if (nodesNumberField != null) {
 							properties.setProperty("nodes", nodesNumberField.getText());
 						}
-						if (edgesNumberField != null) {
-							properties.setProperty("edges", edgesNumberField.getText());
+						if (densityTotalField != null) {
+							properties.setProperty("density", densityTotalField.getText());
 						}
 						break;
 					case RANDOMMODULAR:
@@ -183,19 +185,57 @@ public class GraphGeneratorWindow extends JDialog {
 	private JPanel setRightView(RandomGraphType randomGraphType, View view) {
 		switch (randomGraphType) {
 		case RANDOM:
-			JPanel randomPanel = new JPanel();
-			JLabel lblNumberOfNodes = new JLabel("number of nodes:");
-			randomPanel.add(lblNumberOfNodes);
+			JPanel randomPanel = new JPanel(new BorderLayout());
+			JPanel upperPanel = new JPanel();
+			JLabel lblNumberOfNodes1 = new JLabel("number of nodes:");
+			upperPanel.add(lblNumberOfNodes1);
 			nodesNumberField = new JTextField();
-			nodesNumberField.setText("10");
-			randomPanel.add(nodesNumberField);
+			nodesNumberField.setText("50");
+			upperPanel.add(nodesNumberField);
 			nodesNumberField.setColumns(3);
-			JLabel lblNumberOfEdges = new JLabel("number of edges:");
-			randomPanel.add(lblNumberOfEdges);
-			edgesNumberField = new JTextField();
-			edgesNumberField.setText("15");
-			randomPanel.add(edgesNumberField);
-			edgesNumberField.setColumns(3);
+			randomPanel.add(upperPanel, BorderLayout.NORTH);
+			final JSlider randomSlider = new JSlider();
+			densityTotalField = new JTextField();
+			densityTotalField.setColumns(3);
+			JPanel densityPanel = new JPanel();
+			densityPanel.add(new JLabel("density of graph (x/100):"));
+			densityPanel.add(densityTotalField);
+			randomPanel.add(densityPanel, BorderLayout.CENTER);
+			randomSlider.setValue(50);
+			randomSlider.setMinorTickSpacing(5);
+			randomSlider.setMajorTickSpacing(25);
+			randomSlider.setPaintTicks(true);
+//			grSlider.setPaintLabels(true);
+			randomSlider.addChangeListener(new ChangeListener() {
+
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					JSlider source = (JSlider) e.getSource();
+					densityTotalField.setText("" + source.getValue());
+				}
+			});
+			densityTotalField.setText("" + randomSlider.getValue());
+			densityTotalField.addKeyListener(new KeyListener() {
+				@Override
+				public void keyReleased(KeyEvent e) {
+					String typed = densityTotalField.getText();
+					randomSlider.setValue(0);
+					if (!typed.matches("\\d+")) {
+						return;
+					}
+					int value = Integer.parseInt(typed);
+					randomSlider.setValue(value);
+				}
+
+				@Override
+				public void keyTyped(KeyEvent e) {
+				}
+
+				@Override
+				public void keyPressed(KeyEvent e) {
+				}
+			});
+			randomPanel.add(randomSlider, BorderLayout.SOUTH);
 			return randomPanel;
 
 		case RANDOMMODULAR:
@@ -232,26 +272,26 @@ public class GraphGeneratorWindow extends JDialog {
 			
 		case ERDOSRENYI:
 			JPanel erdosrenyiPanel = new JPanel(new BorderLayout());
-			JPanel upperPanel = new JPanel();
-			JLabel lblNumberOfNodes1 = new JLabel("number of nodes:");
-			upperPanel.add(lblNumberOfNodes1);
+			JPanel erUpperPanel = new JPanel();
+			JLabel erlblNumberOfNodes = new JLabel("number of nodes:");
+			erUpperPanel.add(erlblNumberOfNodes);
 			nodesNumberField = new JTextField();
 			nodesNumberField.setText("10");
-			upperPanel.add(nodesNumberField);
+			erUpperPanel.add(nodesNumberField);
 			nodesNumberField.setColumns(3);
-			erdosrenyiPanel.add(upperPanel, BorderLayout.NORTH);
-			final JSlider grSlider = new JSlider();
+			erdosrenyiPanel.add(erUpperPanel, BorderLayout.NORTH);
+			final JSlider erSlider = new JSlider();
 			probabilityField = new JTextField();
-			JPanel probLabelText = new JPanel();
-			probLabelText.add(new JLabel("Connection's probability between 2 vertices percentage:"));
-			probLabelText.add(probabilityField);
-			erdosrenyiPanel.add(probLabelText, BorderLayout.CENTER);
-			grSlider.setValue(50);
-			grSlider.setMinorTickSpacing(5);
-			grSlider.setMajorTickSpacing(25);
-			grSlider.setPaintTicks(true);
-			grSlider.setPaintLabels(true);
-			grSlider.addChangeListener(new ChangeListener() {
+			JPanel erProbLabelText = new JPanel();
+			erProbLabelText.add(new JLabel("Connection's probability between 2 vertices percentage:"));
+			erProbLabelText.add(probabilityField);
+			erdosrenyiPanel.add(erProbLabelText, BorderLayout.CENTER);
+			erSlider.setValue(50);
+			erSlider.setMinorTickSpacing(5);
+			erSlider.setMajorTickSpacing(25);
+			erSlider.setPaintTicks(true);
+			erSlider.setPaintLabels(true);
+			erSlider.addChangeListener(new ChangeListener() {
 
 				@Override
 				public void stateChanged(ChangeEvent e) {
@@ -259,17 +299,17 @@ public class GraphGeneratorWindow extends JDialog {
 					probabilityField.setText("" + source.getValue());
 				}
 			});
-			probabilityField.setText("" + grSlider.getValue());
+			probabilityField.setText("" + erSlider.getValue());
 			probabilityField.addKeyListener(new KeyListener() {
 				@Override
 				public void keyReleased(KeyEvent e) {
 					String typed = probabilityField.getText();
-					grSlider.setValue(0);
+					erSlider.setValue(0);
 					if (!typed.matches("\\d+")) {
 						return;
 					}
 					int value = Integer.parseInt(typed);
-					grSlider.setValue(value);
+					erSlider.setValue(value);
 				}
 
 				@Override
@@ -280,7 +320,7 @@ public class GraphGeneratorWindow extends JDialog {
 				public void keyPressed(KeyEvent e) {
 				}
 			});
-			erdosrenyiPanel.add(grSlider, BorderLayout.SOUTH);
+			erdosrenyiPanel.add(erSlider, BorderLayout.SOUTH);
 			return erdosrenyiPanel;
 
 		case EPPSTEIN:

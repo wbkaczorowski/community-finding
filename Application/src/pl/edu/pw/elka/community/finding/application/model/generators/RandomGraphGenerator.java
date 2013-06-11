@@ -35,8 +35,7 @@ public class RandomGraphGenerator {
 		random = new Random();
 	}
 
-	private Graph<Node, Edge> generateRandomGraph(int nodes, int edges) {
-
+	private Graph<Node, Edge> generateRandomGraph(int nodes, double density) {
 		Graph<Node, Edge> graph = new UndirectedSparseGraph<>();
 		for (int n = 0; n < nodes; ++n) {
 			Properties properties = new Properties();
@@ -47,6 +46,8 @@ public class RandomGraphGenerator {
 		}
 		ArrayList<Node> vertices = new ArrayList<Node>(graph.getVertices());
 
+		int edges = (int) ((density * vertices.size() * (vertices.size() - 1)) / 2);
+		System.out.println("d:" + density + " edges:" + edges);
 		for (int e = 0; e < edges; ++e) {
 			while (true) {
 				int firstNode = random.nextInt(nodes);
@@ -172,7 +173,7 @@ public class RandomGraphGenerator {
 		Graph<Node, Edge> graph = null;
 		switch (randomGraphType) {
 		case RANDOM:
-			graph = generateRandomGraph(Integer.valueOf((String) properties.get("nodes")), Integer.valueOf((String) properties.get("edges")));
+			graph = generateRandomGraph(Integer.valueOf((String) properties.get("nodes")), Double.valueOf((String) properties.get("density")) / 100);
 			break;
 			
 		case RANDOMMODULAR:
