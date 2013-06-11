@@ -47,7 +47,6 @@ public class RandomGraphGenerator {
 		ArrayList<Node> vertices = new ArrayList<Node>(graph.getVertices());
 
 		int edges = (int) ((density * vertices.size() * (vertices.size() - 1)) / 2);
-		System.out.println("d:" + density + " edges:" + edges);
 		for (int e = 0; e < edges; ++e) {
 			while (true) {
 				int firstNode = random.nextInt(nodes);
@@ -67,7 +66,7 @@ public class RandomGraphGenerator {
 			ArrayList<Node> set = new ArrayList<Node>();
 			structure.add(set);
 		}
-		
+
 		Graph<Node, Edge> graph = new UndirectedSparseGraph<>();
 		for (int n = 0; n < nodes; ++n) {
 			Properties properties = new Properties();
@@ -81,7 +80,7 @@ public class RandomGraphGenerator {
 		// creating edges insides groups
 		for (ArrayList<Node> comm : structure) {
 			int commSize = comm.size();
-			int edgesInside = (int) ((commSize * (commSize - 1) * densityInside) / 2) ;
+			int edgesInside = (int) ((commSize * (commSize - 1) * densityInside) / 2);
 			for (int e = 0; e < edgesInside; ++e) {
 				while (true) {
 					int firstNode = random.nextInt(commSize);
@@ -94,10 +93,10 @@ public class RandomGraphGenerator {
 			}
 		}
 
-		//creating edges between communities
+		// creating edges between communities
 		int edgesTotal = (int) (densityTotal * graph.getVertexCount() * (graph.getVertexCount() - 1) / 2);
 		ArrayList<Node> vertices = new ArrayList<Node>(graph.getVertices());
-		System.out.println(edgesTotal + " " + graph.getEdgeCount());
+//		System.out.println(edgesTotal + " " + graph.getEdgeCount());
 		while (edgesTotal > graph.getEdgeCount()) {
 			while (true) {
 				Node firstNode = vertices.get(random.nextInt(nodes));
@@ -108,10 +107,10 @@ public class RandomGraphGenerator {
 				}
 			}
 		}
-		
+
 		return graph;
 	}
-	
+
 	private boolean sameCommunity(Node first, Node second, ArrayList<ArrayList<Node>> structure) {
 		for (Collection<Node> community : structure) {
 			if (community.contains(first) && community.contains(second)) {
@@ -120,7 +119,6 @@ public class RandomGraphGenerator {
 		}
 		return false;
 	}
-	
 
 	private Graph<Node, Edge> generateBarabasiAlbert(int nodes, int edges) {
 		Set<Node> seedVertices = new HashSet<>();
@@ -175,9 +173,10 @@ public class RandomGraphGenerator {
 		case RANDOM:
 			graph = generateRandomGraph(Integer.valueOf((String) properties.get("nodes")), Double.valueOf((String) properties.get("density")) / 100);
 			break;
-			
+
 		case RANDOMMODULAR:
-			graph = generateModularGraph(Integer.valueOf((String) properties.get("nodes")), Integer.valueOf((String) properties.get("comm")), 1.0, 0.3);
+			graph = generateModularGraph(Integer.valueOf((String) properties.get("nodes")), Integer.valueOf((String) properties.get("comm")),
+					Double.valueOf((String) properties.get("densityInside")) / 100, Double.valueOf((String) properties.get("densityTotal")) / 100);
 			break;
 
 		case BARABASIALBERT:

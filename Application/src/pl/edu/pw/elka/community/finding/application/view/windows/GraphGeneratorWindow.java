@@ -1,6 +1,7 @@
 package pl.edu.pw.elka.community.finding.application.view.windows;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -89,8 +90,14 @@ public class GraphGeneratorWindow extends JDialog {
 						if (edgesNumberField != null) {
 							properties.setProperty("comm", edgesNumberField.getText());
 						}
+						if (densityTotalField != null) {
+							properties.setProperty("densityTotal", densityTotalField.getText());
+						}
+						if (densityInsideField != null) {
+							properties.setProperty("densityInside", densityInsideField.getText());
+						}
 						break;
-					
+
 					case BARABASIALBERT:
 						if (nodesNumberField != null) {
 							properties.setProperty("nodes", nodesNumberField.getText());
@@ -205,7 +212,6 @@ public class GraphGeneratorWindow extends JDialog {
 			randomSlider.setMinorTickSpacing(5);
 			randomSlider.setMajorTickSpacing(25);
 			randomSlider.setPaintTicks(true);
-//			grSlider.setPaintLabels(true);
 			randomSlider.addChangeListener(new ChangeListener() {
 
 				@Override
@@ -239,20 +245,7 @@ public class GraphGeneratorWindow extends JDialog {
 			return randomPanel;
 
 		case RANDOMMODULAR:
-			JPanel randomModularPanel = new JPanel();
-			JLabel rmLabelNodes = new JLabel("number of nodes:");
-			randomModularPanel.add(rmLabelNodes);
-			nodesNumberField = new JTextField();
-			nodesNumberField.setText("50");
-			randomModularPanel.add(nodesNumberField);
-			nodesNumberField.setColumns(3);
-			JLabel rmLabelComm = new JLabel("number of communities:");
-			randomModularPanel.add(rmLabelComm);
-			edgesNumberField = new JTextField();
-			edgesNumberField.setText("4");
-			randomModularPanel.add(edgesNumberField);
-			edgesNumberField.setColumns(3);
-			return randomModularPanel;
+			return randomModularView();
 
 		case BARABASIALBERT:
 			JPanel barabasiAlbertPanel = new JPanel();
@@ -269,7 +262,7 @@ public class GraphGeneratorWindow extends JDialog {
 			barabasiAlbertPanel.add(edgesNumberField);
 			edgesNumberField.setColumns(3);
 			return barabasiAlbertPanel;
-			
+
 		case ERDOSRENYI:
 			JPanel erdosrenyiPanel = new JPanel(new BorderLayout());
 			JPanel erUpperPanel = new JPanel();
@@ -396,11 +389,128 @@ public class GraphGeneratorWindow extends JDialog {
 			});
 			kleinbergPanel.add(kswSlider, BorderLayout.SOUTH);
 			return kleinbergPanel;
-			
+
 		default:
 			return new JPanel();
 
 		}
+
+	}
+
+	private JPanel randomModularView() {
+		JPanel randomPanel = new JPanel(new GridLayout(3, 0, 0, 0));
+		JPanel nodeCommNumberPanel = new JPanel();
+		JPanel totalDensityPanel = new JPanel();
+		JPanel insideDensityPanel = new JPanel();
+
+		JLabel rmLabelNodes = new JLabel("number of nodes:");
+		nodeCommNumberPanel.add(rmLabelNodes);
+		nodesNumberField = new JTextField();
+		nodesNumberField.setText("50");
+		nodeCommNumberPanel.add(nodesNumberField);
+		nodesNumberField.setColumns(3);
+		JLabel rmLabelComm = new JLabel("number of communities:");
+		nodeCommNumberPanel.add(rmLabelComm);
+		edgesNumberField = new JTextField();
+		edgesNumberField.setText("4");
+		nodeCommNumberPanel.add(edgesNumberField);
+		edgesNumberField.setColumns(3);
+		randomPanel.add(nodeCommNumberPanel);
+
+		/*
+		 * Total density.
+		 */
+		final JSlider totalDensitySlider = new JSlider();
+		densityTotalField = new JTextField();
+		densityTotalField.setColumns(3);
+		JPanel densityTotalPanel = new JPanel();
+		densityTotalPanel.add(new JLabel("total density in graph (x/100):"));
+		densityTotalPanel.add(densityTotalField);
+		totalDensityPanel.add(densityTotalPanel);
+		totalDensitySlider.setValue(50);
+		totalDensitySlider.setMinorTickSpacing(5);
+		totalDensitySlider.setMajorTickSpacing(25);
+		totalDensitySlider.setPaintTicks(true);
+		totalDensitySlider.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				JSlider source = (JSlider) e.getSource();
+				densityTotalField.setText("" + source.getValue());
+			}
+		});
+		densityTotalField.setText("" + totalDensitySlider.getValue());
+		densityTotalField.addKeyListener(new KeyListener() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String typed = densityTotalField.getText();
+				totalDensitySlider.setValue(0);
+				if (!typed.matches("\\d+")) {
+					return;
+				}
+				int value = Integer.parseInt(typed);
+				totalDensitySlider.setValue(value);
+			}
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+			}
+		});
+		totalDensityPanel.add(totalDensitySlider);
+
+		/*
+		 * Inside density.
+		 */
+		final JSlider insideDensitySlider = new JSlider();
+		densityInsideField = new JTextField();
+		densityInsideField.setColumns(3);
+		JPanel densityInsidePanel = new JPanel();
+		densityInsidePanel.add(new JLabel("density inside groups in graph (x/100):"));
+		densityInsidePanel.add(densityInsideField);
+		insideDensityPanel.add(densityInsidePanel);
+		insideDensitySlider.setValue(50);
+		insideDensitySlider.setMinorTickSpacing(5);
+		insideDensitySlider.setMajorTickSpacing(25);
+		insideDensitySlider.setPaintTicks(true);
+		insideDensitySlider.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				JSlider source = (JSlider) e.getSource();
+				densityInsideField.setText("" + source.getValue());
+			}
+		});
+		densityInsideField.setText("" + insideDensitySlider.getValue());
+		densityInsideField.addKeyListener(new KeyListener() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String typed = densityInsideField.getText();
+				insideDensitySlider.setValue(0);
+				if (!typed.matches("\\d+")) {
+					return;
+				}
+				int value = Integer.parseInt(typed);
+				insideDensitySlider.setValue(value);
+			}
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+			}
+		});
+		insideDensityPanel.add(insideDensitySlider);
+
+		randomPanel.add(nodeCommNumberPanel);
+		randomPanel.add(totalDensityPanel);
+		randomPanel.add(insideDensityPanel);
+		return randomPanel;
 
 	}
 
