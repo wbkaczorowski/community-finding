@@ -9,6 +9,7 @@ Application:
 * reading graph from graphML and pajek files
 * generation random graphs and random with communities
 * runing multiple tests with different graphs  
+* saving image with model of graph
 
 Library:  
 Contains two algorithms:

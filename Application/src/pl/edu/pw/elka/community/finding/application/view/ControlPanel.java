@@ -7,8 +7,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 
-import edu.uci.ics.jung.algorithms.generators.GraphGenerator;
-
 import pl.edu.pw.elka.community.finding.application.controller.events.Event;
 import pl.edu.pw.elka.community.finding.application.controller.events.EventName;
 import pl.edu.pw.elka.community.finding.application.controller.events.EventsBlockingQueue;
@@ -39,6 +37,7 @@ public class ControlPanel extends JToolBar {
 	private SingleTestWindow singleTestWindow;
 	private GraphGeneratorWindow graphGeneratorWindow;
 	private MultiTestWindow multiTestWindow;
+	private JButton btnSaveImage;
 	
 	public ControlPanel(final EventsBlockingQueue blockingQueue, final View view) {
 		setFloatable(false);
@@ -93,11 +92,24 @@ public class ControlPanel extends JToolBar {
 			}
 		});
 		add(btnMultipleTests);
+		
+		btnSaveImage = new JButton("Save image");
+		btnSaveImage.setEnabled(false);
+		btnSaveImage.setToolTipText("Save current graph as an image.");
+		btnSaveImage.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				view.getGraphView().saveImage(String.valueOf(System.currentTimeMillis())+".png", view);
+			}
+		});
+		add(btnSaveImage);
 
 	}
 
 	public void setEnabled(boolean b) {
 		btnSingleTest.setEnabled(b);
+		btnSaveImage.setEnabled(b);
 	}
 
 	public SingleTestWindow getSingleTestWindow() {

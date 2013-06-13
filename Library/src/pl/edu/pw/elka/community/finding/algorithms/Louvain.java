@@ -110,12 +110,12 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 			communities.add(group);
 		}
 
-		for (V i : graph.getVertices()) {
+		for (V node : graph.getVertices()) {
 			maxDQ = 0;
 			Set<V> newGroup = null;
 			// looking for best change
-			for (Set<V> neighbourGroup : findNeighborGroups(i, graph)) {
-				double dQ = calcualteDeltaModularity(i, neighbourGroup, graph);
+			for (Set<V> neighbourGroup : findNeighborGroups(node, graph)) {
+				double dQ = calcualteDeltaModularity(node, neighbourGroup, graph);
 				if (dQ > maxDQ) {
 					maxDQ = dQ;
 					newGroup = neighbourGroup;
@@ -124,8 +124,8 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 			}
 
 			if (newGroup != null) {
-				findVertexGroup(i).remove(i);
-				newGroup.add(i);
+				findVertexGroup(node).remove(node);
+				newGroup.add(node);
 			}
 		}
 
