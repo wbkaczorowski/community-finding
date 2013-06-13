@@ -13,6 +13,7 @@ import pl.edu.pw.elka.community.finding.application.controller.events.Event;
 import pl.edu.pw.elka.community.finding.application.controller.events.EventName;
 import pl.edu.pw.elka.community.finding.application.controller.events.EventsBlockingQueue;
 import pl.edu.pw.elka.community.finding.application.view.windows.GraphGeneratorWindow;
+import pl.edu.pw.elka.community.finding.application.view.windows.MultiTestWindow;
 import pl.edu.pw.elka.community.finding.application.view.windows.SingleTestWindow;
 
 /**
@@ -37,7 +38,8 @@ public class ControlPanel extends JToolBar {
 	 */
 	private SingleTestWindow singleTestWindow;
 	private GraphGeneratorWindow graphGeneratorWindow;
-
+	private MultiTestWindow multiTestWindow;
+	
 	public ControlPanel(final EventsBlockingQueue blockingQueue, final View view) {
 		setFloatable(false);
 
@@ -86,7 +88,8 @@ public class ControlPanel extends JToolBar {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO multi testy
+				multiTestWindow = new MultiTestWindow(view);
+				multiTestWindow.setVisible(true);
 			}
 		});
 		add(btnMultipleTests);

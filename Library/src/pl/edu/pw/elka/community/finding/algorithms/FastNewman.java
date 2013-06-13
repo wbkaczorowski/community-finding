@@ -107,7 +107,7 @@ public class FastNewman<V, E> implements Algorithm<V, E> {
 		 * Chose best partition.
 		 */
 		double maxQ = -Double.MAX_VALUE;
-		DendrogramLevel<V> chosenOne = null;
+		DendrogramLevel<V> chosenOne = dendrogram.get(0);
 		for (DendrogramLevel<V> dl : dendrogram) {
 			// System.out.println("Q:" + dl.getQ() + " size:" + dl.getGroups().size());
 			if (dl.getQ() > maxQ) {
@@ -115,8 +115,7 @@ public class FastNewman<V, E> implements Algorithm<V, E> {
 				chosenOne = dl;
 			}
 		}
-
-		// System.out.println("Best partition: " + chosenOne);
+//		System.out.println("Best partition: " + chosenOne);
 
 		return chosenOne.getGroups();
 	}

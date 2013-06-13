@@ -8,6 +8,7 @@ Application:
 * visualization of graph and partition
 * reading graph from graphML and pajek files
 * generation random graphs and random with communities
+* runing multiple tests with different graphs  
 
 Library:  
 Contains two algorithms:

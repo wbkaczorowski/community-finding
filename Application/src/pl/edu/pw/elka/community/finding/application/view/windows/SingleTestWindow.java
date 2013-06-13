@@ -243,12 +243,6 @@ public class SingleTestWindow extends JDialog {
 			fastNewmanPanel.add(fastNewmanLabel);
 			return fastNewmanPanel;
 
-		case ALL:
-			JPanel defaultPanel = new JPanel();
-			JLabel defaultLabel = new JLabel("All not acceptable, choose other algorithm on the left.");
-			defaultPanel.add(defaultLabel);
-			return defaultPanel;
-
 		default:
 			return new JPanel();
 

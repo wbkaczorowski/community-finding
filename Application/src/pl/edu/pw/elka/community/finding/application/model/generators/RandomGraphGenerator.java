@@ -35,7 +35,7 @@ public class RandomGraphGenerator {
 		random = new Random();
 	}
 
-	private Graph<Node, Edge> generateRandomGraph(int nodes, double density) {
+	public Graph<Node, Edge> generateRandomGraph(int nodes, double density) {
 		Graph<Node, Edge> graph = new UndirectedSparseGraph<>();
 		for (int n = 0; n < nodes; ++n) {
 			Properties properties = new Properties();
@@ -60,7 +60,7 @@ public class RandomGraphGenerator {
 		return graph;
 	}
 
-	private Graph<Node, Edge> generateModularGraph(int nodes, int communities, double densityInside, double densityTotal) {
+	public Graph<Node, Edge> generateModularGraph(int nodes, int communities, double densityInside, double densityTotal) {
 		ArrayList<ArrayList<Node>> structure = new ArrayList<>();
 		for (int c = 0; c < communities; ++c) {
 			ArrayList<Node> set = new ArrayList<Node>();
@@ -96,7 +96,7 @@ public class RandomGraphGenerator {
 		// creating edges between communities
 		int edgesTotal = (int) (densityTotal * graph.getVertexCount() * (graph.getVertexCount() - 1) / 2);
 		ArrayList<Node> vertices = new ArrayList<Node>(graph.getVertices());
-		System.out.println(edgesTotal + " " + graph.getEdgeCount());
+//		System.out.println(edgesTotal + " " + graph.getEdgeCount());
 		while (edgesTotal > graph.getEdgeCount()) {
 			while (true) {
 				Node firstNode = vertices.get(random.nextInt(nodes));

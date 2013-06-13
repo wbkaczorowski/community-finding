@@ -81,19 +81,43 @@ public class Controller {
 			}
 		});
 
-		eventHandlers.put(EventName.OPEN_DIRECTORY, new EventHandler() {
+		eventHandlers.put(EventName.MULTI_TESTS_REAL, new EventHandler() {
 
 			@Override
 			public void execute() {
 				if (view.getDirGraphPath() != null) {
 					view.getStatusBar().setAppState("loading graphs...");
-					model.loadGraphs(view.getDirGraphPath());
+					model.getTestManager().addData(model.loadGraphs(view.getDirGraphPath()));
 					// no putting graph view here
 					view.getStatusBar().setAppState("loaded graphs: " + view.getDirGraphPath());
 				}
 			}
 		});
 
+		eventHandlers.put(EventName.MULTI_TESTS_ARTIFICIAL, new EventHandler() {
+
+			@Override
+			public void execute() {
+				view.getStatusBar().setAppState("generating graphs...");
+				model.getTestManager().generateArtificialData();
+				view.getStatusBar().setAppState("generated graphs");
+
+			}
+		});
+		
+		eventHandlers.put(EventName.MULTI_TESTS, new EventHandler() {
+
+			@Override
+			public void execute() {
+				if(!model.getTestManager().getTestQueue().isEmpty()) {
+					view.getStatusBar().setAppState("multiple test...");
+					model.getTestManager().runTest();
+					model.getTestManager().saveResults();
+					view.getStatusBar().setAppState("multiple test done");
+				}
+			}
+		});
+		
 		eventHandlers.put(EventName.CALCULATE_SINGLE, new EventHandler() {
 
 			@Override

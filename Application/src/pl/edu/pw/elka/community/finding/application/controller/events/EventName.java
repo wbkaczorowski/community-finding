@@ -18,7 +18,7 @@ public enum EventName {
     /**
      * Load directory with graphs.
      */
-    OPEN_DIRECTORY,
+    MULTI_TESTS_REAL,
     
     /**
      * Calculate single graph groups with visualization.
@@ -26,9 +26,14 @@ public enum EventName {
     CALCULATE_SINGLE,
     
     /**
-     * Calculate groups without visualization.
+     * Make multiple tests.
      */
-    CALCULATE_MULTI,
+    MULTI_TESTS,
+    
+    /**
+     * Make multiple tests with artificial data.
+     */
+    MULTI_TESTS_ARTIFICIAL,
 
     /**
      * About.

@@ -48,6 +48,7 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Set<Set<V>> getCommunities(Graph<V, E> graph) {
 		Graph<V, E> loopGraph = graph;

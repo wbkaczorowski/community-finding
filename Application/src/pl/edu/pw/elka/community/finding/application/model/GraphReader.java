@@ -26,53 +26,43 @@ import edu.uci.ics.jung.io.PajekNetReader;
  */
 public class GraphReader {
 
-	private GraphMLReader<Graph<Node, Edge>, Node, Edge> graphMLReader;
-	private PajekNetReader<Graph<Node, Edge>, Node, Edge> pajekNetReader;
-	private Graph<Node, Edge> graph;
-
-	public GraphReader(String filename) throws ParserConfigurationException, SAXException, IOException {
-		if (filename.endsWith(".graphml")) {
-			graphMLFile(filename);
-		} else if (filename.endsWith(".paj")) {
-			pajekFile(filename);
-		}
-	}
 	
-	private void graphMLFile(String filename) throws ParserConfigurationException, SAXException, IOException {
-		graphMLReader = new GraphMLReader<Graph<Node, Edge>, Node, Edge>(new NodeFactory(), new EdgeFactory());
-
-		graph = new UndirectedSparseGraph<Node, Edge>();
-		graphMLReader.load(filename, graph);
-
-		Map<String, GraphMLMetadata<Node>> nodeMetadata = graphMLReader.getVertexMetadata();
-
-		// setting data for nodes
-		Set<String> keys = nodeMetadata.keySet();
-		for (Node n : graph.getVertices()) {
-			for (String key : keys) {
-				if (!nodeMetadata.get(key).transformer.transform(n).equals("")) {
-					n.getData().put(key, nodeMetadata.get(key).transformer.transform(n));
-				}
-			}
-			// by default, at beginning all belongs to the same group
-			n.setGroup("0");
-		}
-	}
-	
-	private void pajekFile(String filename) throws IOException {
-		pajekNetReader = new PajekNetReader<Graph<Node, Edge>, Node, Edge>(new NodeFactory(), new EdgeFactory());
+	public static Graph<Node, Edge> read(String filename) throws IOException, ParserConfigurationException, SAXException {
+		GraphMLReader<Graph<Node, Edge>, Node, Edge> graphMLReader;
+		PajekNetReader<Graph<Node, Edge>, Node, Edge> pajekNetReader;
+		Graph<Node, Edge> graph = null;
 		
-		graph = new UndirectedSparseGraph<Node, Edge>();
-		pajekNetReader.load(filename, graph);
+		if (filename.endsWith(".graphml")) {
+			graphMLReader = new GraphMLReader<Graph<Node, Edge>, Node, Edge>(new NodeFactory(), new EdgeFactory());
 
-		for (Node n : graph.getVertices()) {
-			n.setGroup("0");
+			graph = new UndirectedSparseGraph<Node, Edge>();
+			graphMLReader.load(filename, graph);
+
+			Map<String, GraphMLMetadata<Node>> nodeMetadata = graphMLReader.getVertexMetadata();
+
+			// setting data for nodes
+			Set<String> keys = nodeMetadata.keySet();
+			for (Node n : graph.getVertices()) {
+				for (String key : keys) {
+					if (!nodeMetadata.get(key).transformer.transform(n).equals("")) {
+						n.getData().put(key, nodeMetadata.get(key).transformer.transform(n));
+					}
+				}
+				// by default, at beginning all belongs to the same group
+				n.setGroup("0");
+			}
+		} else if (filename.endsWith(".paj")) {
+			pajekNetReader = new PajekNetReader<Graph<Node, Edge>, Node, Edge>(new NodeFactory(), new EdgeFactory());
+			
+			graph = new UndirectedSparseGraph<Node, Edge>();
+			pajekNetReader.load(filename, graph);
+
+			for (Node n : graph.getVertices()) {
+				n.setGroup("0");
+			}
 		}
-
-	}
-
-	public Graph<Node, Edge> getGraph() {
 		return graph;
 	}
+
 
 }

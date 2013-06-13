@@ -10,7 +10,6 @@ public enum AlgorithmType {
 	GRIVAN_NEWMAN("Grivan-Newman"),
 	WU_HUBERMAN("Wu-Huberman"),
 	FAST_NEWMAM("Fast Newman Algorithm"),
-	ALL("all"),
 	;
 	
 	private final String text;
