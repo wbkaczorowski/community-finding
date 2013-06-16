@@ -183,7 +183,7 @@ public class FastNewman<V, E> implements Algorithm<V, E> {
 	/**
 	 * @param i id of first group
 	 * @param j id of second group
-	 * @return ture if two groups are connected by edge
+	 * @return true if two groups are connected by edge
 	 */
 	private boolean areConnected(int i, int j) {
 		if (sumEdgesValuesWithoutTrace(matrixGraph.viewSelection(getIntArrayFromSets(groupIndicesMap.get(i), groupIndicesMap.get(j)),

@@ -17,7 +17,7 @@ import edu.uci.ics.jung.graph.UndirectedSparseGraph;
  * @author Wojciech Kaczorowski
  * 
  * @param <V>
- *            vertex
+ *            vertex cannot be java.util.Set type
  * @param <E>
  *            edge
  */
@@ -35,7 +35,7 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 
 	// global parameters for calculation and experiments
 	/**
-	 * Doubled number of all edges in graph, should be: Doubled the sum of the weights of all the links in the network.
+	 * Doubled the sum of the weights of all the links in the network.
 	 */
 	private double m2;
 
@@ -60,6 +60,7 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 			edgesValues.put(e, new Double(1));
 		}
 
+		// main loop
 		while (true) {
 			if (!phaseOne(loopGraph)) {
 				break;
@@ -71,7 +72,7 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 
 		communities = new HashSet<>();
 		for (V g : loopGraph.getVertices()) {
-			if (!(g instanceof Set<?>)) {
+			if (!(g instanceof Set<?>)) { // case when main loop does only one iteration
 				Set<V> group = new HashSet<>();
 				group.add(g);
 				communities.add(separateElements(group));
@@ -114,8 +115,14 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 			maxDQ = 0;
 			Set<V> newGroup = null;
 			// looking for best change
+			double dQremoved = calcualteDeltaModularity(node, findVertexGroup(node), graph); // difference in modularity obtained by removing from current community
 			for (Set<V> neighbourGroup : findNeighborGroups(node, graph)) {
-				double dQ = calcualteDeltaModularity(node, neighbourGroup, graph);
+				double dQ;
+				if (findVertexGroup(node).size() > 1) {
+					dQ = calcualteDeltaModularity(node, neighbourGroup, graph) - dQremoved;
+				} else { // node was isolated
+					dQ = calcualteDeltaModularity(node, neighbourGroup, graph);
+				}
 				if (dQ > maxDQ) {
 					maxDQ = dQ;
 					newGroup = neighbourGroup;

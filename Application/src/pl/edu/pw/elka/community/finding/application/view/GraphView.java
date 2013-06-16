@@ -20,6 +20,7 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
+import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 
 /**
  * Class responsible for displaying graph itself.
@@ -63,7 +64,7 @@ public class GraphView {
 		/*
 		 * nodes labels
 		 */
-		// v.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<Node>());
+		 v.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<Node>());
 		/*
 		 * edges labels
 		 */
