@@ -12,7 +12,7 @@ Application:
 * saving image with model of graph
 
 Library:  
-Contains two algorithms:
+Contains algorithms:
 * Louvain (Blondel)
 * Fast-Greedy Newman.
-
+* Grivan-Newman (improved EdgeBetweennessClusterer)
