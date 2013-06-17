@@ -7,7 +7,8 @@ package pl.edu.pw.elka.community.finding.application.model.algoritms;
  */
 public enum AlgorithmType {
 	LOUVAIN("Louvain"),
-	GRIVAN_NEWMAN("Grivan-Newman"),
+	GRIVAN_NEWMAN("Grivan-Newman/edges number"),
+	IMPROVED_GRIVAN_NEWMAN("Grivan-Newman/group number"),
 	WU_HUBERMAN("Wu-Huberman"),
 	FAST_NEWMAM("Fast Newman Algorithm"),
 	;

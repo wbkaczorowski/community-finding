@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import pl.edu.pw.elka.community.finding.algorithms.FastNewman;
+import pl.edu.pw.elka.community.finding.algorithms.GrivanNewman;
 import pl.edu.pw.elka.community.finding.algorithms.Louvain;
 import pl.edu.pw.elka.community.finding.application.controller.events.Event;
 import pl.edu.pw.elka.community.finding.application.controller.events.EventName;
@@ -53,6 +54,10 @@ public class AlgorithmManager {
 
 		case GRIVAN_NEWMAN:
 			numberGroups = grivanNewman(graph, param);
+			break;
+			
+		case IMPROVED_GRIVAN_NEWMAN:
+			numberGroups = improvedGrivanNewman(graph, param);
 			break;
 
 		case WU_HUBERMAN:
@@ -109,13 +114,13 @@ public class AlgorithmManager {
 		outputs.add(wuHubermanOut);
 		
 		// TODO wyliczać tą wartość?
-//		int numEdgesToRemove = numEdgesToRemoveGN;
-		int numEdgesToRemove = graph.getVertexCount() / 15;
+//		int numEdgesToRemove = graph.getVertexCount() / 15;
+		
 		System.out.println("GN:" + name);
-		EdgeBetweennessClusterer<Node, Edge> grivanNewman = new EdgeBetweennessClusterer<Node, Edge>(numEdgesToRemove);
+		GrivanNewman<Node, Edge> grivanNewman = new GrivanNewman<Node, Edge>(clusterCandidates);
 		Output grivanNewmanOut = new Output();
 		long grivanNewmanTime = System.currentTimeMillis();
-		grivanNewmanOut.setCommunities(grivanNewman.transform(graph));
+		grivanNewmanOut.setCommunities(grivanNewman.getCommunities(graph));
 		grivanNewmanOut.setTime(System.currentTimeMillis() - grivanNewmanTime);
 		grivanNewmanOut.setName("GN:" + name);
 		outputs.add(grivanNewmanOut);
@@ -135,7 +140,19 @@ public class AlgorithmManager {
 		return groupCounter;
 
 	}
-
+	
+	private int improvedGrivanNewman(Graph<Node, Edge> graph, int groupsNumber) {
+		GrivanNewman<Node, Edge> algorithm = new GrivanNewman<>(groupsNumber);
+		int groupCounter = 0;
+		for (Set<Node> set : algorithm.getCommunities(graph)) {
+			for (Node n : set) {
+				n.setGroup(String.valueOf(groupCounter));
+			}
+			++groupCounter;
+		}
+		return groupCounter;
+	}
+	
 	private int grivanNewman(Graph<Node, Edge> graph, int numEdgesToRemove) {
 		EdgeBetweennessClusterer<Node, Edge> algorithm = new EdgeBetweennessClusterer<Node, Edge>(numEdgesToRemove);
 		int groupCounter = 0;
@@ -171,6 +188,7 @@ public class AlgorithmManager {
 		}
 		return groupCounter;
 	}
+	
 
 	public AlgorithmType getAlgorithmType() {
 		return algorithmType;

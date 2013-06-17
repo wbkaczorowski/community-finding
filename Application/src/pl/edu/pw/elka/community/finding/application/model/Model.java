@@ -45,7 +45,7 @@ public class Model {
 
 	public void loadNewGraph(String filename) {
 		try {
-			graph = GraphReader.read(filename);
+			graph = GraphUtils.read(filename);
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		} catch (SAXException e) {
@@ -73,7 +73,7 @@ public class Model {
 		for(File graphFile : directory.listFiles()) {
 			if (graphFile.isFile() && (graphFile.getName().endsWith(".graphml") || graphFile.getName().endsWith(".paj"))) {
 				try {
-					map.put(graphFile.getName(), GraphReader.read(graphFile.getAbsolutePath()));
+					map.put(graphFile.getName(), GraphUtils.read(graphFile.getAbsolutePath()));
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (ParserConfigurationException e) {

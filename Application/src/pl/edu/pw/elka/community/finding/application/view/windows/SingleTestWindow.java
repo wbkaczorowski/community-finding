@@ -196,7 +196,7 @@ public class SingleTestWindow extends JDialog {
 			final JSlider whSlider = new JSlider();
 			paramValueTextField = new JTextField(String.valueOf(view.getGraphParameter().getEgdesNumber()).length());
 			JPanel whLabelText = new JPanel();
-			whLabelText.add(new JLabel("Number of grup candidates:"));
+			whLabelText.add(new JLabel("Number of group candidates:"));
 			whLabelText.add(paramValueTextField);
 			whPanel.add(whLabelText, BorderLayout.NORTH);
 			whSlider.setMaximum(view.getGraphParameter().getNodesNumber());
@@ -235,6 +235,51 @@ public class SingleTestWindow extends JDialog {
 			});
 			whPanel.add(whSlider, BorderLayout.CENTER);
 			return whPanel;
+			
+		case IMPROVED_GRIVAN_NEWMAN:
+			JPanel impGNPanel = new JPanel(new BorderLayout(0, 0));
+			final JSlider impGNSlider = new JSlider();
+			paramValueTextField = new JTextField(String.valueOf(view.getGraphParameter().getEgdesNumber()).length());
+			JPanel impGNTextPanel = new JPanel();
+			impGNTextPanel.add(new JLabel("Number of group candidates:"));
+			impGNTextPanel.add(paramValueTextField);
+			impGNPanel.add(impGNTextPanel, BorderLayout.NORTH);
+			impGNSlider.setMaximum(view.getGraphParameter().getNodesNumber());
+			impGNSlider.setMinorTickSpacing(view.getGraphParameter().getNodesNumber() / 20);
+			impGNSlider.setMajorTickSpacing(view.getGraphParameter().getNodesNumber() / 4);
+			impGNSlider.setPaintTicks(true);
+			impGNSlider.setPaintLabels(true);
+			impGNSlider.addChangeListener(new ChangeListener() {
+
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					JSlider source = (JSlider) e.getSource();
+					paramValueTextField.setText("" + source.getValue());
+				}
+			});
+			paramValueTextField.setText("" + impGNSlider.getValue());
+			paramValueTextField.addKeyListener(new KeyListener() {
+				@Override
+				public void keyReleased(KeyEvent e) {
+					String typed = paramValueTextField.getText();
+					impGNSlider.setValue(0);
+					if (!typed.matches("\\d+")) {
+						return;
+					}
+					int value = Integer.parseInt(typed);
+					impGNSlider.setValue(value);
+				}
+
+				@Override
+				public void keyTyped(KeyEvent e) {
+				}
+
+				@Override
+				public void keyPressed(KeyEvent e) {
+				}
+			});
+			impGNPanel.add(impGNSlider, BorderLayout.CENTER);
+			return impGNPanel;
 
 		case FAST_NEWMAM:
 			JPanel fastNewmanPanel = new JPanel();

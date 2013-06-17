@@ -19,12 +19,12 @@ import edu.uci.ics.jung.io.GraphMLReader;
 import edu.uci.ics.jung.io.PajekNetReader;
 
 /**
- * Reader for one graph from file.
+ * Utilities for graphs.
  * 
  * @author Wojciech Kaczorowski
  * 
  */
-public class GraphReader {
+public class GraphUtils {
 
 	
 	public static Graph<Node, Edge> read(String filename) throws IOException, ParserConfigurationException, SAXException {
@@ -64,5 +64,13 @@ public class GraphReader {
 		return graph;
 	}
 
+	
+	public static Graph<Node, Edge> makeCopy(Graph<Node, Edge> graph) {
+		Graph<Node, Edge> copy = new UndirectedSparseGraph<Node, Edge>();
+		for (Edge e : graph.getEdges()) {
+			copy.addEdge(e, graph.getEndpoints(e));
+		}
+		return copy;
+	}
 
 }
