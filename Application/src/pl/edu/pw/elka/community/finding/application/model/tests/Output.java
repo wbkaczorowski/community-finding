@@ -16,6 +16,7 @@ public class Output {
 	private Collection<Set<Node>> communities;
 	private long time;
 	private double modularity;
+	
 	private Transformer<Node, Set<Node>> moduleMembership;
 
 	public Output() {
@@ -60,11 +61,9 @@ public class Output {
 		modularity = Modularity.computeModularity(graph, moduleMembership);
 	}
 	
-	
-	
 	@Override
 	public String toString() {
-		return properties + ", communities=" + communities.size() + ", time=" + time + ", modularity=" + modularity;
+		return properties + ", communities=" + communities.size() + ", time=" + time + " ms" + ", modularity=" + modularity;
 	}
 
 	public Collection<Set<Node>> getCommunities() {

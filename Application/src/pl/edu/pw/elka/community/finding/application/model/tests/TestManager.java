@@ -102,7 +102,7 @@ public class TestManager {
 		System.out.println("generated random graphs: " + testQueue.size());
 	}
 
-	// TODO to porównanie czy dal tego samego grafu takie same podziały dało, i jak sie różnia
+	// TODO to porównanie czy dla tego samego grafu takie same podziały dało, i jak sie różnia
 	public void partitionComparator() {
 
 	}
