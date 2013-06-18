@@ -1,7 +1,5 @@
 package pl.edu.pw.elka.community.finding.application.controller;
 
-import java.util.Properties;
-
 import pl.edu.pw.elka.community.finding.application.controller.events.Event;
 import pl.edu.pw.elka.community.finding.application.controller.events.EventHandler;
 import pl.edu.pw.elka.community.finding.application.controller.events.EventName;
@@ -9,7 +7,6 @@ import pl.edu.pw.elka.community.finding.application.controller.events.EventsBloc
 import pl.edu.pw.elka.community.finding.application.controller.events.EventsHandlersMap;
 import pl.edu.pw.elka.community.finding.application.model.Model;
 import pl.edu.pw.elka.community.finding.application.model.algoritms.AlgorithmType;
-import pl.edu.pw.elka.community.finding.application.model.generators.RandomGraphType;
 import pl.edu.pw.elka.community.finding.application.view.View;
 
 public class Controller {
@@ -29,7 +26,7 @@ public class Controller {
 		try {
 			// put the starting event
 			blockingQueue.put(new Event(EventName.START));
-//			blockingQueue.put(new Event(EventName.DEBUG));
+			// blockingQueue.put(new Event(EventName.DEBUG));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -60,19 +57,20 @@ public class Controller {
 				}
 			}
 		});
-		
+
 		eventHandlers.put(EventName.GENERATE_RANODM, new EventHandler() {
 
 			@Override
 			public void execute() {
-					view.getStatusBar().setAppState("generating graph...");
-					model.generateGraph(view.getControlPanel().getGraphGeneratorWindow().getChosenGraphType(), view.getControlPanel().getGraphGeneratorWindow().getProperties());
-					view.setGraphView(model.getGraph());
-					view.setGraphParameter(model.getGraph());
-					view.getStatusBar().setAppState("generated " + view.getControlPanel().getGraphGeneratorWindow().getChosenGraphType() + " graph");
+				view.getStatusBar().setAppState("generating graph...");
+				model.generateGraph(view.getControlPanel().getGraphGeneratorWindow().getChosenGraphType(), view.getControlPanel().getGraphGeneratorWindow()
+						.getProperties());
+				view.setGraphView(model.getGraph());
+				view.setGraphParameter(model.getGraph());
+				view.getStatusBar().setAppState("generated " + view.getControlPanel().getGraphGeneratorWindow().getChosenGraphType() + " graph");
 			}
 		});
-		
+
 		eventHandlers.put(EventName.REFRESH_VIEW, new EventHandler() {
 			@Override
 			public void execute() {
@@ -104,12 +102,12 @@ public class Controller {
 
 			}
 		});
-		
+
 		eventHandlers.put(EventName.MULTI_TESTS, new EventHandler() {
 
 			@Override
 			public void execute() {
-				if(!model.getTestManager().getTestQueue().isEmpty()) {
+				if (!model.getTestManager().getTestQueue().isEmpty()) {
 					view.getStatusBar().setAppState("multiple test...");
 					model.getTestManager().runTest();
 					model.getTestManager().saveResults();
@@ -117,25 +115,26 @@ public class Controller {
 				}
 			}
 		});
-		
+
 		eventHandlers.put(EventName.CALCULATE_SINGLE, new EventHandler() {
 
 			@Override
 			public void execute() {
 				model.setAlgorithmType(view.getControlPanel().getSingleTestWindow().getChosenAglorithm());
 				view.getStatusBar().setAppState("calculating...");
-				view.getStatusBar().setAppState("number of groups: " + model.getAlgorithmManager().computeSingle(model.getGraph(), view.getControlPanel().getSingleTestWindow().getParam()));
+				view.getStatusBar().setAppState(
+						"number of groups: "
+								+ model.getAlgorithmManager().computeSingle(model.getGraph(), view.getControlPanel().getSingleTestWindow().getParam()));
 				view.newGroups(model.getGraph());
 			}
 		});
-		
-		
+
 		eventHandlers.put(EventName.DEBUG, new EventHandler() {
-			
+
 			@Override
 			public void execute() {
 				view.showWindow();
-				
+
 				view.getStatusBar().setAppState("loading graph...");
 				model.loadNewGraph("sm.graphml");
 				view.setGraphView(model.getGraph());
@@ -147,7 +146,7 @@ public class Controller {
 				view.newGroups(model.getGraph());
 			}
 		});
-		
+
 	}
 
 	/**

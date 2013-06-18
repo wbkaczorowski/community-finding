@@ -26,13 +26,13 @@ public class NodePainter implements Transformer<Node, Paint> {
 		colorMap.put("0", Color.BLUE);
 		colorMap.put("1", Color.RED);
 		colorMap.put("2", Color.GREEN);
-		colorMap.put("3", Color.MAGENTA);
+		colorMap.put("3", Color.ORANGE);
 		colorMap.put("4", Color.CYAN);
 		colorMap.put("5", Color.PINK);
 		colorMap.put("6", Color.YELLOW);
-		colorMap.put("7", Color.ORANGE);
+		colorMap.put("7", Color.MAGENTA);
 		colorMap.put("8", Color.DARK_GRAY);
-		
+		colorMap.put("9", Color.WHITE);
 	}
 
 	@Override

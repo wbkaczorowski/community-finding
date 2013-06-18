@@ -2,6 +2,7 @@ package pl.edu.pw.elka.community.finding.application.model.algoritms;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Properties;
 import java.util.Set;
 
 import pl.edu.pw.elka.community.finding.algorithms.FastNewman;
@@ -29,7 +30,7 @@ public class AlgorithmManager {
 	 * Type of algorithm actually use.
 	 */
 	private AlgorithmType algorithmType;
-	
+
 	private EventsBlockingQueue blockingQueue;
 
 	public AlgorithmManager(EventsBlockingQueue blockingQueue) {
@@ -55,7 +56,7 @@ public class AlgorithmManager {
 		case GRIVAN_NEWMAN:
 			numberGroups = grivanNewman(graph, param);
 			break;
-			
+
 		case IMPROVED_GRIVAN_NEWMAN:
 			numberGroups = improvedGrivanNewman(graph, param);
 			break;
@@ -79,52 +80,59 @@ public class AlgorithmManager {
 		return numberGroups;
 	}
 
-	
-	public Collection<Output> computeAll(String name, Graph<Node, Edge> graph, int numEdgesToRemoveGN, int clusterCandidatesWH) {
+	public Collection<Output> computeAll(Properties properties, Graph<Node, Edge> graph) {
 		ArrayList<Output> outputs = new ArrayList<Output>(4);
-		
-		System.out.println("LV:" + name);
+
+		System.out.println("LV:" + properties.getProperty("graphType"));
 		Louvain<Node, Edge> louvain = new Louvain<Node, Edge>();
 		Output louvainOut = new Output();
 		long louvainTime = System.currentTimeMillis();
 		louvainOut.setCommunities(louvain.getCommunities(graph));
 		louvainOut.setTime(System.currentTimeMillis() - louvainTime);
-		louvainOut.setName("LV:" + name);
+		louvainOut.addProperty("algorithmType", "LV");
+		louvainOut.addProperty(properties);
+		louvainOut.calculateModularity(graph);
 		outputs.add(louvainOut);
-		
-		System.out.println("FN:" + name);
+
+		System.out.println("FN:" + properties.getProperty("graphType"));
 		FastNewman<Node, Edge> fastNewman = new FastNewman<Node, Edge>();
 		Output fastNewmanOut = new Output();
 		long fastNewmanTime = System.currentTimeMillis();
 		fastNewmanOut.setCommunities(fastNewman.getCommunities(graph));
 		fastNewmanOut.setTime(System.currentTimeMillis() - fastNewmanTime);
-		fastNewmanOut.setName("FN:" + name);
+		fastNewmanOut.addProperty("algorithmType", "FN");
+		fastNewmanOut.addProperty(properties);
+		fastNewmanOut.calculateModularity(graph);
 		outputs.add(fastNewmanOut);
-		
+
 		// TODO wyliczać tą wartość?
-		int clusterCandidates = (louvainOut.getCommunities().size() + fastNewmanOut.getCommunities().size()) / 2;
-//		int clusterCandidates = clusterCandidatesWH;
-		System.out.println("WH:" + name);
+		int clusterCandidates = (int) Math.ceil((louvainOut.getCommunities().size() + fastNewmanOut.getCommunities().size()) / 2.0);
+		// int clusterCandidates = clusterCandidatesWH;
+		System.out.println("WH:" + properties.getProperty("graphType"));
 		VoltageClusterer<Node, Edge> wuHuberman = new VoltageClusterer<Node, Edge>(graph, clusterCandidates);
 		Output wuHubermanOut = new Output();
 		long wuHubermanTime = System.currentTimeMillis();
 		wuHubermanOut.setCommunities(wuHuberman.cluster(clusterCandidates));
 		wuHubermanOut.setTime(System.currentTimeMillis() - wuHubermanTime);
-		wuHubermanOut.setName("WH:" + name);
+		wuHubermanOut.addProperty("algorithmType", "WH");
+		wuHubermanOut.addProperty(properties);
+		wuHubermanOut.calculateModularity(graph);
 		outputs.add(wuHubermanOut);
-		
+
 		// TODO wyliczać tą wartość?
-//		int numEdgesToRemove = graph.getVertexCount() / 15;
-		
-		System.out.println("GN:" + name);
+		// int numEdgesToRemove = graph.getVertexCount() / 15;
+
+		System.out.println("GN:" + properties.getProperty("graphType"));
 		GrivanNewman<Node, Edge> grivanNewman = new GrivanNewman<Node, Edge>(clusterCandidates);
 		Output grivanNewmanOut = new Output();
 		long grivanNewmanTime = System.currentTimeMillis();
 		grivanNewmanOut.setCommunities(grivanNewman.getCommunities(graph));
 		grivanNewmanOut.setTime(System.currentTimeMillis() - grivanNewmanTime);
-		grivanNewmanOut.setName("GN:" + name);
+		grivanNewmanOut.addProperty("algorithmType", "GN");
+		grivanNewmanOut.addProperty(properties);
+		grivanNewmanOut.calculateModularity(graph);
 		outputs.add(grivanNewmanOut);
-		
+
 		return outputs;
 	}
 
@@ -140,7 +148,7 @@ public class AlgorithmManager {
 		return groupCounter;
 
 	}
-	
+
 	private int improvedGrivanNewman(Graph<Node, Edge> graph, int groupsNumber) {
 		GrivanNewman<Node, Edge> algorithm = new GrivanNewman<>(groupsNumber);
 		int groupCounter = 0;
@@ -152,7 +160,7 @@ public class AlgorithmManager {
 		}
 		return groupCounter;
 	}
-	
+
 	private int grivanNewman(Graph<Node, Edge> graph, int numEdgesToRemove) {
 		EdgeBetweennessClusterer<Node, Edge> algorithm = new EdgeBetweennessClusterer<Node, Edge>(numEdgesToRemove);
 		int groupCounter = 0;
@@ -176,7 +184,7 @@ public class AlgorithmManager {
 		}
 		return groupCounter;
 	}
-	
+
 	private int fastNewman(Graph<Node, Edge> graph) {
 		FastNewman<Node, Edge> algorithm = new FastNewman<Node, Edge>();
 		int groupCounter = 0;
@@ -188,7 +196,6 @@ public class AlgorithmManager {
 		}
 		return groupCounter;
 	}
-	
 
 	public AlgorithmType getAlgorithmType() {
 		return algorithmType;

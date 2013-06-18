@@ -17,26 +17,25 @@ import edu.uci.ics.jung.graph.Graph;
 
 public class TestManager {
 
-	private HashMap<String, Graph<Node, Edge>> testQueue;
+	private HashMap<Properties, Graph<Node, Edge>> testQueue;
 	private AlgorithmManager algorithmManager;
 	private RandomGraphGenerator randomGraphGenerator;
 	private ArrayList<Output> results;
 
 	public TestManager(AlgorithmManager am, RandomGraphGenerator rgg) {
-		testQueue = new HashMap<String, Graph<Node, Edge>>();
+		testQueue = new HashMap<Properties, Graph<Node, Edge>>();
 		algorithmManager = am;
 		randomGraphGenerator = rgg;
 	}
 
-	public void addData(Map<String, Graph<Node, Edge>> graphs) {
+	public void addData(Map<Properties, Graph<Node, Edge>> graphs) {
 		testQueue.putAll(graphs);
 	}
 
 	public void runTest() {
 		results = new ArrayList<Output>();
-		for (String name : testQueue.keySet()) {
-			// TODO te parametry zmienić
-			results.addAll(algorithmManager.computeAll(name, testQueue.get(name), 0, 0));
+		for (Properties property : testQueue.keySet()) {
+			results.addAll(algorithmManager.computeAll(property, testQueue.get(property)));
 		}
 	}
 
@@ -44,16 +43,16 @@ public class TestManager {
 		return results;
 	}
 
-	public HashMap<String, Graph<Node, Edge>> getTestQueue() {
+	public HashMap<Properties, Graph<Node, Edge>> getTestQueue() {
 		return testQueue;
 	}
 
 	public void clearData() {
-		testQueue = new HashMap<String, Graph<Node, Edge>>();
+		testQueue = new HashMap<Properties, Graph<Node, Edge>>();
 	}
 
 	public void saveResults() {
-		// TODO 
+		// TODO
 		PrintWriter pw;
 		try {
 			pw = new PrintWriter(new FileOutputStream("test.txt"));
@@ -75,9 +74,10 @@ public class TestManager {
 		for (int n = 10; n < maxNumberOfNodes; n += 10) {
 			for (double d = 10; d < maxDensity; d += 10) {
 				Properties properties = new Properties();
+				properties.setProperty("graphType", "random");
 				properties.setProperty("nodes", String.valueOf(n));
 				properties.setProperty("density", String.valueOf(d));
-				testQueue.put("random " + properties.toString(), randomGraphGenerator.create(RandomGraphType.RANDOM, properties));
+				testQueue.put(properties, randomGraphGenerator.create(RandomGraphType.RANDOM, properties));
 			}
 		}
 
@@ -89,18 +89,21 @@ public class TestManager {
 				for (double totalD = 5; totalD < maxTotalDensity; totalD += 5) {
 					for (double insideD = totalD + 5; insideD < maxInsideDensity; insideD += 10) {
 						Properties properties = new Properties();
+						properties.setProperty("graphType", "random modular");
 						properties.setProperty("nodes", String.valueOf(n));
 						properties.setProperty("comm", String.valueOf(c));
 						properties.setProperty("densityTotal", String.valueOf(totalD));
 						properties.setProperty("densityInside", String.valueOf(insideD));
-						testQueue.put("random modular " + properties.toString(), randomGraphGenerator.create(RandomGraphType.RANDOMMODULAR, properties));
+						testQueue.put(properties, randomGraphGenerator.create(RandomGraphType.RANDOMMODULAR, properties));
 					}
 				}
 			}
-
 		}
-
 		System.out.println("generated random graphs: " + testQueue.size());
 	}
 
+	// TODO to porównanie czy dal tego samego grafu takie same podziały dało, i jak sie różnia
+	public void partitionComparator() {
+
+	}
 }

@@ -1,32 +1,70 @@
 package pl.edu.pw.elka.community.finding.application.model.tests;
 
 import java.util.Collection;
+import java.util.Properties;
 import java.util.Set;
 
+import org.apache.commons.collections15.Transformer;
+
+import pl.edu.pw.elka.community.finding.application.model.graph.structure.Edge;
 import pl.edu.pw.elka.community.finding.application.model.graph.structure.Node;
+import edu.uci.ics.jung.graph.Graph;
 
 public class Output {
-	
-	private String name;
+
+	private Properties properties;
 	private Collection<Set<Node>> communities;
 	private long time;
 	private double modularity;
+	private Transformer<Node, Set<Node>> moduleMembership;
 
 	public Output() {
+		properties = new  Properties();
+		moduleMembership = new Transformer<Node, Set<Node>>() {
 
+			@Override
+			public Set<Node> transform(Node arg0) {
+				for (Set<Node> module : communities) {
+					if (module.contains(arg0)) {
+						return module;
+					}
+				}
+				return null;
+			}
+
+		};
+	}
+	
+	public Properties getProperties() {
+		return properties;
 	}
 
-	public Output(Set<Set<Node>> communities, String name, long time, double modularity) {
-		this.communities = communities;
-		this.name = name;
-		this.time = time;
-		this.modularity = modularity;
+	/**
+	 * Adds to properties all other.
+	 * @param properties
+	 */
+	public void addProperty(Properties properties) {
+		this.properties.putAll(properties);
+	}
+	
+	/**
+	 * Puts properties.
+	 * @param key
+	 * @param value
+	 */
+	public void addProperty(String key, String value) {
+		this.properties.put(key, value);
 	}
 
+	public void calculateModularity(Graph<Node, Edge> graph) {
+		modularity = Modularity.computeModularity(graph, moduleMembership);
+	}
+	
+	
+	
 	@Override
 	public String toString() {
-		// TODO
-		return "[name=" + name + ", communities=" + communities.size() + ", time=" + time + " ms , modularity=" + modularity + "]";
+		return properties + ", communities=" + communities.size() + ", time=" + time + ", modularity=" + modularity;
 	}
 
 	public Collection<Set<Node>> getCommunities() {
@@ -35,14 +73,6 @@ public class Output {
 
 	public void setCommunities(Collection<Set<Node>> collection) {
 		this.communities = collection;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public long getTime() {
@@ -57,7 +87,4 @@ public class Output {
 		return modularity;
 	}
 
-	public void setModularity(double modularity) {
-		this.modularity = modularity;
-	}
 }

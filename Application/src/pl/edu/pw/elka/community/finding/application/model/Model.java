@@ -2,9 +2,7 @@ package pl.edu.pw.elka.community.finding.application.model;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -22,11 +20,11 @@ import pl.edu.pw.elka.community.finding.application.model.graph.structure.Node;
 import pl.edu.pw.elka.community.finding.application.model.tests.TestManager;
 import edu.uci.ics.jung.graph.Graph;
 
-
 /**
- * Main class for model in MVC pattern. 
+ * Main class for model in MVC pattern.
+ * 
  * @author Wojciech Kaczorowski
- *
+ * 
  */
 public class Model {
 
@@ -35,7 +33,7 @@ public class Model {
 	private AlgorithmManager algorithmManager;
 	private RandomGraphGenerator randomGraphGenerator;
 	private TestManager testManager;
-	
+
 	public Model(EventsBlockingQueue blockingQueue) {
 		this.blockingQueue = blockingQueue;
 		this.algorithmManager = new AlgorithmManager(blockingQueue);
@@ -54,11 +52,11 @@ public class Model {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public Graph<Node, Edge> getGraph() {
 		return graph;
 	}
-	
+
 	public AlgorithmManager getAlgorithmManager() {
 		return algorithmManager;
 	}
@@ -67,13 +65,15 @@ public class Model {
 		algorithmManager.setAlgorithmType(algorithmType);
 	}
 
-	public Map<String, Graph<Node, Edge>> loadGraphs(String dirGraphPath) {
-		Map<String, Graph<Node, Edge>> map = new HashMap<>();
+	public Map<Properties, Graph<Node, Edge>> loadGraphs(String dirGraphPath) {
+		Map<Properties, Graph<Node, Edge>> map = new HashMap<>();
 		File directory = new File(dirGraphPath);
-		for(File graphFile : directory.listFiles()) {
+		for (File graphFile : directory.listFiles()) {
 			if (graphFile.isFile() && (graphFile.getName().endsWith(".graphml") || graphFile.getName().endsWith(".paj"))) {
 				try {
-					map.put(graphFile.getName(), GraphUtils.read(graphFile.getAbsolutePath()));
+					Properties properties = new Properties();
+					properties.setProperty("graphType", graphFile.getName());
+					map.put(properties, GraphUtils.read(graphFile.getAbsolutePath()));
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (ParserConfigurationException e) {
@@ -86,11 +86,10 @@ public class Model {
 		return map;
 	}
 
-	
 	public TestManager getTestManager() {
 		return testManager;
 	}
-	
+
 	public void generateGraph(RandomGraphType randomGraphType, Properties properties) {
 		graph = randomGraphGenerator.create(randomGraphType, properties);
 	}

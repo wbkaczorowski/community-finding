@@ -53,11 +53,11 @@ public class GraphUtils {
 			}
 		} else if (filename.endsWith(".paj")) {
 			pajekNetReader = new PajekNetReader<Graph<Node, Edge>, Node, Edge>(new NodeFactory(), new EdgeFactory());
-			
 			graph = new UndirectedSparseGraph<Node, Edge>();
 			pajekNetReader.load(filename, graph);
 
 			for (Node n : graph.getVertices()) {
+				n.getData().put("id", pajekNetReader.getVertexLabeller().transform(n));
 				n.setGroup("0");
 			}
 		}
@@ -65,8 +65,16 @@ public class GraphUtils {
 	}
 
 	
+	/**
+	 * Creates a copy of given graph as a UndirectedSparseGraph.
+	 * @param graph
+	 * @return new object from @graph
+	 */
 	public static Graph<Node, Edge> makeCopy(Graph<Node, Edge> graph) {
 		Graph<Node, Edge> copy = new UndirectedSparseGraph<Node, Edge>();
+		for (Node n : graph.getVertices()) {
+			copy.addVertex(n);
+		}
 		for (Edge e : graph.getEdges()) {
 			copy.addEdge(e, graph.getEndpoints(e));
 		}

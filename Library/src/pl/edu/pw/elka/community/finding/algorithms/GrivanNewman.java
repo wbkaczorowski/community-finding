@@ -1,5 +1,6 @@
 package pl.edu.pw.elka.community.finding.algorithms;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import edu.uci.ics.jung.algorithms.cluster.EdgeBetweennessClusterer;
@@ -37,6 +38,7 @@ public class GrivanNewman<V, E> implements Algorithm<V, E> {
 		WeakComponentClusterer<V, E> weakComponentClusterer = new WeakComponentClusterer<V, E>();
 
 		Set<Set<V>> groups = edgeBetweennessClusterer.transform(graph);
+		
 		if (groups.size() == groupCandidates) {
 			return groups;
 		}
@@ -53,6 +55,9 @@ public class GrivanNewman<V, E> implements Algorithm<V, E> {
 
 	private Graph<V, E> makeCopy(Graph<V, E> graph) {
 		Graph<V, E> copy = new UndirectedSparseGraph<V, E>();
+		for (V v : graph.getVertices()) {
+			copy.addVertex(v);
+		}
 		for (E e : graph.getEdges()) {
 			copy.addEdge(e, graph.getEndpoints(e));
 		}
