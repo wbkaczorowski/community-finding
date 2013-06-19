@@ -48,25 +48,22 @@ public class TestManager {
 
 	private void partitionComparator(Collection<Output> testedGraph) {
 		for (Output o1 : testedGraph) {
-			for (Output o2  : testedGraph) {
+			for (Output o2 : testedGraph) {
 				if (!o1.equals(o2)) {
-					double sum = 0;
+					double similarity = 0;
 					for (Set<Node> g1 : o1.getCommunities()) {
 						for (Set<Node> g2 : o2.getCommunities()) {
-							sum += (double) CollectionUtils.intersection(g1, g2).size() / (double) CollectionUtils.union(g1, g2).size();
+							similarity += (double) CollectionUtils.intersection(g1, g2).size() / (double) CollectionUtils.union(g1, g2).size();
 						}
 					}
-					System.out.println(o1.getProperties().getProperty("algorithmType") + "-" + o1.getCommunities().size() + " " + o2.getProperties().getProperty("algorithmType") + "-" + o2.getCommunities().size() + " : " + sum);
-//					System.out.println(o1.getCommunities());
-//					System.out.println(o2.getCommunities());
-//					System.out.println("");
-					//TODO czy to dzielić?
-
+					similarity /= (double) (o1.getCommunities().size() + o2.getCommunities().size()) / 2.0;
+					System.out.println(o1.getProperties().getProperty("algorithmType") + "-" + o1.getCommunities().size() + " "
+							+ o2.getProperties().getProperty("algorithmType") + "-" + o2.getCommunities().size() + " : " + similarity);
 				}
 			}
 		}
 	}
-	
+
 	public ArrayList<Output> getResults() {
 		return results;
 	}

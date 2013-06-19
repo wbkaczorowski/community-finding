@@ -11,14 +11,8 @@ import javax.imageio.ImageIO;
 
 import pl.edu.pw.elka.community.finding.application.model.graph.structure.Edge;
 import pl.edu.pw.elka.community.finding.application.model.graph.structure.Node;
-import edu.uci.ics.jung.algorithms.layout.CircleLayout;
-import edu.uci.ics.jung.algorithms.layout.DAGLayout;
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
-import edu.uci.ics.jung.algorithms.layout.KKLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
-import edu.uci.ics.jung.algorithms.layout.TreeLayout;
-import edu.uci.ics.jung.algorithms.layout3d.ISOMLayout;
-import edu.uci.ics.jung.algorithms.layout3d.SpringLayout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 import edu.uci.ics.jung.visualization.VisualizationImageServer;
@@ -26,6 +20,7 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
+import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 
 /**
  * Class responsible for displaying graph itself.
@@ -48,8 +43,8 @@ public class GraphView {
 
 	public void init(View view) {
 		layout = new FRLayout<Node, Edge>(graph);
-				
-		layout.setSize(new Dimension(view.getMainWindow().getSize().width - 5, view.getMainWindow().getSize().height - 5*Constans.BAR_HEIGHT));
+
+		layout.setSize(new Dimension(view.getMainWindow().getSize().width - 5, view.getMainWindow().getSize().height - 5 * Constans.BAR_HEIGHT));
 
 		visualizationViewer = new VisualizationViewer<Node, Edge>(layout);
 
@@ -69,7 +64,7 @@ public class GraphView {
 		/*
 		 * nodes labels
 		 */
-//		 v.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<Node>());
+		v.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<Node>());
 		/*
 		 * edges labels
 		 */
