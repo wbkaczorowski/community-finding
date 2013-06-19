@@ -105,9 +105,7 @@ public class AlgorithmManager {
 		fastNewmanOut.calculateModularity(graph);
 		outputs.add(fastNewmanOut);
 
-		// TODO wyliczać tą wartość?
 		int clusterCandidates = (int) Math.ceil((louvainOut.getCommunities().size() + fastNewmanOut.getCommunities().size()) / 2.0);
-		// int clusterCandidates = clusterCandidatesWH;
 		System.out.println("WH:" + properties.getProperty("graphType"));
 		VoltageClusterer<Node, Edge> wuHuberman = new VoltageClusterer<Node, Edge>(graph, clusterCandidates);
 		Output wuHubermanOut = new Output();
@@ -119,9 +117,7 @@ public class AlgorithmManager {
 		wuHubermanOut.calculateModularity(graph);
 		outputs.add(wuHubermanOut);
 
-		// TODO wyliczać tą wartość?
 		// int numEdgesToRemove = graph.getVertexCount() / 15;
-
 		System.out.println("GN:" + properties.getProperty("graphType"));
 		GrivanNewman<Node, Edge> grivanNewman = new GrivanNewman<Node, Edge>(clusterCandidates);
 		Output grivanNewmanOut = new Output();

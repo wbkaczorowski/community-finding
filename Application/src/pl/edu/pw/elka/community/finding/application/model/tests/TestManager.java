@@ -4,9 +4,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+
+import org.apache.commons.collections15.CollectionUtils;
 
 import pl.edu.pw.elka.community.finding.application.model.algoritms.AlgorithmManager;
 import pl.edu.pw.elka.community.finding.application.model.generators.RandomGraphGenerator;
@@ -35,10 +40,33 @@ public class TestManager {
 	public void runTest() {
 		results = new ArrayList<Output>();
 		for (Properties property : testQueue.keySet()) {
-			results.addAll(algorithmManager.computeAll(property, testQueue.get(property)));
+			Collection<Output> testedGragh = algorithmManager.computeAll(property, testQueue.get(property));
+			partitionComparator(testedGragh);
+			results.addAll(testedGragh);
 		}
 	}
 
+	private void partitionComparator(Collection<Output> testedGraph) {
+		for (Output o1 : testedGraph) {
+			for (Output o2  : testedGraph) {
+				if (!o1.equals(o2)) {
+					double sum = 0;
+					for (Set<Node> g1 : o1.getCommunities()) {
+						for (Set<Node> g2 : o2.getCommunities()) {
+							sum += (double) CollectionUtils.intersection(g1, g2).size() / (double) CollectionUtils.union(g1, g2).size();
+						}
+					}
+					System.out.println(o1.getProperties().getProperty("algorithmType") + "-" + o1.getCommunities().size() + " " + o2.getProperties().getProperty("algorithmType") + "-" + o2.getCommunities().size() + " : " + sum);
+//					System.out.println(o1.getCommunities());
+//					System.out.println(o2.getCommunities());
+//					System.out.println("");
+					//TODO czy to dzielić?
+
+				}
+			}
+		}
+	}
+	
 	public ArrayList<Output> getResults() {
 		return results;
 	}
@@ -52,7 +80,7 @@ public class TestManager {
 	}
 
 	public void saveResults() {
-		// TODO
+		// TODO malo elegancko
 		PrintWriter pw;
 		try {
 			pw = new PrintWriter(new FileOutputStream("test.txt"));
@@ -61,7 +89,6 @@ public class TestManager {
 			}
 			pw.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -102,8 +129,4 @@ public class TestManager {
 		System.out.println("generated random graphs: " + testQueue.size());
 	}
 
-	// TODO to porównanie czy dla tego samego grafu takie same podziały dało, i jak sie różnia
-	public void partitionComparator() {
-
-	}
 }
