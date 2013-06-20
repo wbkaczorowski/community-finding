@@ -117,12 +117,7 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 			// looking for best change
 			double dQremoved = calcualteDeltaModularity(node, findVertexGroup(node), graph); // difference in modularity obtained by removing from current community
 			for (Set<V> neighbourGroup : findNeighborGroups(node, graph)) {
-				double dQ;
-				if (findVertexGroup(node).size() > 1) {
-					dQ = calcualteDeltaModularity(node, neighbourGroup, graph) - dQremoved;
-				} else { // node was isolated
-					dQ = calcualteDeltaModularity(node, neighbourGroup, graph);
-				}
+				double dQ = calcualteDeltaModularity(node, neighbourGroup, graph) - dQremoved;
 				if (dQ > maxDQ) {
 					maxDQ = dQ;
 					newGroup = neighbourGroup;
