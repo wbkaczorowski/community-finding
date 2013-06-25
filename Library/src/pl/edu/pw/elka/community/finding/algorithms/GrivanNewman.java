@@ -1,6 +1,5 @@
 package pl.edu.pw.elka.community.finding.algorithms;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import edu.uci.ics.jung.algorithms.cluster.EdgeBetweennessClusterer;

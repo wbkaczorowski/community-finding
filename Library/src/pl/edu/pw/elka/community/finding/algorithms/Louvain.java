@@ -115,7 +115,8 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 			maxDQ = 0;
 			Set<V> newGroup = null;
 			// looking for best change
-			double dQremoved = calcualteDeltaModularity(node, findVertexGroup(node), graph); // difference in modularity obtained by removing from current community
+			double dQremoved = calcualteDeltaModularity(node, findVertexGroup(node), graph); // difference in modularity obtained by removing from current
+																								// community
 			for (Set<V> neighbourGroup : findNeighborGroups(node, graph)) {
 				double dQ = calcualteDeltaModularity(node, neighbourGroup, graph) - dQremoved;
 				if (dQ > maxDQ) {
@@ -215,17 +216,17 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 		return (Graph<V, E>) newGraph;
 	}
 
-	private Collection<V> findOutgoingNodes(Graph<V, E> graph, Set<V> group) {
-		Collection<V> nodes = new ArrayList<V>();
-		for (V vertex : group) {
-			for (V v : graph.getNeighbors(vertex)) {
-				if (!group.contains(v)) {
-					nodes.add(v);
-				}
-			}
-		}
-		return nodes;
-	}
+//	private Collection<V> findOutgoingNodes(Graph<V, E> graph, Set<V> group) {
+//		Collection<V> nodes = new ArrayList<V>();
+//		for (V vertex : group) {
+//			for (V v : graph.getNeighbors(vertex)) {
+//				if (!group.contains(v)) {
+//					nodes.add(v);
+//				}
+//			}
+//		}
+//		return nodes;
+//	}
 
 	/**
 	 * Method for calculating the difference in modularity as proposed in article.
@@ -275,17 +276,17 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 		return null;
 	}
 
-	private Collection<E> findOutgoingEdges(Graph<V, E> graph, Set<V> group) {
-		Collection<E> edges = new ArrayList<E>();
-		for (V vertex : group) {
-			for (V v : graph.getNeighbors(vertex)) {
-				if (!group.contains(v)) {
-					edges.add(graph.findEdge(v, vertex));
-				}
-			}
-		}
-		return edges;
-	}
+//	private Collection<E> findOutgoingEdges(Graph<V, E> graph, Set<V> group) {
+//		Collection<E> edges = new ArrayList<E>();
+//		for (V vertex : group) {
+//			for (V v : graph.getNeighbors(vertex)) {
+//				if (!group.contains(v)) {
+//					edges.add(graph.findEdge(v, vertex));
+//				}
+//			}
+//		}
+//		return edges;
+//	}
 
 	/**
 	 * Separating elements to unification of returning groups.
