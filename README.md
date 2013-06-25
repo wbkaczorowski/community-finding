@@ -2,7 +2,7 @@ community-finding
 =================
 
 Community finding library &amp; testing application.  
-Project done in Java 1.7 with JUNG 2.0.1 framework.
+Project done in Java 1.7 with JUNG 2.0.1 framework. Library could be used without application in other JUNG projects.
 
 Application:
 * visualization of graph and partition
@@ -14,5 +14,5 @@ Application:
 Library:  
 Contains algorithms:
 * Louvain (Blondel)
-* Fast-Greedy Newman.
+* Fast-Greedy Newman
 * Grivan-Newman (improved EdgeBetweennessClusterer)
