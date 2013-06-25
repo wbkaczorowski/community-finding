@@ -9,10 +9,10 @@ package pl.edu.pw.elka.community.finding.application.model.generators;
 public enum RandomGraphType {
 	RANDOM("random"),
 	RANDOMMODULAR("random with communities"),
-	ERDOSRENYI("Erdos-Renyi"),
-	EPPSTEIN("Eppstein power law"),
-	KLEINBERGSMALLWORLD("Kleinberg small worlds"),
-	BARABASIALBERT("Barabasi Albert"),
+//	ERDOSRENYI("Erdos-Renyi"),
+//	EPPSTEIN("Eppstein power law"),
+//	KLEINBERGSMALLWORLD("Kleinberg small worlds"),
+//	BARABASIALBERT("Barabasi Albert"),
 	;
 	
 	private final String text;

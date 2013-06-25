@@ -2,21 +2,11 @@ package pl.edu.pw.elka.community.finding.application.model.generators;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Properties;
 import java.util.Random;
-import java.util.Set;
 
-import pl.edu.pw.elka.community.finding.application.model.graph.EdgeFactory;
-import pl.edu.pw.elka.community.finding.application.model.graph.GraphFactory;
-import pl.edu.pw.elka.community.finding.application.model.graph.NodeFactory;
-import pl.edu.pw.elka.community.finding.application.model.graph.UndirectedGraphFactory;
 import pl.edu.pw.elka.community.finding.application.model.graph.structure.Edge;
 import pl.edu.pw.elka.community.finding.application.model.graph.structure.Node;
-import edu.uci.ics.jung.algorithms.generators.random.BarabasiAlbertGenerator;
-import edu.uci.ics.jung.algorithms.generators.random.EppsteinPowerLawGenerator;
-import edu.uci.ics.jung.algorithms.generators.random.ErdosRenyiGenerator;
-import edu.uci.ics.jung.algorithms.generators.random.KleinbergSmallWorldGenerator;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.UndirectedSparseGraph;
 
@@ -119,52 +109,52 @@ public class RandomGraphGenerator {
 		return false;
 	}
 
-	private Graph<Node, Edge> generateBarabasiAlbert(int nodes, int edges) {
-		Set<Node> seedVertices = new HashSet<>();
-		for (int i = 0; i < nodes / 3; ++i) {
-			Node n = new Node();
-			seedVertices.add(n);
-		}
-		BarabasiAlbertGenerator<Node, Edge> generator = new BarabasiAlbertGenerator<Node, Edge>(new GraphFactory(), new NodeFactory(), new EdgeFactory(),
-				nodes, edges, seedVertices);
-
-		Graph<Node, Edge> graph = generator.create();
-		for (Node n : graph.getVertices()) {
-			n.setGroup("0");
-		}
-		return graph;
-	}
-
-	private Graph<Node, Edge> generateErdosRenyi(int nodes, double probability) {
-		ErdosRenyiGenerator<Node, Edge> erdosRenyiGenerator = new ErdosRenyiGenerator<Node, Edge>(new UndirectedGraphFactory(), new NodeFactory(),
-				new EdgeFactory(), nodes, probability);
-		Graph<Node, Edge> graph = erdosRenyiGenerator.create();
-		for (Node n : graph.getVertices()) {
-			n.setGroup("0");
-		}
-		return graph;
-	}
-
-	private Graph<Node, Edge> generateEppstein(int nodes, int edges, int iterations) {
-		EppsteinPowerLawGenerator<Node, Edge> generator = new EppsteinPowerLawGenerator<Node, Edge>(new GraphFactory(), new NodeFactory(), new EdgeFactory(),
-				nodes, edges, iterations);
-		Graph<Node, Edge> graph = generator.create();
-		for (Node n : graph.getVertices()) {
-			n.setGroup("0");
-		}
-		return graph;
-	}
-
-	private Graph<Node, Edge> generateKleinbergSmallWorld(int nodes, double clusteringExponent) {
-		KleinbergSmallWorldGenerator<Node, Edge> generator = new KleinbergSmallWorldGenerator<Node, Edge>(new UndirectedGraphFactory(), new NodeFactory(),
-				new EdgeFactory(), (int) Math.round(Math.sqrt(nodes)), -clusteringExponent);
-
-		Graph<Node, Edge> graph = generator.create();
-		for (Node n : graph.getVertices()) {
-			n.setGroup("0");
-		}
-		return graph;
-	}
+//	private Graph<Node, Edge> generateBarabasiAlbert(int nodes, int edges) {
+//		Set<Node> seedVertices = new HashSet<>();
+//		for (int i = 0; i < nodes / 3; ++i) {
+//			Node n = new Node();
+//			seedVertices.add(n);
+//		}
+//		BarabasiAlbertGenerator<Node, Edge> generator = new BarabasiAlbertGenerator<Node, Edge>(new GraphFactory(), new NodeFactory(), new EdgeFactory(),
+//				nodes, edges, seedVertices);
+//
+//		Graph<Node, Edge> graph = generator.create();
+//		for (Node n : graph.getVertices()) {
+//			n.setGroup("0");
+//		}
+//		return graph;
+//	}
+//
+//	private Graph<Node, Edge> generateErdosRenyi(int nodes, double probability) {
+//		ErdosRenyiGenerator<Node, Edge> erdosRenyiGenerator = new ErdosRenyiGenerator<Node, Edge>(new UndirectedGraphFactory(), new NodeFactory(),
+//				new EdgeFactory(), nodes, probability);
+//		Graph<Node, Edge> graph = erdosRenyiGenerator.create();
+//		for (Node n : graph.getVertices()) {
+//			n.setGroup("0");
+//		}
+//		return graph;
+//	}
+//
+//	private Graph<Node, Edge> generateEppstein(int nodes, int edges, int iterations) {
+//		EppsteinPowerLawGenerator<Node, Edge> generator = new EppsteinPowerLawGenerator<Node, Edge>(new GraphFactory(), new NodeFactory(), new EdgeFactory(),
+//				nodes, edges, iterations);
+//		Graph<Node, Edge> graph = generator.create();
+//		for (Node n : graph.getVertices()) {
+//			n.setGroup("0");
+//		}
+//		return graph;
+//	}
+//
+//	private Graph<Node, Edge> generateKleinbergSmallWorld(int nodes, double clusteringExponent) {
+//		KleinbergSmallWorldGenerator<Node, Edge> generator = new KleinbergSmallWorldGenerator<Node, Edge>(new UndirectedGraphFactory(), new NodeFactory(),
+//				new EdgeFactory(), (int) Math.round(Math.sqrt(nodes)), -clusteringExponent);
+//
+//		Graph<Node, Edge> graph = generator.create();
+//		for (Node n : graph.getVertices()) {
+//			n.setGroup("0");
+//		}
+//		return graph;
+//	}
 
 	public Graph<Node, Edge> create(RandomGraphType randomGraphType, Properties properties) {
 		Graph<Node, Edge> graph = null;
@@ -178,22 +168,22 @@ public class RandomGraphGenerator {
 					Double.valueOf((String) properties.get("densityInside")) / 100, Double.valueOf((String) properties.get("densityTotal")) / 100);
 			break;
 
-		case BARABASIALBERT:
-			graph = generateBarabasiAlbert(Integer.valueOf((String) properties.get("nodes")), Integer.valueOf((String) properties.get("edges")));
-			break;
-
-		case ERDOSRENYI:
-			graph = generateErdosRenyi(Integer.valueOf((String) properties.get("nodes")), Double.valueOf((String) properties.get("prob")));
-			break;
-
-		case EPPSTEIN:
-			graph = generateEppstein(Integer.valueOf((String) properties.get("nodes")), Integer.valueOf((String) properties.get("edges")),
-					Integer.valueOf((String) properties.get("iterations")));
-			break;
-
-		case KLEINBERGSMALLWORLD:
-			graph = generateKleinbergSmallWorld(Integer.valueOf((String) properties.get("nodes")), Double.valueOf((String) properties.get("exp")));
-			break;
+//		case BARABASIALBERT:
+//			graph = generateBarabasiAlbert(Integer.valueOf((String) properties.get("nodes")), Integer.valueOf((String) properties.get("edges")));
+//			break;
+//
+//		case ERDOSRENYI:
+//			graph = generateErdosRenyi(Integer.valueOf((String) properties.get("nodes")), Double.valueOf((String) properties.get("prob")));
+//			break;
+//
+//		case EPPSTEIN:
+//			graph = generateEppstein(Integer.valueOf((String) properties.get("nodes")), Integer.valueOf((String) properties.get("edges")),
+//					Integer.valueOf((String) properties.get("iterations")));
+//			break;
+//
+//		case KLEINBERGSMALLWORLD:
+//			graph = generateKleinbergSmallWorld(Integer.valueOf((String) properties.get("nodes")), Double.valueOf((String) properties.get("exp")));
+//			break;
 
 		default:
 			graph = new UndirectedSparseGraph<>();

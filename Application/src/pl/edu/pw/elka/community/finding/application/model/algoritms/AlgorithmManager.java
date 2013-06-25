@@ -83,7 +83,7 @@ public class AlgorithmManager {
 	public Collection<Output> computeAll(Properties properties, Graph<Node, Edge> graph) {
 		ArrayList<Output> outputs = new ArrayList<Output>(4);
 
-		System.out.println("LV:" + properties.getProperty("graphType"));
+		System.out.println("LV:" + properties);
 		Louvain<Node, Edge> louvain = new Louvain<Node, Edge>();
 		Output louvainOut = new Output();
 		long louvainTime = System.currentTimeMillis();
@@ -94,7 +94,7 @@ public class AlgorithmManager {
 		louvainOut.calculateModularity(graph);
 		outputs.add(louvainOut);
 
-		System.out.println("FN:" + properties.getProperty("graphType"));
+		System.out.println("FN:" + properties);
 		FastNewman<Node, Edge> fastNewman = new FastNewman<Node, Edge>();
 		Output fastNewmanOut = new Output();
 		long fastNewmanTime = System.currentTimeMillis();
@@ -106,7 +106,10 @@ public class AlgorithmManager {
 		outputs.add(fastNewmanOut);
 
 		int clusterCandidates = (int) Math.ceil((louvainOut.getCommunities().size() + fastNewmanOut.getCommunities().size()) / 2.0);
-		System.out.println("WH:" + properties.getProperty("graphType"));
+		if (properties.get("comm") != null) {
+			clusterCandidates = Integer.valueOf((String) properties.get("comm"));
+		}
+		System.out.println("WH:" + properties);
 		VoltageClusterer<Node, Edge> wuHuberman = new VoltageClusterer<Node, Edge>(graph, clusterCandidates);
 		Output wuHubermanOut = new Output();
 		long wuHubermanTime = System.currentTimeMillis();
@@ -117,8 +120,7 @@ public class AlgorithmManager {
 		wuHubermanOut.calculateModularity(graph);
 		outputs.add(wuHubermanOut);
 
-		// int numEdgesToRemove = graph.getVertexCount() / 15;
-		System.out.println("GN:" + properties.getProperty("graphType"));
+		System.out.println("GN:" + properties);
 		GrivanNewman<Node, Edge> grivanNewman = new GrivanNewman<Node, Edge>(clusterCandidates);
 		Output grivanNewmanOut = new Output();
 		long grivanNewmanTime = System.currentTimeMillis();

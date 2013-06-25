@@ -1,5 +1,10 @@
 package pl.edu.pw.elka.community.finding.application.view;
 
+/**
+ * Class for passing some parameters.
+ * @author Wojciech Kaczorowski
+ *
+ */
 public class GraphParameter {
 	
 	private int egdesNumber;

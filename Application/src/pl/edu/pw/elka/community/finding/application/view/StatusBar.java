@@ -21,7 +21,7 @@ public class StatusBar extends JPanel {
 	private JLabel secondLabel;
 
 	public StatusBar(EventsBlockingQueue blockingQueue) {
-		super(new GridLayout(1, 2));
+		super(new GridLayout(1, 1));
 		setPreferredSize(new Dimension(Constans.WINDOW_WIDTH, Constans.BAR_HEIGHT));
 		firstLabel = new JLabel();
 		secondLabel = new JLabel();

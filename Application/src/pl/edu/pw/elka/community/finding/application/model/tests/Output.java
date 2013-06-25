@@ -10,6 +10,11 @@ import pl.edu.pw.elka.community.finding.application.model.graph.structure.Edge;
 import pl.edu.pw.elka.community.finding.application.model.graph.structure.Node;
 import edu.uci.ics.jung.graph.Graph;
 
+/**
+ * Output from multiple test for single algorithm - single graph.
+ * @author Wojciech Kaczorowski
+ *
+ */
 public class Output {
 
 	private Properties properties;
@@ -58,12 +63,20 @@ public class Output {
 	}
 
 	public void calculateModularity(Graph<Node, Edge> graph) {
-		modularity = Modularity.computeModularity(graph, moduleMembership);
+		modularity = Modularity.computeScaledModularity(graph, moduleMembership);
 	}
 	
 	@Override
 	public String toString() {
 		return properties + ", communities=" + communities.size() + ", time=" + time + " ms" + ", modularity=" + modularity;
+	}
+	
+	public String toCSVline() {
+		String string = "";
+		for (Object o : properties.values()) {
+			string += o + ",";
+		}
+		return string + communities.size() + "," + time + "," + modularity;
 	}
 
 	public Collection<Set<Node>> getCommunities() {

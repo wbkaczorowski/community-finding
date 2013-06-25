@@ -34,7 +34,6 @@ public class GraphUtils {
 		
 		if (filename.endsWith(".graphml")) {
 			graphMLReader = new GraphMLReader<Graph<Node, Edge>, Node, Edge>(new NodeFactory(), new EdgeFactory());
-
 			graph = new UndirectedSparseGraph<Node, Edge>();
 			graphMLReader.load(filename, graph);
 
@@ -61,6 +60,8 @@ public class GraphUtils {
 				n.setGroup("0");
 			}
 		}
+//		System.out.println(graph.getVertexCount());
+//		System.out.println(graph.getEdgeCount());
 		return graph;
 	}
 

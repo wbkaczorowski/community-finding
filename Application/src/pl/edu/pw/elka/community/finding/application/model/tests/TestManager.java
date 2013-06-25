@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -20,17 +19,20 @@ import pl.edu.pw.elka.community.finding.application.model.graph.structure.Edge;
 import pl.edu.pw.elka.community.finding.application.model.graph.structure.Node;
 import edu.uci.ics.jung.graph.Graph;
 
+
 public class TestManager {
 
 	private HashMap<Properties, Graph<Node, Edge>> testQueue;
 	private AlgorithmManager algorithmManager;
 	private RandomGraphGenerator randomGraphGenerator;
 	private ArrayList<Output> results;
+	private HashMap<Properties, HashMap<String, Double>> comparedPartitions;
 
 	public TestManager(AlgorithmManager am, RandomGraphGenerator rgg) {
 		testQueue = new HashMap<Properties, Graph<Node, Edge>>();
 		algorithmManager = am;
 		randomGraphGenerator = rgg;
+		comparedPartitions = new HashMap<>();
 	}
 
 	public void addData(Map<Properties, Graph<Node, Edge>> graphs) {
@@ -40,13 +42,18 @@ public class TestManager {
 	public void runTest() {
 		results = new ArrayList<Output>();
 		for (Properties property : testQueue.keySet()) {
+			System.out.println(property);
+		}
+		for (Properties property : testQueue.keySet()) {
 			Collection<Output> testedGragh = algorithmManager.computeAll(property, testQueue.get(property));
-			partitionComparator(testedGragh);
+			comparedPartitions.put(property, partitionComparator(testedGragh));
+			// System.out.println(partitionComparator(testedGragh));
 			results.addAll(testedGragh);
 		}
 	}
 
-	private void partitionComparator(Collection<Output> testedGraph) {
+	private HashMap<String, Double> partitionComparator(Collection<Output> testedGraph) {
+		HashMap<String, Double> cp = new HashMap<String, Double>();
 		for (Output o1 : testedGraph) {
 			for (Output o2 : testedGraph) {
 				if (!o1.equals(o2)) {
@@ -57,10 +64,27 @@ public class TestManager {
 						}
 					}
 					similarity /= (double) (o1.getCommunities().size() + o2.getCommunities().size()) / 2.0;
-					System.out.println(o1.getProperties().getProperty("algorithmType") + "-" + o1.getCommunities().size() + " "
-							+ o2.getProperties().getProperty("algorithmType") + "-" + o2.getCommunities().size() + " : " + similarity);
+					cp.put(o1.getProperties().getProperty("algorithmType") + " " + o2.getProperties().getProperty("algorithmType"), similarity);
 				}
 			}
+		}
+		return cp;
+	}
+	
+	private void averageSimilarity() {
+		HashMap<String, Double> averageSimilarity = new HashMap<>();
+		for (HashMap<String, Double> values : comparedPartitions.values()) {
+			for (String pair : values.keySet()) {
+				if (averageSimilarity.get(pair) != null) {
+					averageSimilarity.put(pair, averageSimilarity.get(pair) + values.get(pair));
+				} else {
+					averageSimilarity.put(pair, values.get(pair));
+				}
+			}
+		}
+		for (String s : averageSimilarity.keySet()) {
+			averageSimilarity.put(s, averageSimilarity.get(s) / (double) comparedPartitions.size());
+			System.out.println(s + " " + averageSimilarity.get(s));
 		}
 	}
 
@@ -77,26 +101,35 @@ public class TestManager {
 	}
 
 	public void saveResults() {
-		// TODO malo elegancko
 		PrintWriter pw;
 		try {
-			pw = new PrintWriter(new FileOutputStream("test.txt"));
+			pw = new PrintWriter(new FileOutputStream("test.csv"));
 			for (Output o : results) {
-				pw.println(o);
+				pw.println(o.toCSVline());
 			}
 			pw.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-
+		try {
+			//TODO na csv zmiennić
+			pw = new PrintWriter(new FileOutputStream("partitionCompare.txt"));
+			for (Properties p : comparedPartitions.keySet()) {
+				pw.println(p + " " + comparedPartitions.get(p));
+			}
+			pw.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		averageSimilarity();
 	}
-
+	
 	public void generateArtificialData() {
-		int maxNumberOfNodes = 100;
-		double maxDensity = 50; // multiplied by 100
+		int maxNumberOfNodes = 200;
+		double maxDensity = 30; // divided by 100
 
-		for (int n = 10; n < maxNumberOfNodes; n += 10) {
-			for (double d = 10; d < maxDensity; d += 10) {
+		for (int n = 20; n <= maxNumberOfNodes; n += 20) {
+			for (double d = 5; d <= maxDensity; d += 5) {
 				Properties properties = new Properties();
 				properties.setProperty("graphType", "random");
 				properties.setProperty("nodes", String.valueOf(n));
@@ -105,11 +138,11 @@ public class TestManager {
 			}
 		}
 
-		int maxNumberOfCommunities = 4;
-		double maxInsideDensity = 50; // multiplied by 100
+		int maxNumberOfCommunities = 5;
+		double maxInsideDensity = 55; // multiplied by 100
 		double maxTotalDensity = 30; // multiplied by 100
-		for (int n = 10; n < maxNumberOfNodes; n += 10) {
-			for (int c = 2; c < maxNumberOfCommunities; c++) {
+		for (int n = 20; n <= maxNumberOfNodes; n += 20) {
+			for (int c = 2; c <= maxNumberOfCommunities; ++c) {
 				for (double totalD = 5; totalD < maxTotalDensity; totalD += 5) {
 					for (double insideD = totalD + 5; insideD < maxInsideDensity; insideD += 10) {
 						Properties properties = new Properties();
