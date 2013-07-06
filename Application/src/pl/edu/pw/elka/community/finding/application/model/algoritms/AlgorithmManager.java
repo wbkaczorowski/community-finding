@@ -84,7 +84,7 @@ public class AlgorithmManager {
 		ArrayList<Output> outputs = new ArrayList<Output>(4);
 
 		System.out.println("LV:" + properties);
-		Louvain<Node, Edge> louvain = new Louvain<Node, Edge>();
+		Louvain<Node, Edge> louvain = new Louvain<Node, Edge>(null);
 		Output louvainOut = new Output();
 		long louvainTime = System.currentTimeMillis();
 		louvainOut.setCommunities(louvain.getCommunities(graph));
@@ -135,7 +135,7 @@ public class AlgorithmManager {
 	}
 
 	private int louvain(Graph<Node, Edge> graph) {
-		Louvain<Node, Edge> algorithm = new Louvain<Node, Edge>();
+		Louvain<Node, Edge> algorithm = new Louvain<Node, Edge>(null);
 		int groupCounter = 0;
 		for (Set<Node> set : algorithm.getCommunities(graph)) {
 			for (Node n : set) {

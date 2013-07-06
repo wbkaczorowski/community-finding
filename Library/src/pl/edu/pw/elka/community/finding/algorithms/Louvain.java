@@ -44,20 +44,23 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 	 */
 	private int totalIterations;
 
-	public Louvain() {
-
+	public Louvain(Map<E, Double> edgesValues) {
+		this.edgesValues = edgesValues;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Set<Set<V>> getCommunities(Graph<V, E> graph) {
 		Graph<V, E> loopGraph = graph;
-		edgesValues = new HashMap<E, Double>();
+
 		totalIterations = 0;
 
 		// default - no edges values in the graph
-		for (E e : loopGraph.getEdges()) {
-			edgesValues.put(e, new Double(1));
+		if (edgesValues == null) {
+			edgesValues = new HashMap<E, Double>();
+			for (E e : loopGraph.getEdges()) {
+				edgesValues.put(e, new Double(1));
+			}
 		}
 
 		// main loop
@@ -216,17 +219,17 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 		return (Graph<V, E>) newGraph;
 	}
 
-//	private Collection<V> findOutgoingNodes(Graph<V, E> graph, Set<V> group) {
-//		Collection<V> nodes = new ArrayList<V>();
-//		for (V vertex : group) {
-//			for (V v : graph.getNeighbors(vertex)) {
-//				if (!group.contains(v)) {
-//					nodes.add(v);
-//				}
-//			}
-//		}
-//		return nodes;
-//	}
+	// private Collection<V> findOutgoingNodes(Graph<V, E> graph, Set<V> group) {
+	// Collection<V> nodes = new ArrayList<V>();
+	// for (V vertex : group) {
+	// for (V v : graph.getNeighbors(vertex)) {
+	// if (!group.contains(v)) {
+	// nodes.add(v);
+	// }
+	// }
+	// }
+	// return nodes;
+	// }
 
 	/**
 	 * Method for calculating the difference in modularity as proposed in article.
@@ -276,17 +279,17 @@ public class Louvain<V, E> implements Algorithm<V, E> {
 		return null;
 	}
 
-//	private Collection<E> findOutgoingEdges(Graph<V, E> graph, Set<V> group) {
-//		Collection<E> edges = new ArrayList<E>();
-//		for (V vertex : group) {
-//			for (V v : graph.getNeighbors(vertex)) {
-//				if (!group.contains(v)) {
-//					edges.add(graph.findEdge(v, vertex));
-//				}
-//			}
-//		}
-//		return edges;
-//	}
+	// private Collection<E> findOutgoingEdges(Graph<V, E> graph, Set<V> group) {
+	// Collection<E> edges = new ArrayList<E>();
+	// for (V vertex : group) {
+	// for (V v : graph.getNeighbors(vertex)) {
+	// if (!group.contains(v)) {
+	// edges.add(graph.findEdge(v, vertex));
+	// }
+	// }
+	// }
+	// return edges;
+	// }
 
 	/**
 	 * Separating elements to unification of returning groups.
